@@ -6,11 +6,18 @@ Compares:
   - RandomPolicy
   - LargeActionPolicy
 
+All results are saved to results/:
+  results/eval_mse_curve.png  — MSE vs timestep plot
+  results/eval_metrics.json   — numerical results
+
 Usage:
-  uv run python eval.py --checkpoint checkpoints/ckpt_epoch0050.pt
-  uv run python eval.py --checkpoint checkpoints/ckpt_epoch0050.pt --split test
+  uv run python eval.py --checkpoint checkpoints/ckpt_epoch2000.pt
+  uv run python eval.py --checkpoint checkpoints/ckpt_epoch2000.pt --split test
+  uv run python eval.py --checkpoint checkpoints/ckpt_epoch2000.pt --wandb
 """
 import argparse
+import json
+import os
 from typing import List
 
 import matplotlib.pyplot as plt
@@ -29,13 +36,18 @@ from models.encoder import ViewEncoder
 from models.location import LocationSensor
 from models.memory import AgentMemory
 from train import load_checkpoint
+from utils.logging import init_logging
 
 
 def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
                 policy, config: Config, device: torch.device,
-                policy_name: str = "policy") -> List[float]:
+                policy_name: str = "policy",
+                seed: int = 42) -> List[float]:
     """
     Evaluate a policy and return MSE×1000 at each timestep.
+
+    Uses a fixed seed so all policies start from identical positions,
+    making the per-timestep comparison fair.
 
     Returns:
         mse_per_step: list of T floats (MSE×1000 averaged over dataset)
@@ -48,13 +60,17 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
     cumulative_mse = [0.0] * T
     n_batches = 0
 
+    # Fixed RNG so every policy sees the same starting positions
+    rng = torch.Generator()
+    rng.manual_seed(seed)
+
     with torch.no_grad():
         for batch in loader:
             batch = batch.to(device)
             B = batch.shape[0]
 
-            elev_cur = torch.randint(0, n_elev, (B,))
-            azim_cur = torch.randint(0, n_azim, (B,))
+            elev_cur = torch.randint(0, n_elev, (B,), generator=rng).to(device)
+            azim_cur = torch.randint(0, n_azim, (B,), generator=rng).to(device)
             delta_0 = azim_cur[0].item()
 
             h, c = memory.init_hidden(B, device)
@@ -82,8 +98,7 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
 
                 recon_t = completion(a_t)
                 recon_t = circ_shift_viewgrid(recon_t, int(delta_0), n_elev, n_azim)
-                recon_t = paste_observed(recon_t, shared_observed,
-                                         int(delta_0), n_azim)
+                recon_t = paste_observed(recon_t, shared_observed, n_azim)
 
                 mse_t = F.mse_loss(recon_t, batch).item() * 1000
                 cumulative_mse[t] += mse_t
@@ -108,8 +123,8 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
                     d_azim_prev = torch.full((B,), float(da), device=device)
                     rel_elev = rel_elev + float(de)
                     rel_azim = rel_azim + float(da)
-                    elev_cur = torch.full((B,), new_e, dtype=torch.long)
-                    azim_cur = torch.full((B,), new_a, dtype=torch.long)
+                    elev_cur = torch.full((B,), new_e, dtype=torch.long, device=device)
+                    azim_cur = torch.full((B,), new_a, dtype=torch.long, device=device)
 
             n_batches += 1
 
@@ -124,14 +139,22 @@ def main():
     parser.add_argument("--split", type=str, default="val",
                         choices=["val", "test"])
     parser.add_argument("--batch-size", type=int, default=32)
+    parser.add_argument("--wandb", action="store_true",
+                        help="Log eval results to wandb")
+    parser.add_argument("--run-name", type=str, default=None,
+                        help="Wandb run name")
+    parser.add_argument("--device", type=str, default=None,
+                        help="Device string, e.g. 'cuda:2'")
     args = parser.parse_args()
 
     cfg = Config()
     if args.data_dir:
         cfg.data_dir = args.data_dir
     cfg.batch_size = args.batch_size
+    cfg.use_wandb = args.wandb
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device(args.device if args.device else ("cuda" if torch.cuda.is_available() else "cpu"))
+    print(f"Device: {device}")
 
     dataset = SUN360Dataset(cfg.data_dir, split=args.split)
     cfg.n_elev = dataset.n_elev; cfg.n_azim = dataset.n_azim; cfg.n_views = dataset.n_views
@@ -154,13 +177,21 @@ def main():
     random_policy = RandomPolicy(n_actions=cfg.n_actions)
     large_policy  = LargeActionPolicy(action_deltas=cfg.action_deltas)
 
+    # Init logging
+    run_name = args.run_name or f"eval_{args.split}_{os.path.basename(args.checkpoint)}"
+    run = None
+    if cfg.use_wandb:
+        cfg_copy = Config()
+        cfg_copy.use_wandb = True
+        run = init_logging(cfg_copy, run_name=run_name)
+
     results = {}
     for name, policy in [("ours", actor),
                           ("random", random_policy),
                           ("large-action", large_policy)]:
         print(f"Evaluating: {name} ...")
         mse_curve = eval_policy(loader, encoder, loc_sensor, combine, memory,
-                                completion, policy, cfg, device, name)
+                                completion, policy, cfg, device, name, seed=42)
         results[name] = mse_curve
         print(f"  Final MSE×1000: {mse_curve[-1]:.2f}")
 
@@ -170,18 +201,65 @@ def main():
     for name, curve in results.items():
         print(f"{name:<15} {curve[-1]:>18.2f}")
 
+    os.makedirs("results", exist_ok=True)
+
+    # Save JSON metrics
+    metrics_path = "results/eval_metrics.json"
+    metrics = {
+        "checkpoint": args.checkpoint,
+        "split": args.split,
+        "data_dir": cfg.data_dir,
+        "n_samples": len(dataset),
+        "results": {name: {"curve": curve, "final_mse": curve[-1]}
+                    for name, curve in results.items()}
+    }
+    with open(metrics_path, "w") as f:
+        json.dump(metrics, f, indent=2)
+    print(f"Saved {metrics_path}")
+
     # Plot MSE vs timestep
     fig, ax = plt.subplots(figsize=(7, 4))
+    # Paper reference values (SUN360, from Fig 4)
+    paper_ref = {
+        "ours (paper)":        [None, None, None, None, None, 23.16],
+        "random (paper)":      [None, None, None, None, None, 31.88],
+        "large-action (paper)":[None, None, None, None, None, 30.76],
+    }
+    colors = {"ours": "tab:blue", "random": "tab:orange", "large-action": "tab:green"}
     for name, curve in results.items():
-        ax.plot(range(1, cfg.T + 1), curve, marker='o', label=name)
+        ax.plot(range(1, cfg.T + 1), curve, marker='o',
+                label=name, color=colors.get(name))
+    # Mark paper reference as dashed horizontal lines at t=T
+    for name, vals in paper_ref.items():
+        final = vals[-1]
+        base_name = name.replace(" (paper)", "")
+        ax.axhline(final, linestyle="--", alpha=0.5,
+                   color=colors.get(base_name, "gray"),
+                   label=f"{name}: {final:.1f}")
+
     ax.set_xlabel("Timestep")
     ax.set_ylabel("MSE × 1000")
-    ax.set_title("Active Completion: MSE vs. Time (SUN360)")
-    ax.legend()
+    ax.set_title(f"Active Completion: MSE vs. Time (SUN360, {args.split})")
+    ax.legend(fontsize=8)
     ax.grid(True)
     plt.tight_layout()
-    plt.savefig("eval_mse_curve.png", dpi=150)
-    print("Saved eval_mse_curve.png")
+    plot_path = "results/eval_mse_curve.png"
+    plt.savefig(plot_path, dpi=150)
+    print(f"Saved {plot_path}")
+    plt.close()
+
+    # Log to wandb
+    if run is not None:
+        import wandb
+        wandb_metrics = {}
+        for name, curve in results.items():
+            for t, val in enumerate(curve):
+                wandb_metrics[f"eval/{name}/mse_t{t+1}"] = val
+            wandb_metrics[f"eval/{name}/final_mse"] = curve[-1]
+        run.log(wandb_metrics)
+        run.log({"eval/mse_curve": wandb.Image(plot_path)})
+        run.finish()
+        print("Logged to wandb.")
 
 
 if __name__ == "__main__":

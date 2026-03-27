@@ -63,12 +63,11 @@ def run_episode(
     n_elev, n_azim = config.n_elev, config.n_azim
 
     # Random starting position per batch element
-    elev_0 = torch.randint(0, n_elev, (B,))
-    azim_0 = torch.randint(0, n_azim, (B,))
+    elev_0 = torch.randint(0, n_elev, (B,), device=device)
+    azim_0 = torch.randint(0, n_azim, (B,), device=device)
     delta_0 = azim_0.clone()  # azimuth offset for rotation compensation
 
-    # Current position (same for all batch elements at same step, but
-    # we track per-element to allow independent trajectories)
+    # Current position
     elev_cur = elev_0.clone()
     azim_cur = azim_0.clone()
 
@@ -121,8 +120,7 @@ def run_episode(
         # Rotation compensation — use first element's delta_0 (shared trajectory)
         d0 = delta_0[0].item()
         recon_t_shifted = circ_shift_viewgrid(recon_t, int(d0), n_elev, n_azim)
-        recon_t_shifted = paste_observed(recon_t_shifted, shared_observed,
-                                         int(d0), n_azim)
+        recon_t_shifted = paste_observed(recon_t_shifted, shared_observed, n_azim)
         recon_list.append(recon_t_shifted)
 
         # --- Act (skip on last step) ---
@@ -153,8 +151,8 @@ def run_episode(
             rel_elev = rel_elev + float(de)
             rel_azim = rel_azim + float(da)
 
-            elev_cur = torch.full((B,), new_e, dtype=torch.long)
-            azim_cur = torch.full((B,), new_a, dtype=torch.long)
+            elev_cur = torch.full((B,), new_e, dtype=torch.long, device=device)
+            azim_cur = torch.full((B,), new_a, dtype=torch.long, device=device)
 
     return recon_list, log_probs, delta_0
 
@@ -342,11 +340,14 @@ def main(args=None):
         if hasattr(args, 'epochs') and args.epochs:
             cfg.n_epochs = args.epochs
         if hasattr(args, 'wandb') and args.wandb:
-            cfg.use_wandb = True
+            cfg.use_wandb = args.wandb
         if hasattr(args, 'batch_size') and args.batch_size:
             cfg.batch_size = args.batch_size
 
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device_str = args.device if (args and hasattr(args, 'device') and args.device) else (
+        "cuda" if torch.cuda.is_available() else "cpu"
+    )
+    device = torch.device(device_str)
     print(f"Device: {device}")
 
     # Dataset — load from split files in data_dir
@@ -429,5 +430,7 @@ if __name__ == "__main__":
     parser.add_argument("--batch-size", type=int, default=None)
     parser.add_argument("--wandb", action="store_true",
                         help="Enable wandb logging")
+    parser.add_argument("--device", type=str, default=None,
+                        help="Device string, e.g. 'cuda:2' (default: auto)")
     args = parser.parse_args()
     main(args)

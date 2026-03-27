@@ -8,8 +8,7 @@ data/
 origin_results/
 models/
 code-2017/
-results/
-
+wandb
 # Virtual environments
 .venv/
 venv/

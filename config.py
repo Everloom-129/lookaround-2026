@@ -5,7 +5,7 @@ from typing import List, Tuple
 @dataclass
 class Config:
     # Data
-    data_dir: str = "code-2017/SUN360/data/minitorchfeed"  # dir with split .h5 files
+    data_dir: str = "origin_code/SUN360/data/minitorchfeed"  # dir with split .h5 files
     n_elev: int = 4
     n_azim: int = 8
     n_views: int = 32           # n_elev * n_azim  (actual SUN360 mini: 4x8=32)
@@ -41,6 +41,6 @@ class Config:
 
     # Checkpointing / logging
     log_every: int = 100
-    save_every: int = 5
+    save_every: int = 100
     checkpoint_dir: str = "checkpoints"
     use_wandb: bool = False

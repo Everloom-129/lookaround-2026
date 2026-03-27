@@ -9,6 +9,35 @@ Reference Lua/Torch7 code: `code-2017/` (original, non-runnable)
 
 ---
 
+## Paper Overview
+
+![Teaser](origin_results/fig1_teaser.png)
+*Fig. 1 — An agent observing limited portions of a scene must decide where to look next to most efficiently reduce uncertainty about unobserved regions.*
+
+The paper proposes a reinforcement learning agent that learns to **actively complete panoramic scenes** by selecting informative viewpoints. The agent is rewarded for reducing its reconstruction error over unobserved views — no downstream task supervision required.
+
+### Architecture
+
+![Architecture](origin_results/fig2_architecture.png)
+*Fig. 2 — Five modules: **sense** (CNN patch encoder + proprioception MLP), **fuse** (combine module), **aggregate** (LSTM memory), **decode** (transposed-conv viewgrid predictor), **act** (policy MLP).*
+
+### Qualitative Results
+
+![Episodes](origin_results/fig3_episodes.png)
+*Fig. 3 — Active completion episodes. As the agent explores, its predicted viewgrid converges toward the ground truth. Top: outdoor scene. Bottom: 3D object (unseen category).*
+
+### Quantitative Results
+
+![MSE vs Time](origin_results/fig4_mse_vs_time.png)
+*Fig. 4 — Per-pixel MSE × 1000 vs. timestep on SUN360 (left), ModelNet seen (center), ModelNet unseen (right). The learned policy consistently outperforms random and large-action baselines.*
+
+### Policy Transfer
+
+![Policy Transfer](origin_results/fig5_policy_transfer.png)
+*Fig. 5 — Unsupervised policy transfer: the completion policy (trained without labels) drives an active categorization system and matches the fully supervised baseline on both SUN360 and ModelNet-10.*
+
+---
+
 ## Quick Start
 
 ```bash
@@ -19,7 +48,7 @@ uv sync
 uv run python train.py
 
 # Evaluate a checkpoint
-uv run python eval.py --checkpoint checkpoints/ckpt_epoch0050.pt
+uv run python eval.py --checkpoint checkpoints/ckpt_epoch2000.pt
 ```
 
 Data directory: `code-2017/SUN360/data/minitorchfeed/` (mini, 10 panoramas per split)
@@ -57,6 +86,7 @@ Full data: `code-2017/SUN360/data/torchfeed/` — use `--data-dir` flag
 - [x] `train.py` — Phase 2: full training T=6 (REINFORCE + reconstruction loss, 2000 epochs)
 - [x] Gradient clipping (`max_norm=5.0`)
 - [x] Checkpoint save/resume (`checkpoints/ckpt_epoch*.pt`)
+- [x] Full training completed — recon loss 0.32 → 0.12 over 2000 epochs
 - [ ] Training on full SUN360 dataset (currently using mini — 10 samples)
 - [ ] GPU training (currently CPU only — old CUDA driver)
 
@@ -68,5 +98,5 @@ Full data: `code-2017/SUN360/data/torchfeed/` — use `--data-dir` flag
 
 ### Done
 - [x] Design doc (`designdoc.md`) — v2.0, corrected from paper + Lua reference code
-- [x] README (`readme.md`)
-- [x] Full training pipeline running (background: `training.log`)
+- [x] README with paper figures (`readme.md`)
+- [x] Full 2000-epoch training completed (`checkpoints/ckpt_epoch2000.pt`, `training.log`)
