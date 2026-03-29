@@ -25,9 +25,18 @@ uv run python eval.py --checkpoint checkpoints/ckpt_epoch2000.pt \
 # Preprocess raw panoramas (JPEG/PNG dir) → torchfeed HDF5
 uv run python data/prepare_sun360.py --pano-dir /path/to/images --out-dir data/mytorchfeed
 
-# Policy transfer evaluation (requires categorized dataset with labels)
+# Policy transfer evaluation — produces results/transfer_panocontext.json
+#                              and results/transfer_modelnet10.json
 uv run python eval_transfer.py --checkpoint checkpoints/ckpt_epoch2000.pt \
-    --data-dir data/indoor360_torchfeed
+    --data-dir data/panocontext_torchfeed
+uv run python eval_transfer.py --checkpoint checkpoints/ckpt_epoch2000.pt \
+    --data-dir data/modelnet10_torchfeed
+
+# Plot Fig 5 (requires both JSON files above)
+uv run python plot_fig5.py
+
+# Interactive visualization app (Gradio, port 7860)
+uv run python app.py --device cuda:2 --port 7860
 ```
 
 ## Architecture
@@ -49,6 +58,16 @@ Key implementation details:
 - **Rotation compensation** (`data/utils.py:circ_shift_viewgrid`): since the agent has no absolute azimuth reference, the predicted viewgrid is circularly shifted by `delta_0` (first view's azimuth index) before computing MSE against ground truth.
 - **Paste observed** (`data/utils.py:paste_observed`): after decoding, actually-observed views are pasted into the prediction — error only comes from unobserved views.
 - **All batch elements share position** at each step (simplification over the paper): the single shared `(elev, azim)` position is driven by `batch[0]`'s action.
+
+## Visualization App (`app.py`)
+
+Gradio 6 app with three tabs:
+
+- **Offline Results** — load pre-computed `results/eval_metrics.json` / `results/transfer_metrics.json` as plots + tables; browse val panoramas by index (shows full 4×8 viewgrid).
+- **Live Episode** — pick a val sample + policy (ours/random/large-action) + start position, then step through the T=6 episode one click at a time. Shows ground truth viewgrid (red=current, gold=visited), predicted viewgrid, trajectory map, and live MSE curve.
+- **Run Full Eval** — runs `eval_transfer` on the full val set in a background thread with a live progress bar; saves a new `results/eval_transfer.png` when done. Dataset dropdown supports indoor360, modelnet10, panocontext.
+
+App loads the model and val dataset once at startup. State per session is stored in `gr.State`.
 
 ## Data
 

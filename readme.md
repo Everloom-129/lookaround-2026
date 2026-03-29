@@ -5,7 +5,7 @@ Open source, Claude Code-based, 2026 PyTorch reimplementation of:
 **"Learning to Look Around: Intelligently Exploring Unseen Environments for Unknown Tasks"**
 Jayaraman & Grauman, CVPR 2018 — https://arxiv.org/abs/1709.00507
 
-Reference Lua/Torch7 code: `code-2017/` (original, non-runnable)
+Reference Lua/Torch7 code: `origin_code/` (original, non-runnable)
 
 ---
 
@@ -44,15 +44,30 @@ The paper proposes a reinforcement learning agent that learns to **actively comp
 # Install dependencies
 uv sync
 
-# Train (uses mini SUN360 dataset included in code-2017/)
-uv run python train.py
+# Train on indoor360 dataset (~2 hours on cuda:2)
+uv run python train.py --data-dir data/indoor360_torchfeed --wandb --device cuda:2
 
 # Evaluate a checkpoint
-uv run python eval.py --checkpoint checkpoints/ckpt_epoch2000.pt
+uv run python eval.py --checkpoint checkpoints/ckpt_epoch2000.pt \
+    --data-dir data/indoor360_torchfeed --device cuda:2
+
+# Policy transfer evaluation (Fig 5)
+uv run python eval_transfer.py --checkpoint checkpoints/ckpt_epoch2000.pt \
+    --data-dir data/modelnet10_torchfeed --device cuda:2
+
+# Interactive visualization app
+uv run python app.py --device cuda:2 --port 7860
 ```
 
-Data directory: `code-2017/SUN360/data/minitorchfeed/` (mini, 10 panoramas per split)
-Full data: `code-2017/SUN360/data/torchfeed/` — use `--data-dir` flag
+### Interactive Viewer (`app.py`)
+
+A Gradio web app (port 7860) with three tabs:
+
+| Tab | What it does |
+|-----|-------------|
+| **Offline Results** | Displays pre-computed MSE curves (Fig 4) and policy transfer accuracy (Fig 5) from `results/`. Browse any val panorama as a 4×8 viewgrid. |
+| **Live Episode** | Step through a single model episode interactively. Pick a val sample, policy, and start position; click *Next Step* to advance one timestep. Shows ground truth (red=current pos, gold=visited), predicted viewgrid, trajectory map, and MSE curve — all updating live. |
+| **Run Full Eval** | Re-runs the full `eval_transfer` pipeline on any dataset in a background thread; saves a new `results/eval_transfer.png` when done. |
 
 ---
 
@@ -86,17 +101,21 @@ Full data: `code-2017/SUN360/data/torchfeed/` — use `--data-dir` flag
 - [x] `train.py` — Phase 2: full training T=6 (REINFORCE + reconstruction loss, 2000 epochs)
 - [x] Gradient clipping (`max_norm=5.0`)
 - [x] Checkpoint save/resume (`checkpoints/ckpt_epoch*.pt`)
-- [x] Full training completed — recon loss 0.32 → 0.12 over 2000 epochs
-- [ ] Training on full SUN360 dataset (currently using mini — 10 samples)
-- [ ] GPU training (currently CPU only — old CUDA driver)
+- [x] Full training completed on indoor360 — recon loss converges over 2000 epochs
+- [ ] Training on full SUN360 dataset (MIT CSAIL server unreachable; use `data/prepare_sun360.py` if obtained)
 
 ### Evaluation
 - [x] `eval.py` — per-pixel MSE×1000 at final step T on val/test set
 - [x] Compare vs. `RandomPolicy` and `LargeActionPolicy` baselines
 - [x] Plot MSE vs. timestep curve
-- [ ] Run evaluation after full training completes
+- [x] Full 2000-epoch training on indoor360 (`cuda:2`, ~2 hours) — ours=23.71, random=26.62, large-action=27.05 MSE×1000
+- [x] `eval_transfer.py` — Fig 5 policy transfer (per-timestep accuracy curves for 4 policies)
+- [x] ModelNet-10 rendering pipeline (`data/prepare_modelnet.py`, pyrender+EGL) — 32 views/model, 4899 models
+- [x] PanoContext dataset pipeline (bedroom/living_room, 2-class, 706 panoramas)
+- [x] `plot_fig5.py` — combined two-panel Fig 5 reproduction
+- [x] `app.py` — interactive Gradio visualization app (offline + live episode + full eval tabs)
 
 ### Done
 - [x] Design doc (`designdoc.md`) — v2.0, corrected from paper + Lua reference code
 - [x] README with paper figures (`readme.md`)
-- [x] Full 2000-epoch training completed (`checkpoints/ckpt_epoch2000.pt`, `training.log`)
+- [x] Full 2000-epoch training completed (`checkpoints/ckpt_epoch2000.pt`)
