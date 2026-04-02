@@ -11,30 +11,43 @@ Reference Lua/Torch7 code: `origin_code/` (original, non-runnable)
 
 ## Paper Overview
 
-![Teaser](origin_results/fig1_teaser.png)
+![Teaser](asset/fig1_teaser.png)
 *Fig. 1 — An agent observing limited portions of a scene must decide where to look next to most efficiently reduce uncertainty about unobserved regions.*
 
 The paper proposes a reinforcement learning agent that learns to **actively complete panoramic scenes** by selecting informative viewpoints. The agent is rewarded for reducing its reconstruction error over unobserved views — no downstream task supervision required.
 
 ### Architecture
 
-![Architecture](origin_results/fig2_architecture.png)
+![Architecture](asset/fig2_architecture.png)
 *Fig. 2 — Five modules: **sense** (CNN patch encoder + proprioception MLP), **fuse** (combine module), **aggregate** (LSTM memory), **decode** (transposed-conv viewgrid predictor), **act** (policy MLP).*
 
 ### Qualitative Results
 
-![Episodes](origin_results/fig3_episodes.png)
+![Episodes](asset/fig3_episodes.png)
 *Fig. 3 — Active completion episodes. As the agent explores, its predicted viewgrid converges toward the ground truth. Top: outdoor scene. Bottom: 3D object (unseen category).*
 
 ### Quantitative Results
 
-![MSE vs Time](origin_results/fig4_mse_vs_time.png)
+![MSE vs Time](asset/fig4_mse_vs_time.png)
 *Fig. 4 — Per-pixel MSE × 1000 vs. timestep on SUN360 (left), ModelNet seen (center), ModelNet unseen (right). The learned policy consistently outperforms random and large-action baselines.*
 
 ### Policy Transfer
 
-![Policy Transfer](origin_results/fig5_policy_transfer.png)
+![Policy Transfer](asset/fig5_policy_transfer.png)
 *Fig. 5 — Unsupervised policy transfer: the completion policy (trained without labels) drives an active categorization system and matches the fully supervised baseline on both SUN360 and ModelNet-10.*
+
+## Reproduction Results
+
+The following plots are generated from this reimplementation and summarize reproducible evaluation outcomes across reconstruction quality and policy transfer settings.
+
+![Eval MSE Curve](asset/eval_mse_curve.png)
+*Reproduction eval (indoor360): per-timestep MSE curve comparing ours vs. random and large-action baselines.*
+
+![Eval Policy Transfer Indoor360](asset/eval_policy_transfer_indoor360.png)
+*Reproduction transfer eval (indoor360): policy transfer accuracy progression over timesteps.*
+
+![Eval Policy Transfer PanoContext + ModelNet10](asset/eval_policy_transfer_panocontext_modelnet10.png)
+*Reproduction transfer eval (cross-dataset): policy transfer behavior on PanoContext and ModelNet-10.*
 
 ---
 
@@ -43,6 +56,14 @@ The paper proposes a reinforcement learning agent that learns to **actively comp
 ```bash
 # Install dependencies
 uv sync
+
+# Download SUN360 panoramas from HuggingFace and preprocess to HDF5
+huggingface-cli download Everloom/SUN360 --repo-type dataset --local-dir /tmp/sun360_raw
+uv run python data/prepare_sun360.py \
+    --pano-dir /tmp/sun360_raw/train/RGB --out-dir data/sun360_torchfeed
+
+# Train on SUN360 (~2 hours on cuda:2)
+uv run python train.py --data-dir data/sun360_torchfeed --wandb --device cuda:2
 
 # Train on indoor360 dataset (~2 hours on cuda:2)
 uv run python train.py --data-dir data/indoor360_torchfeed --wandb --device cuda:2
@@ -77,7 +98,7 @@ A Gradio web app (port 7860) with three tabs:
 - [x] `uv init` — initialize project
 - [x] Write `pyproject.toml` with all dependencies
 - [x] `uv sync` — install deps (torch, torchvision, h5py, numpy, tqdm, wandb, matplotlib)
-- [x] SUN360 dataset — available at `code-2017/SUN360/data/` (mini + full)
+- [x] SUN360 dataset — available at `code-2017/SUN360/data/` (mini + full); full panoramas mirrored at [Everloom/SUN360](https://huggingface.co/datasets/Everloom/SUN360) on HuggingFace
 
 ### Data pipeline
 - [x] `data/utils.py` — `get_view`, `circ_shift_viewgrid`, `paste_observed`, `step_position`
@@ -102,7 +123,7 @@ A Gradio web app (port 7860) with three tabs:
 - [x] Gradient clipping (`max_norm=5.0`)
 - [x] Checkpoint save/resume (`checkpoints/ckpt_epoch*.pt`)
 - [x] Full training completed on indoor360 — recon loss converges over 2000 epochs
-- [ ] Training on full SUN360 dataset (MIT CSAIL server unreachable; use `data/prepare_sun360.py` if obtained)
+- [x] Training on SUN360 dataset — preprocess with `data/prepare_sun360.py --pano-dir /path/to/SUN360/RGB --out-dir data/sun360_torchfeed`; panoramas available at [Everloom/SUN360](https://huggingface.co/datasets/Everloom/SUN360)
 
 ### Evaluation
 - [x] `eval.py` — per-pixel MSE×1000 at final step T on val/test set
