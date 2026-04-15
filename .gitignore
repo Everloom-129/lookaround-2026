@@ -11,7 +11,6 @@ test/
 origin_results/
 models/
 code-2017/
-origin_code/
 wandb
 # Virtual environments
 .venv/
