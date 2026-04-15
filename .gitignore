@@ -4,14 +4,9 @@ __pycache__/
 *$py.class
 
 # Project
-data/
-train/
-test/
 
 origin_results/
-models/
-code-2017/
-wandb
+wandb/
 # Virtual environments
 .venv/
 venv/
@@ -39,8 +34,6 @@ checkpoints/
 *.pt
 *.pth
 
-# Logs
-*.log
 
 # OS / IDE
 .DS_Store
