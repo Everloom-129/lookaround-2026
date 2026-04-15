@@ -4,7 +4,8 @@ __pycache__/
 *$py.class
 
 # Project
-
+data/
+*.log
 origin_results/
 wandb/
 # Virtual environments
