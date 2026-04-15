@@ -1,0 +1,1384 @@
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from /home/edward/.netrc.
+wandb: Currently logged in as: jie20 (jie20-zju) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run w45u9hpc
+wandb: Tracking run with wandb version 0.25.1
+wandb: Run data is saved locally in /home/edward/projects/lookaround_2026/wandb/run-20260414_145337-w45u9hpc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run fancy-plasma-6
+wandb: ⭐️ View project at https://wandb.ai/jie20-zju/lookaround-2026
+wandb: 🚀 View run at https://wandb.ai/jie20-zju/lookaround-2026/runs/w45u9hpc
+Device: cuda:2
+Combined mode: data/indoor360_torchfeed (4:3:3 resplit) + data/sun360_torchfeed
+[indoor360 resplit 4:3:3] total=3550  train=1420  val=1065  test=1065
+[sun360] train=325  val=57
+[combined] train=1745  val=1122
+Grid: 4×8 = 32 views, each 3×32×32
+Train batches/epoch: 55  Val batches: 36
+Total parameters: 2,741,134
+
+=== Phase 1: Pretraining (50 epochs, T=1) ===
+[step    550] pretrain/recon_loss=0.0358  pretrain/epoch=10.0000
+[step   1100] pretrain/recon_loss=0.0351  pretrain/epoch=20.0000
+[step   1650] pretrain/recon_loss=0.0359  pretrain/epoch=30.0000
+[step   2200] pretrain/recon_loss=0.0348  pretrain/epoch=40.0000
+[step   2750] pretrain/recon_loss=0.0347  pretrain/epoch=50.0000
+Pretraining complete. Checkpoint saved.
+
+=== Phase 2: Full training (2000 epochs, T=6) ===
+[step   2800] train/recon_loss=0.1945  train/policy_loss=0.0298  train/reward=-0.0264  train/baseline=-0.0289
+[step   2900] train/recon_loss=0.1538  train/policy_loss=0.0656  train/reward=-0.0224  train/baseline=-0.0276
+[step   3000] train/recon_loss=0.1579  train/policy_loss=0.0300  train/reward=-0.0250  train/baseline=-0.0278
+[step   3100] train/recon_loss=0.1815  train/policy_loss=0.0139  train/reward=-0.0277  train/baseline=-0.0292
+[step   3200] train/recon_loss=0.1937  train/policy_loss=0.0007  train/reward=-0.0294  train/baseline=-0.0295
+[step   3300] train/recon_loss=0.2084  train/policy_loss=-0.0241  train/reward=-0.0337  train/baseline=-0.0300
+[step   3300] train/epoch_recon=0.1860  train/epoch_policy=-0.0011  train/epoch_reward=-0.0287  train/epoch=10.0000  val/recon_loss=0.1765  val/reward=-0.0268
+[step   3400] train/recon_loss=0.1506  train/policy_loss=0.0351  train/reward=-0.0204  train/baseline=-0.0282
+[step   3500] train/recon_loss=0.1910  train/policy_loss=-0.0148  train/reward=-0.0312  train/baseline=-0.0283
+[step   3600] train/recon_loss=0.1881  train/policy_loss=-0.0079  train/reward=-0.0295  train/baseline=-0.0279
+[step   3700] train/recon_loss=0.2233  train/policy_loss=-0.0403  train/reward=-0.0356  train/baseline=-0.0289
+[step   3800] train/recon_loss=0.2373  train/policy_loss=-0.0303  train/reward=-0.0337  train/baseline=-0.0282
+[step   3850] train/epoch_recon=0.1870  train/epoch_policy=-0.0027  train/epoch_reward=-0.0287  train/epoch=20.0000  val/recon_loss=0.1771  val/reward=-0.0271
+[step   3900] train/recon_loss=0.1818  train/policy_loss=-0.0017  train/reward=-0.0290  train/baseline=-0.0287
+[step   4000] train/recon_loss=0.1652  train/policy_loss=0.0096  train/reward=-0.0262  train/baseline=-0.0282
+[step   4100] train/recon_loss=0.1684  train/policy_loss=0.0205  train/reward=-0.0233  train/baseline=-0.0273
+[step   4200] train/recon_loss=0.2028  train/policy_loss=-0.0100  train/reward=-0.0309  train/baseline=-0.0292
+[step   4300] train/recon_loss=0.1810  train/policy_loss=-0.0056  train/reward=-0.0279  train/baseline=-0.0266
+[step   4400] train/recon_loss=0.1595  train/policy_loss=0.0077  train/reward=-0.0257  train/baseline=-0.0270
+[step   4400] train/epoch_recon=0.1821  train/epoch_policy=0.0012  train/epoch_reward=-0.0279  train/epoch=30.0000  val/recon_loss=0.1799  val/reward=-0.0273
+[step   4500] train/recon_loss=0.1528  train/policy_loss=0.0282  train/reward=-0.0232  train/baseline=-0.0280
+[step   4600] train/recon_loss=0.1590  train/policy_loss=0.0130  train/reward=-0.0263  train/baseline=-0.0284
+[step   4700] train/recon_loss=0.2064  train/policy_loss=-0.0172  train/reward=-0.0313  train/baseline=-0.0277
+[step   4800] train/recon_loss=0.1895  train/policy_loss=-0.0052  train/reward=-0.0281  train/baseline=-0.0274
+[step   4900] train/recon_loss=0.2068  train/policy_loss=-0.0257  train/reward=-0.0318  train/baseline=-0.0269
+[step   4950] train/epoch_recon=0.1827  train/epoch_policy=-0.0013  train/epoch_reward=-0.0273  train/epoch=40.0000  val/recon_loss=0.1786  val/reward=-0.0273
+[step   5000] train/recon_loss=0.1701  train/policy_loss=0.0081  train/reward=-0.0254  train/baseline=-0.0271
+[step   5100] train/recon_loss=0.1560  train/policy_loss=0.0217  train/reward=-0.0229  train/baseline=-0.0271
+[step   5200] train/recon_loss=0.1792  train/policy_loss=0.0043  train/reward=-0.0249  train/baseline=-0.0263
+[step   5300] train/recon_loss=0.1727  train/policy_loss=0.0048  train/reward=-0.0259  train/baseline=-0.0268
+[step   5400] train/recon_loss=0.1978  train/policy_loss=-0.0215  train/reward=-0.0290  train/baseline=-0.0258
+[step   5500] train/recon_loss=0.1690  train/policy_loss=0.0166  train/reward=-0.0255  train/baseline=-0.0277
+[step   5500] train/epoch_recon=0.1803  train/epoch_policy=-0.0001  train/epoch_reward=-0.0273  train/epoch=50.0000  val/recon_loss=0.1714  val/reward=-0.0261
+[step   5600] train/recon_loss=0.1646  train/policy_loss=0.0150  train/reward=-0.0248  train/baseline=-0.0275
+[step   5700] train/recon_loss=0.1668  train/policy_loss=0.0058  train/reward=-0.0245  train/baseline=-0.0257
+[step   5800] train/recon_loss=0.1839  train/policy_loss=0.0021  train/reward=-0.0278  train/baseline=-0.0282
+[step   5900] train/recon_loss=0.1713  train/policy_loss=0.0093  train/reward=-0.0247  train/baseline=-0.0268
+[step   6000] train/recon_loss=0.1556  train/policy_loss=0.0035  train/reward=-0.0246  train/baseline=-0.0254
+[step   6050] train/epoch_recon=0.1796  train/epoch_policy=-0.0003  train/epoch_reward=-0.0269  train/epoch=60.0000  val/recon_loss=0.1732  val/reward=-0.0264
+[step   6100] train/recon_loss=0.1921  train/policy_loss=-0.0127  train/reward=-0.0288  train/baseline=-0.0262
+[step   6200] train/recon_loss=0.1910  train/policy_loss=-0.0105  train/reward=-0.0294  train/baseline=-0.0270
+[step   6300] train/recon_loss=0.1683  train/policy_loss=0.0091  train/reward=-0.0237  train/baseline=-0.0257
+[step   6400] train/recon_loss=0.1899  train/policy_loss=-0.0009  train/reward=-0.0265  train/baseline=-0.0263
+[step   6500] train/recon_loss=0.1658  train/policy_loss=0.0086  train/reward=-0.0228  train/baseline=-0.0252
+[step   6600] train/recon_loss=0.2650  train/policy_loss=-0.0417  train/reward=-0.0386  train/baseline=-0.0276
+[step   6600] train/epoch_recon=0.1773  train/epoch_policy=-0.0004  train/epoch_reward=-0.0268  train/epoch=70.0000  val/recon_loss=0.1734  val/reward=-0.0265
+[step   6700] train/recon_loss=0.1788  train/policy_loss=-0.0075  train/reward=-0.0286  train/baseline=-0.0269
+[step   6800] train/recon_loss=0.1418  train/policy_loss=0.0208  train/reward=-0.0194  train/baseline=-0.0248
+[step   6900] train/recon_loss=0.1479  train/policy_loss=0.0209  train/reward=-0.0215  train/baseline=-0.0257
+[step   7000] train/recon_loss=0.1543  train/policy_loss=0.0201  train/reward=-0.0221  train/baseline=-0.0262
+[step   7100] train/recon_loss=0.1659  train/policy_loss=0.0055  train/reward=-0.0237  train/baseline=-0.0253
+[step   7150] train/epoch_recon=0.1773  train/epoch_policy=-0.0011  train/epoch_reward=-0.0268  train/epoch=80.0000  val/recon_loss=0.1763  val/reward=-0.0269
+[step   7200] train/recon_loss=0.1922  train/policy_loss=-0.0126  train/reward=-0.0299  train/baseline=-0.0271
+[step   7300] train/recon_loss=0.2043  train/policy_loss=-0.0255  train/reward=-0.0331  train/baseline=-0.0280
+[step   7400] train/recon_loss=0.1779  train/policy_loss=0.0108  train/reward=-0.0243  train/baseline=-0.0269
+[step   7500] train/recon_loss=0.1780  train/policy_loss=-0.0004  train/reward=-0.0267  train/baseline=-0.0266
+[step   7600] train/recon_loss=0.1675  train/policy_loss=0.0099  train/reward=-0.0260  train/baseline=-0.0278
+[step   7700] train/recon_loss=0.1650  train/policy_loss=0.0035  train/reward=-0.0270  train/baseline=-0.0277
+[step   7700] train/epoch_recon=0.1796  train/epoch_policy=-0.0002  train/epoch_reward=-0.0274  train/epoch=90.0000  val/recon_loss=0.1717  val/reward=-0.0269
+[step   7800] train/recon_loss=0.1757  train/policy_loss=0.0025  train/reward=-0.0263  train/baseline=-0.0269
+[step   7900] train/recon_loss=0.1593  train/policy_loss=0.0107  train/reward=-0.0237  train/baseline=-0.0266
+[step   8000] train/recon_loss=0.1615  train/policy_loss=0.0029  train/reward=-0.0253  train/baseline=-0.0265
+[step   8100] train/recon_loss=0.1716  train/policy_loss=-0.0091  train/reward=-0.0273  train/baseline=-0.0251
+[step   8200] train/recon_loss=0.1643  train/policy_loss=0.0166  train/reward=-0.0232  train/baseline=-0.0267
+[step   8250] train/epoch_recon=0.1755  train/epoch_policy=-0.0001  train/epoch_reward=-0.0269  train/epoch=100.0000  val/recon_loss=0.1692  val/reward=-0.0254
+[checkpoint] saved to checkpoints/ckpt_epoch0100.pt
+[step   8300] train/recon_loss=0.1757  train/policy_loss=0.0002  train/reward=-0.0256  train/baseline=-0.0256
+[step   8400] train/recon_loss=0.1498  train/policy_loss=0.0118  train/reward=-0.0227  train/baseline=-0.0261
+[step   8500] train/recon_loss=0.1921  train/policy_loss=-0.0117  train/reward=-0.0312  train/baseline=-0.0265
+[step   8600] train/recon_loss=0.1927  train/policy_loss=-0.0130  train/reward=-0.0316  train/baseline=-0.0270
+[step   8700] train/recon_loss=0.1636  train/policy_loss=0.0027  train/reward=-0.0246  train/baseline=-0.0255
+[step   8800] train/recon_loss=0.1613  train/policy_loss=0.0042  train/reward=-0.0256  train/baseline=-0.0266
+[step   8800] train/epoch_recon=0.1729  train/epoch_policy=0.0004  train/epoch_reward=-0.0260  train/epoch=110.0000  val/recon_loss=0.1691  val/reward=-0.0259
+[step   8900] train/recon_loss=0.1452  train/policy_loss=0.0131  train/reward=-0.0236  train/baseline=-0.0266
+[step   9000] train/recon_loss=0.1648  train/policy_loss=0.0141  train/reward=-0.0214  train/baseline=-0.0256
+[step   9100] train/recon_loss=0.1739  train/policy_loss=0.0025  train/reward=-0.0252  train/baseline=-0.0257
+[step   9200] train/recon_loss=0.1540  train/policy_loss=0.0235  train/reward=-0.0200  train/baseline=-0.0251
+[step   9300] train/recon_loss=0.1726  train/policy_loss=0.0099  train/reward=-0.0238  train/baseline=-0.0259
+[step   9350] train/epoch_recon=0.1737  train/epoch_policy=-0.0008  train/epoch_reward=-0.0263  train/epoch=120.0000  val/recon_loss=0.1642  val/reward=-0.0252
+[step   9400] train/recon_loss=0.1886  train/policy_loss=-0.0061  train/reward=-0.0295  train/baseline=-0.0277
+[step   9500] train/recon_loss=0.1610  train/policy_loss=0.0016  train/reward=-0.0259  train/baseline=-0.0263
+[step   9600] train/recon_loss=0.1579  train/policy_loss=0.0230  train/reward=-0.0216  train/baseline=-0.0264
+[step   9700] train/recon_loss=0.1700  train/policy_loss=0.0148  train/reward=-0.0233  train/baseline=-0.0261
+[step   9800] train/recon_loss=0.1633  train/policy_loss=0.0200  train/reward=-0.0229  train/baseline=-0.0266
+[step   9900] train/recon_loss=0.1893  train/policy_loss=-0.0138  train/reward=-0.0294  train/baseline=-0.0270
+[step   9900] train/epoch_recon=0.1735  train/epoch_policy=-0.0007  train/epoch_reward=-0.0263  train/epoch=130.0000  val/recon_loss=0.1707  val/reward=-0.0265
+[step  10000] train/recon_loss=0.1505  train/policy_loss=0.0139  train/reward=-0.0224  train/baseline=-0.0261
+[step  10100] train/recon_loss=0.1829  train/policy_loss=-0.0152  train/reward=-0.0299  train/baseline=-0.0266
+[step  10200] train/recon_loss=0.1410  train/policy_loss=0.0207  train/reward=-0.0217  train/baseline=-0.0259
+[step  10300] train/recon_loss=0.1764  train/policy_loss=-0.0037  train/reward=-0.0269  train/baseline=-0.0262
+[step  10400] train/recon_loss=0.1714  train/policy_loss=0.0067  train/reward=-0.0245  train/baseline=-0.0260
+[step  10450] train/epoch_recon=0.1701  train/epoch_policy=0.0020  train/epoch_reward=-0.0253  train/epoch=140.0000  val/recon_loss=0.1671  val/reward=-0.0255
+[step  10500] train/recon_loss=0.1904  train/policy_loss=-0.0150  train/reward=-0.0291  train/baseline=-0.0259
+[step  10600] train/recon_loss=0.1660  train/policy_loss=-0.0040  train/reward=-0.0262  train/baseline=-0.0250
+[step  10700] train/recon_loss=0.1709  train/policy_loss=0.0008  train/reward=-0.0253  train/baseline=-0.0255
+[step  10800] train/recon_loss=0.1622  train/policy_loss=0.0121  train/reward=-0.0234  train/baseline=-0.0274
+[step  10900] train/recon_loss=0.1529  train/policy_loss=0.0080  train/reward=-0.0227  train/baseline=-0.0249
+[step  11000] train/recon_loss=0.1485  train/policy_loss=0.0174  train/reward=-0.0217  train/baseline=-0.0265
+[step  11000] train/epoch_recon=0.1733  train/epoch_policy=0.0004  train/epoch_reward=-0.0266  train/epoch=150.0000  val/recon_loss=0.1698  val/reward=-0.0258
+[step  11100] train/recon_loss=0.1651  train/policy_loss=0.0090  train/reward=-0.0234  train/baseline=-0.0256
+[step  11200] train/recon_loss=0.1654  train/policy_loss=0.0020  train/reward=-0.0254  train/baseline=-0.0262
+[step  11300] train/recon_loss=0.1649  train/policy_loss=-0.0012  train/reward=-0.0257  train/baseline=-0.0253
+[step  11400] train/recon_loss=0.1913  train/policy_loss=-0.0136  train/reward=-0.0295  train/baseline=-0.0262
+[step  11500] train/recon_loss=0.1712  train/policy_loss=-0.0001  train/reward=-0.0271  train/baseline=-0.0271
+[step  11550] train/epoch_recon=0.1691  train/epoch_policy=0.0007  train/epoch_reward=-0.0254  train/epoch=160.0000  val/recon_loss=0.1620  val/reward=-0.0242
+[step  11600] train/recon_loss=0.1648  train/policy_loss=0.0054  train/reward=-0.0241  train/baseline=-0.0263
+[step  11700] train/recon_loss=0.1868  train/policy_loss=-0.0130  train/reward=-0.0308  train/baseline=-0.0255
+[step  11800] train/recon_loss=0.1768  train/policy_loss=-0.0046  train/reward=-0.0264  train/baseline=-0.0248
+[step  11900] train/recon_loss=0.1546  train/policy_loss=0.0008  train/reward=-0.0240  train/baseline=-0.0242
+[step  12000] train/recon_loss=0.1681  train/policy_loss=0.0091  train/reward=-0.0232  train/baseline=-0.0258
+[step  12100] train/recon_loss=0.1390  train/policy_loss=0.0226  train/reward=-0.0201  train/baseline=-0.0254
+[step  12100] train/epoch_recon=0.1678  train/epoch_policy=-0.0004  train/epoch_reward=-0.0255  train/epoch=170.0000  val/recon_loss=0.1630  val/reward=-0.0249
+[step  12200] train/recon_loss=0.1514  train/policy_loss=0.0050  train/reward=-0.0240  train/baseline=-0.0256
+[step  12300] train/recon_loss=0.1437  train/policy_loss=0.0141  train/reward=-0.0208  train/baseline=-0.0251
+[step  12400] train/recon_loss=0.1549  train/policy_loss=0.0146  train/reward=-0.0213  train/baseline=-0.0249
+[step  12500] train/recon_loss=0.1977  train/policy_loss=-0.0261  train/reward=-0.0329  train/baseline=-0.0268
+[step  12600] train/recon_loss=0.1682  train/policy_loss=-0.0010  train/reward=-0.0257  train/baseline=-0.0254
+[step  12650] train/epoch_recon=0.1737  train/epoch_policy=-0.0006  train/epoch_reward=-0.0267  train/epoch=180.0000  val/recon_loss=0.1694  val/reward=-0.0260
+[step  12700] train/recon_loss=0.1675  train/policy_loss=0.0052  train/reward=-0.0246  train/baseline=-0.0264
+[step  12800] train/recon_loss=0.1334  train/policy_loss=0.0243  train/reward=-0.0194  train/baseline=-0.0251
+[step  12900] train/recon_loss=0.1637  train/policy_loss=0.0134  train/reward=-0.0233  train/baseline=-0.0260
+[step  13000] train/recon_loss=0.1545  train/policy_loss=0.0108  train/reward=-0.0235  train/baseline=-0.0253
+[step  13100] train/recon_loss=0.1604  train/policy_loss=0.0160  train/reward=-0.0223  train/baseline=-0.0253
+[step  13200] train/recon_loss=0.1491  train/policy_loss=0.0192  train/reward=-0.0212  train/baseline=-0.0250
+[step  13200] train/epoch_recon=0.1688  train/epoch_policy=0.0013  train/epoch_reward=-0.0253  train/epoch=190.0000  val/recon_loss=0.1700  val/reward=-0.0262
+[step  13300] train/recon_loss=0.2002  train/policy_loss=-0.0153  train/reward=-0.0298  train/baseline=-0.0257
+[step  13400] train/recon_loss=0.1594  train/policy_loss=0.0142  train/reward=-0.0218  train/baseline=-0.0251
+[step  13500] train/recon_loss=0.1430  train/policy_loss=0.0107  train/reward=-0.0203  train/baseline=-0.0236
+[step  13600] train/recon_loss=0.2081  train/policy_loss=-0.0372  train/reward=-0.0320  train/baseline=-0.0242
+[step  13700] train/recon_loss=0.1715  train/policy_loss=0.0008  train/reward=-0.0241  train/baseline=-0.0244
+[step  13750] train/epoch_recon=0.1676  train/epoch_policy=0.0003  train/epoch_reward=-0.0247  train/epoch=200.0000  val/recon_loss=0.1645  val/reward=-0.0246
+[checkpoint] saved to checkpoints/ckpt_epoch0200.pt
+[step  13800] train/recon_loss=0.1541  train/policy_loss=0.0100  train/reward=-0.0220  train/baseline=-0.0245
+[step  13900] train/recon_loss=0.1618  train/policy_loss=0.0050  train/reward=-0.0238  train/baseline=-0.0250
+[step  14000] train/recon_loss=0.1822  train/policy_loss=-0.0306  train/reward=-0.0295  train/baseline=-0.0247
+[step  14100] train/recon_loss=0.1631  train/policy_loss=-0.0068  train/reward=-0.0258  train/baseline=-0.0244
+[step  14200] train/recon_loss=0.1402  train/policy_loss=0.0075  train/reward=-0.0219  train/baseline=-0.0234
+[step  14300] train/recon_loss=0.2156  train/policy_loss=-0.0503  train/reward=-0.0353  train/baseline=-0.0251
+[step  14300] train/epoch_recon=0.1648  train/epoch_policy=0.0003  train/epoch_reward=-0.0245  train/epoch=210.0000  val/recon_loss=0.1593  val/reward=-0.0236
+[step  14400] train/recon_loss=0.1832  train/policy_loss=-0.0082  train/reward=-0.0299  train/baseline=-0.0266
+[step  14500] train/recon_loss=0.1733  train/policy_loss=-0.0097  train/reward=-0.0268  train/baseline=-0.0240
+[step  14600] train/recon_loss=0.1534  train/policy_loss=0.0052  train/reward=-0.0226  train/baseline=-0.0241
+[step  14700] train/recon_loss=0.1686  train/policy_loss=-0.0124  train/reward=-0.0283  train/baseline=-0.0237
+[step  14800] train/recon_loss=0.1720  train/policy_loss=-0.0064  train/reward=-0.0283  train/baseline=-0.0253
+[step  14850] train/epoch_recon=0.1693  train/epoch_policy=-0.0013  train/epoch_reward=-0.0258  train/epoch=220.0000  val/recon_loss=0.1676  val/reward=-0.0257
+[step  14900] train/recon_loss=0.1740  train/policy_loss=-0.0054  train/reward=-0.0274  train/baseline=-0.0251
+[step  15000] train/recon_loss=0.1726  train/policy_loss=-0.0028  train/reward=-0.0248  train/baseline=-0.0236
+[step  15100] train/recon_loss=0.1411  train/policy_loss=0.0090  train/reward=-0.0194  train/baseline=-0.0252
+[step  15200] train/recon_loss=0.1581  train/policy_loss=0.0032  train/reward=-0.0233  train/baseline=-0.0249
+[step  15300] train/recon_loss=0.1667  train/policy_loss=-0.0026  train/reward=-0.0247  train/baseline=-0.0237
+[step  15400] train/recon_loss=0.1772  train/policy_loss=-0.0060  train/reward=-0.0281  train/baseline=-0.0253
+[step  15400] train/epoch_recon=0.1624  train/epoch_policy=0.0002  train/epoch_reward=-0.0243  train/epoch=230.0000  val/recon_loss=0.1666  val/reward=-0.0254
+[step  15500] train/recon_loss=0.1586  train/policy_loss=0.0109  train/reward=-0.0204  train/baseline=-0.0238
+[step  15600] train/recon_loss=0.1955  train/policy_loss=-0.0106  train/reward=-0.0309  train/baseline=-0.0265
+[step  15700] train/recon_loss=0.1432  train/policy_loss=0.0085  train/reward=-0.0209  train/baseline=-0.0246
+[step  15800] train/recon_loss=0.1446  train/policy_loss=0.0078  train/reward=-0.0224  train/baseline=-0.0252
+[step  15900] train/recon_loss=0.1268  train/policy_loss=0.0200  train/reward=-0.0181  train/baseline=-0.0234
+[step  15950] train/epoch_recon=0.1677  train/epoch_policy=-0.0013  train/epoch_reward=-0.0251  train/epoch=240.0000  val/recon_loss=0.1639  val/reward=-0.0250
+[step  16000] train/recon_loss=0.1789  train/policy_loss=-0.0059  train/reward=-0.0274  train/baseline=-0.0248
+[step  16100] train/recon_loss=0.1399  train/policy_loss=0.0087  train/reward=-0.0218  train/baseline=-0.0244
+[step  16200] train/recon_loss=0.1351  train/policy_loss=0.0095  train/reward=-0.0201  train/baseline=-0.0244
+[step  16300] train/recon_loss=0.1522  train/policy_loss=0.0084  train/reward=-0.0204  train/baseline=-0.0230
+[step  16400] train/recon_loss=0.1584  train/policy_loss=0.0019  train/reward=-0.0243  train/baseline=-0.0249
+[step  16500] train/recon_loss=0.1800  train/policy_loss=-0.0093  train/reward=-0.0285  train/baseline=-0.0248
+[step  16500] train/epoch_recon=0.1640  train/epoch_policy=-0.0003  train/epoch_reward=-0.0243  train/epoch=250.0000  val/recon_loss=0.1569  val/reward=-0.0229
+[step  16600] train/recon_loss=0.1445  train/policy_loss=0.0053  train/reward=-0.0222  train/baseline=-0.0239
+[step  16700] train/recon_loss=0.1570  train/policy_loss=-0.0015  train/reward=-0.0247  train/baseline=-0.0242
+[step  16800] train/recon_loss=0.1679  train/policy_loss=-0.0066  train/reward=-0.0250  train/baseline=-0.0235
+[step  16900] train/recon_loss=0.1840  train/policy_loss=-0.0067  train/reward=-0.0254  train/baseline=-0.0227
+[step  17000] train/recon_loss=0.1677  train/policy_loss=0.0017  train/reward=-0.0231  train/baseline=-0.0237
+[step  17050] train/epoch_recon=0.1606  train/epoch_policy=0.0004  train/epoch_reward=-0.0235  train/epoch=260.0000  val/recon_loss=0.1615  val/reward=-0.0238
+[step  17100] train/recon_loss=0.1777  train/policy_loss=-0.0108  train/reward=-0.0277  train/baseline=-0.0243
+[step  17200] train/recon_loss=0.1565  train/policy_loss=0.0093  train/reward=-0.0217  train/baseline=-0.0247
+[step  17300] train/recon_loss=0.1551  train/policy_loss=-0.0034  train/reward=-0.0244  train/baseline=-0.0235
+[step  17400] train/recon_loss=0.1699  train/policy_loss=-0.0072  train/reward=-0.0263  train/baseline=-0.0244
+[step  17500] train/recon_loss=0.1410  train/policy_loss=0.0170  train/reward=-0.0193  train/baseline=-0.0236
+[step  17600] train/recon_loss=0.1625  train/policy_loss=-0.0010  train/reward=-0.0260  train/baseline=-0.0257
+[step  17600] train/epoch_recon=0.1642  train/epoch_policy=-0.0005  train/epoch_reward=-0.0242  train/epoch=270.0000  val/recon_loss=0.1693  val/reward=-0.0251
+[step  17700] train/recon_loss=0.1700  train/policy_loss=0.0038  train/reward=-0.0231  train/baseline=-0.0248
+[step  17800] train/recon_loss=0.1789  train/policy_loss=-0.0025  train/reward=-0.0267  train/baseline=-0.0252
+[step  17900] train/recon_loss=0.1268  train/policy_loss=0.0021  train/reward=-0.0203  train/baseline=-0.0235
+[step  18000] train/recon_loss=0.1475  train/policy_loss=0.0030  train/reward=-0.0217  train/baseline=-0.0234
+[step  18100] train/recon_loss=0.1757  train/policy_loss=-0.0044  train/reward=-0.0268  train/baseline=-0.0245
+[step  18150] train/epoch_recon=0.1659  train/epoch_policy=-0.0004  train/epoch_reward=-0.0247  train/epoch=280.0000  val/recon_loss=0.1693  val/reward=-0.0257
+[step  18200] train/recon_loss=0.1354  train/policy_loss=0.0035  train/reward=-0.0192  train/baseline=-0.0231
+[step  18300] train/recon_loss=0.1439  train/policy_loss=0.0039  train/reward=-0.0201  train/baseline=-0.0250
+[step  18400] train/recon_loss=0.1516  train/policy_loss=0.0026  train/reward=-0.0222  train/baseline=-0.0241
+[step  18500] train/recon_loss=0.1793  train/policy_loss=-0.0036  train/reward=-0.0275  train/baseline=-0.0239
+[step  18600] train/recon_loss=0.1823  train/policy_loss=-0.0008  train/reward=-0.0262  train/baseline=-0.0250
+[step  18700] train/recon_loss=0.1709  train/policy_loss=-0.0008  train/reward=-0.0276  train/baseline=-0.0260
+[step  18700] train/epoch_recon=0.1648  train/epoch_policy=-0.0002  train/epoch_reward=-0.0246  train/epoch=290.0000  val/recon_loss=0.1750  val/reward=-0.0267
+[step  18800] train/recon_loss=0.1661  train/policy_loss=0.0009  train/reward=-0.0218  train/baseline=-0.0242
+[step  18900] train/recon_loss=0.1700  train/policy_loss=-0.0005  train/reward=-0.0255  train/baseline=-0.0241
+[step  19000] train/recon_loss=0.1655  train/policy_loss=-0.0006  train/reward=-0.0267  train/baseline=-0.0245
+[step  19100] train/recon_loss=0.1754  train/policy_loss=-0.0013  train/reward=-0.0286  train/baseline=-0.0248
+[step  19200] train/recon_loss=0.1555  train/policy_loss=0.0002  train/reward=-0.0236  train/baseline=-0.0238
+[step  19250] train/epoch_recon=0.1615  train/epoch_policy=0.0001  train/epoch_reward=-0.0236  train/epoch=300.0000  val/recon_loss=0.1722  val/reward=-0.0260
+[checkpoint] saved to checkpoints/ckpt_epoch0300.pt
+[step  19300] train/recon_loss=0.1383  train/policy_loss=0.0016  train/reward=-0.0197  train/baseline=-0.0242
+[step  19400] train/recon_loss=0.1491  train/policy_loss=0.0018  train/reward=-0.0223  train/baseline=-0.0245
+[step  19500] train/recon_loss=0.1584  train/policy_loss=-0.0004  train/reward=-0.0249  train/baseline=-0.0243
+[step  19600] train/recon_loss=0.1700  train/policy_loss=0.0000  train/reward=-0.0244  train/baseline=-0.0245
+[step  19700] train/recon_loss=0.1618  train/policy_loss=0.0014  train/reward=-0.0232  train/baseline=-0.0246
+[step  19800] train/recon_loss=0.1373  train/policy_loss=0.0072  train/reward=-0.0188  train/baseline=-0.0227
+[step  19800] train/epoch_recon=0.1586  train/epoch_policy=0.0004  train/epoch_reward=-0.0229  train/epoch=310.0000  val/recon_loss=0.1676  val/reward=-0.0250
+[step  19900] train/recon_loss=0.1574  train/policy_loss=0.0023  train/reward=-0.0219  train/baseline=-0.0242
+[step  20000] train/recon_loss=0.1591  train/policy_loss=0.0026  train/reward=-0.0213  train/baseline=-0.0233
+[step  20100] train/recon_loss=0.1355  train/policy_loss=0.0028  train/reward=-0.0206  train/baseline=-0.0241
+[step  20200] train/recon_loss=0.1886  train/policy_loss=-0.0065  train/reward=-0.0291  train/baseline=-0.0248
+[step  20300] train/recon_loss=0.1590  train/policy_loss=-0.0006  train/reward=-0.0232  train/baseline=-0.0225
+[step  20350] train/epoch_recon=0.1645  train/epoch_policy=-0.0002  train/epoch_reward=-0.0244  train/epoch=320.0000  val/recon_loss=0.1682  val/reward=-0.0251
+[step  20400] train/recon_loss=0.1602  train/policy_loss=0.0015  train/reward=-0.0223  train/baseline=-0.0241
+[step  20500] train/recon_loss=0.1850  train/policy_loss=-0.0018  train/reward=-0.0275  train/baseline=-0.0245
+[step  20600] train/recon_loss=0.1666  train/policy_loss=-0.0006  train/reward=-0.0246  train/baseline=-0.0238
+[step  20700] train/recon_loss=0.1489  train/policy_loss=0.0051  train/reward=-0.0213  train/baseline=-0.0241
+[step  20800] train/recon_loss=0.1407  train/policy_loss=0.0050  train/reward=-0.0194  train/baseline=-0.0240
+[step  20900] train/recon_loss=0.1539  train/policy_loss=0.0023  train/reward=-0.0223  train/baseline=-0.0235
+[step  20900] train/epoch_recon=0.1640  train/epoch_policy=-0.0003  train/epoch_reward=-0.0242  train/epoch=330.0000  val/recon_loss=0.1719  val/reward=-0.0263
+[step  21000] train/recon_loss=0.1486  train/policy_loss=0.0017  train/reward=-0.0202  train/baseline=-0.0223
+[step  21100] train/recon_loss=0.1611  train/policy_loss=-0.0002  train/reward=-0.0239  train/baseline=-0.0234
+[step  21200] train/recon_loss=0.1633  train/policy_loss=-0.0016  train/reward=-0.0242  train/baseline=-0.0230
+[step  21300] train/recon_loss=0.1543  train/policy_loss=0.0023  train/reward=-0.0222  train/baseline=-0.0238
+[step  21400] train/recon_loss=0.1668  train/policy_loss=-0.0002  train/reward=-0.0237  train/baseline=-0.0234
+[step  21450] train/epoch_recon=0.1602  train/epoch_policy=-0.0001  train/epoch_reward=-0.0235  train/epoch=340.0000  val/recon_loss=0.1637  val/reward=-0.0241
+[step  21500] train/recon_loss=0.1779  train/policy_loss=-0.0011  train/reward=-0.0259  train/baseline=-0.0243
+[step  21600] train/recon_loss=0.1261  train/policy_loss=0.0028  train/reward=-0.0185  train/baseline=-0.0223
+[step  21700] train/recon_loss=0.1696  train/policy_loss=-0.0019  train/reward=-0.0250  train/baseline=-0.0232
+[step  21800] train/recon_loss=0.1545  train/policy_loss=0.0010  train/reward=-0.0232  train/baseline=-0.0239
+[step  21900] train/recon_loss=0.1605  train/policy_loss=0.0004  train/reward=-0.0241  train/baseline=-0.0249
+[step  22000] train/recon_loss=0.2025  train/policy_loss=-0.0043  train/reward=-0.0329  train/baseline=-0.0229
+[step  22000] train/epoch_recon=0.1622  train/epoch_policy=0.0005  train/epoch_reward=-0.0237  train/epoch=350.0000  val/recon_loss=0.1645  val/reward=-0.0246
+[step  22100] train/recon_loss=0.1479  train/policy_loss=0.0019  train/reward=-0.0206  train/baseline=-0.0219
+[step  22200] train/recon_loss=0.1889  train/policy_loss=-0.0012  train/reward=-0.0245  train/baseline=-0.0229
+[step  22300] train/recon_loss=0.1807  train/policy_loss=-0.0047  train/reward=-0.0268  train/baseline=-0.0232
+[step  22400] train/recon_loss=0.1817  train/policy_loss=-0.0062  train/reward=-0.0277  train/baseline=-0.0243
+[step  22500] train/recon_loss=0.1707  train/policy_loss=-0.0054  train/reward=-0.0268  train/baseline=-0.0236
+[step  22550] train/epoch_recon=0.1629  train/epoch_policy=0.0001  train/epoch_reward=-0.0236  train/epoch=360.0000  val/recon_loss=0.1668  val/reward=-0.0248
+[step  22600] train/recon_loss=0.1618  train/policy_loss=0.0013  train/reward=-0.0222  train/baseline=-0.0227
+[step  22700] train/recon_loss=0.1723  train/policy_loss=0.0008  train/reward=-0.0239  train/baseline=-0.0250
+[step  22800] train/recon_loss=0.1697  train/policy_loss=-0.0012  train/reward=-0.0241  train/baseline=-0.0232
+[step  22900] train/recon_loss=0.1608  train/policy_loss=-0.0003  train/reward=-0.0238  train/baseline=-0.0235
+[step  23000] train/recon_loss=0.1884  train/policy_loss=-0.0076  train/reward=-0.0301  train/baseline=-0.0239
+[step  23100] train/recon_loss=0.1545  train/policy_loss=0.0010  train/reward=-0.0219  train/baseline=-0.0233
+[step  23100] train/epoch_recon=0.1638  train/epoch_policy=0.0003  train/epoch_reward=-0.0240  train/epoch=370.0000  val/recon_loss=0.1718  val/reward=-0.0259
+[step  23200] train/recon_loss=0.1555  train/policy_loss=0.0029  train/reward=-0.0218  train/baseline=-0.0235
+[step  23300] train/recon_loss=0.1679  train/policy_loss=-0.0011  train/reward=-0.0239  train/baseline=-0.0230
+[step  23400] train/recon_loss=0.1656  train/policy_loss=-0.0009  train/reward=-0.0266  train/baseline=-0.0242
+[step  23500] train/recon_loss=0.1534  train/policy_loss=0.0007  train/reward=-0.0214  train/baseline=-0.0227
+[step  23600] train/recon_loss=0.1525  train/policy_loss=0.0013  train/reward=-0.0223  train/baseline=-0.0243
+[step  23650] train/epoch_recon=0.1590  train/epoch_policy=0.0005  train/epoch_reward=-0.0232  train/epoch=380.0000  val/recon_loss=0.1710  val/reward=-0.0248
+[step  23700] train/recon_loss=0.1422  train/policy_loss=0.0022  train/reward=-0.0197  train/baseline=-0.0237
+[step  23800] train/recon_loss=0.2033  train/policy_loss=-0.0010  train/reward=-0.0281  train/baseline=-0.0249
+[step  23900] train/recon_loss=0.1435  train/policy_loss=0.0009  train/reward=-0.0227  train/baseline=-0.0243
+[step  24000] train/recon_loss=0.1478  train/policy_loss=0.0046  train/reward=-0.0201  train/baseline=-0.0237
+[step  24100] train/recon_loss=0.1671  train/policy_loss=-0.0056  train/reward=-0.0258  train/baseline=-0.0234
+[step  24200] train/recon_loss=0.1290  train/policy_loss=0.0058  train/reward=-0.0192  train/baseline=-0.0223
+[step  24200] train/epoch_recon=0.1605  train/epoch_policy=0.0002  train/epoch_reward=-0.0234  train/epoch=390.0000  val/recon_loss=0.1636  val/reward=-0.0236
+[step  24300] train/recon_loss=0.1465  train/policy_loss=-0.0003  train/reward=-0.0226  train/baseline=-0.0224
+[step  24400] train/recon_loss=0.1519  train/policy_loss=0.0028  train/reward=-0.0199  train/baseline=-0.0222
+[step  24500] train/recon_loss=0.1785  train/policy_loss=0.0001  train/reward=-0.0241  train/baseline=-0.0242
+[step  24600] train/recon_loss=0.1527  train/policy_loss=-0.0014  train/reward=-0.0239  train/baseline=-0.0228
+[step  24700] train/recon_loss=0.1507  train/policy_loss=0.0022  train/reward=-0.0203  train/baseline=-0.0223
+[step  24750] train/epoch_recon=0.1614  train/epoch_policy=-0.0003  train/epoch_reward=-0.0236  train/epoch=400.0000  val/recon_loss=0.1616  val/reward=-0.0236
+[checkpoint] saved to checkpoints/ckpt_epoch0400.pt
+[step  24800] train/recon_loss=0.1880  train/policy_loss=-0.0113  train/reward=-0.0300  train/baseline=-0.0238
+[step  24900] train/recon_loss=0.1742  train/policy_loss=-0.0012  train/reward=-0.0245  train/baseline=-0.0240
+[step  25000] train/recon_loss=0.1440  train/policy_loss=0.0078  train/reward=-0.0185  train/baseline=-0.0237
+[step  25100] train/recon_loss=0.1407  train/policy_loss=0.0071  train/reward=-0.0188  train/baseline=-0.0235
+[step  25200] train/recon_loss=0.1608  train/policy_loss=-0.0007  train/reward=-0.0258  train/baseline=-0.0252
+[step  25300] train/recon_loss=0.1689  train/policy_loss=-0.0023  train/reward=-0.0251  train/baseline=-0.0234
+[step  25300] train/epoch_recon=0.1604  train/epoch_policy=-0.0003  train/epoch_reward=-0.0232  train/epoch=410.0000  val/recon_loss=0.1709  val/reward=-0.0257
+[step  25400] train/recon_loss=0.1594  train/policy_loss=0.0013  train/reward=-0.0219  train/baseline=-0.0228
+[step  25500] train/recon_loss=0.1527  train/policy_loss=-0.0022  train/reward=-0.0249  train/baseline=-0.0235
+[step  25600] train/recon_loss=0.1359  train/policy_loss=0.0044  train/reward=-0.0190  train/baseline=-0.0238
+[step  25700] train/recon_loss=0.1542  train/policy_loss=0.0012  train/reward=-0.0218  train/baseline=-0.0226
+[step  25800] train/recon_loss=0.1680  train/policy_loss=-0.0063  train/reward=-0.0261  train/baseline=-0.0226
+[step  25850] train/epoch_recon=0.1593  train/epoch_policy=-0.0002  train/epoch_reward=-0.0231  train/epoch=420.0000  val/recon_loss=0.1670  val/reward=-0.0247
+[step  25900] train/recon_loss=0.1380  train/policy_loss=0.0056  train/reward=-0.0190  train/baseline=-0.0220
+[step  26000] train/recon_loss=0.1497  train/policy_loss=0.0025  train/reward=-0.0204  train/baseline=-0.0233
+[step  26100] train/recon_loss=0.1667  train/policy_loss=-0.0005  train/reward=-0.0237  train/baseline=-0.0234
+[step  26200] train/recon_loss=0.1283  train/policy_loss=0.0083  train/reward=-0.0169  train/baseline=-0.0233
+[step  26300] train/recon_loss=0.1739  train/policy_loss=-0.0009  train/reward=-0.0242  train/baseline=-0.0234
+[step  26400] train/recon_loss=0.1438  train/policy_loss=0.0122  train/reward=-0.0191  train/baseline=-0.0237
+[step  26400] train/epoch_recon=0.1608  train/epoch_policy=0.0003  train/epoch_reward=-0.0237  train/epoch=430.0000  val/recon_loss=0.1721  val/reward=-0.0260
+[step  26500] train/recon_loss=0.1656  train/policy_loss=-0.0064  train/reward=-0.0256  train/baseline=-0.0229
+[step  26600] train/recon_loss=0.1698  train/policy_loss=-0.0044  train/reward=-0.0265  train/baseline=-0.0243
+[step  26700] train/recon_loss=0.1699  train/policy_loss=-0.0033  train/reward=-0.0254  train/baseline=-0.0241
+[step  26800] train/recon_loss=0.2157  train/policy_loss=-0.0184  train/reward=-0.0350  train/baseline=-0.0246
+[step  26900] train/recon_loss=0.1994  train/policy_loss=-0.0109  train/reward=-0.0309  train/baseline=-0.0245
+[step  26950] train/epoch_recon=0.1617  train/epoch_policy=-0.0002  train/epoch_reward=-0.0238  train/epoch=440.0000  val/recon_loss=0.1675  val/reward=-0.0248
+[step  27000] train/recon_loss=0.1486  train/policy_loss=0.0049  train/reward=-0.0202  train/baseline=-0.0235
+[step  27100] train/recon_loss=0.1535  train/policy_loss=0.0026  train/reward=-0.0222  train/baseline=-0.0238
+[step  27200] train/recon_loss=0.1411  train/policy_loss=0.0075  train/reward=-0.0195  train/baseline=-0.0231
+[step  27300] train/recon_loss=0.1484  train/policy_loss=0.0056  train/reward=-0.0197  train/baseline=-0.0227
+[step  27400] train/recon_loss=0.1796  train/policy_loss=-0.0088  train/reward=-0.0279  train/baseline=-0.0239
+[step  27500] train/recon_loss=0.1715  train/policy_loss=0.0025  train/reward=-0.0236  train/baseline=-0.0245
+[step  27500] train/epoch_recon=0.1620  train/epoch_policy=-0.0002  train/epoch_reward=-0.0238  train/epoch=450.0000  val/recon_loss=0.1676  val/reward=-0.0251
+[step  27600] train/recon_loss=0.1535  train/policy_loss=-0.0001  train/reward=-0.0237  train/baseline=-0.0236
+[step  27700] train/recon_loss=0.1753  train/policy_loss=-0.0089  train/reward=-0.0278  train/baseline=-0.0237
+[step  27800] train/recon_loss=0.1634  train/policy_loss=-0.0007  train/reward=-0.0231  train/baseline=-0.0227
+[step  27900] train/recon_loss=0.1361  train/policy_loss=0.0075  train/reward=-0.0193  train/baseline=-0.0233
+[step  28000] train/recon_loss=0.1324  train/policy_loss=0.0113  train/reward=-0.0175  train/baseline=-0.0238
+[step  28050] train/epoch_recon=0.1638  train/epoch_policy=0.0001  train/epoch_reward=-0.0241  train/epoch=460.0000  val/recon_loss=0.1664  val/reward=-0.0247
+[step  28100] train/recon_loss=0.1841  train/policy_loss=-0.0030  train/reward=-0.0283  train/baseline=-0.0258
+[step  28200] train/recon_loss=0.1800  train/policy_loss=0.0013  train/reward=-0.0224  train/baseline=-0.0230
+[step  28300] train/recon_loss=0.1503  train/policy_loss=0.0016  train/reward=-0.0215  train/baseline=-0.0227
+[step  28400] train/recon_loss=0.1474  train/policy_loss=0.0024  train/reward=-0.0201  train/baseline=-0.0227
+[step  28500] train/recon_loss=0.1769  train/policy_loss=-0.0031  train/reward=-0.0260  train/baseline=-0.0227
+[step  28600] train/recon_loss=0.1291  train/policy_loss=0.0068  train/reward=-0.0204  train/baseline=-0.0245
+[step  28600] train/epoch_recon=0.1619  train/epoch_policy=-0.0003  train/epoch_reward=-0.0241  train/epoch=470.0000  val/recon_loss=0.1711  val/reward=-0.0261
+[step  28700] train/recon_loss=0.1648  train/policy_loss=0.0007  train/reward=-0.0232  train/baseline=-0.0240
+[step  28800] train/recon_loss=0.1711  train/policy_loss=-0.0024  train/reward=-0.0237  train/baseline=-0.0223
+[step  28900] train/recon_loss=0.1822  train/policy_loss=-0.0061  train/reward=-0.0293  train/baseline=-0.0228
+[step  29000] train/recon_loss=0.1505  train/policy_loss=0.0023  train/reward=-0.0196  train/baseline=-0.0232
+[step  29100] train/recon_loss=0.1559  train/policy_loss=0.0008  train/reward=-0.0226  train/baseline=-0.0234
+[step  29150] train/epoch_recon=0.1636  train/epoch_policy=-0.0001  train/epoch_reward=-0.0243  train/epoch=480.0000  val/recon_loss=0.1673  val/reward=-0.0250
+[step  29200] train/recon_loss=0.1737  train/policy_loss=-0.0037  train/reward=-0.0267  train/baseline=-0.0242
+[step  29300] train/recon_loss=0.1485  train/policy_loss=0.0024  train/reward=-0.0221  train/baseline=-0.0235
+[step  29400] train/recon_loss=0.1582  train/policy_loss=0.0022  train/reward=-0.0228  train/baseline=-0.0241
+[step  29500] train/recon_loss=0.1809  train/policy_loss=-0.0055  train/reward=-0.0277  train/baseline=-0.0248
+[step  29600] train/recon_loss=0.1685  train/policy_loss=0.0020  train/reward=-0.0237  train/baseline=-0.0250
+[step  29700] train/recon_loss=0.1374  train/policy_loss=0.0044  train/reward=-0.0220  train/baseline=-0.0237
+[step  29700] train/epoch_recon=0.1635  train/epoch_policy=0.0002  train/epoch_reward=-0.0245  train/epoch=490.0000  val/recon_loss=0.1670  val/reward=-0.0254
+[step  29800] train/recon_loss=0.1636  train/policy_loss=-0.0001  train/reward=-0.0251  train/baseline=-0.0251
+[step  29900] train/recon_loss=0.1590  train/policy_loss=0.0009  train/reward=-0.0226  train/baseline=-0.0231
+[step  30000] train/recon_loss=0.1406  train/policy_loss=0.0062  train/reward=-0.0188  train/baseline=-0.0237
+[step  30100] train/recon_loss=0.1834  train/policy_loss=-0.0045  train/reward=-0.0279  train/baseline=-0.0246
+[step  30200] train/recon_loss=0.1448  train/policy_loss=0.0028  train/reward=-0.0200  train/baseline=-0.0235
+[step  30250] train/epoch_recon=0.1626  train/epoch_policy=-0.0004  train/epoch_reward=-0.0243  train/epoch=500.0000  val/recon_loss=0.1726  val/reward=-0.0262
+[checkpoint] saved to checkpoints/ckpt_epoch0500.pt
+[step  30300] train/recon_loss=0.1474  train/policy_loss=0.0069  train/reward=-0.0214  train/baseline=-0.0252
+[step  30400] train/recon_loss=0.1918  train/policy_loss=-0.0097  train/reward=-0.0318  train/baseline=-0.0250
+[step  30500] train/recon_loss=0.1286  train/policy_loss=0.0069  train/reward=-0.0193  train/baseline=-0.0241
+[step  30600] train/recon_loss=0.1655  train/policy_loss=0.0034  train/reward=-0.0199  train/baseline=-0.0228
+[step  30700] train/recon_loss=0.1852  train/policy_loss=-0.0010  train/reward=-0.0255  train/baseline=-0.0248
+[step  30800] train/recon_loss=0.1594  train/policy_loss=-0.0028  train/reward=-0.0255  train/baseline=-0.0243
+[step  30800] train/epoch_recon=0.1627  train/epoch_policy=0.0000  train/epoch_reward=-0.0246  train/epoch=510.0000  val/recon_loss=0.1723  val/reward=-0.0260
+[step  30900] train/recon_loss=0.1614  train/policy_loss=0.0036  train/reward=-0.0226  train/baseline=-0.0252
+[step  31000] train/recon_loss=0.1452  train/policy_loss=0.0095  train/reward=-0.0207  train/baseline=-0.0245
+[step  31100] train/recon_loss=0.1549  train/policy_loss=-0.0026  train/reward=-0.0250  train/baseline=-0.0237
+[step  31200] train/recon_loss=0.1636  train/policy_loss=-0.0005  train/reward=-0.0256  train/baseline=-0.0250
+[step  31300] train/recon_loss=0.1724  train/policy_loss=-0.0005  train/reward=-0.0241  train/baseline=-0.0237
+[step  31350] train/epoch_recon=0.1653  train/epoch_policy=-0.0004  train/epoch_reward=-0.0250  train/epoch=520.0000  val/recon_loss=0.1738  val/reward=-0.0266
+[step  31400] train/recon_loss=0.1567  train/policy_loss=0.0019  train/reward=-0.0240  train/baseline=-0.0247
+[step  31500] train/recon_loss=0.1529  train/policy_loss=0.0067  train/reward=-0.0203  train/baseline=-0.0244
+[step  31600] train/recon_loss=0.1453  train/policy_loss=0.0035  train/reward=-0.0206  train/baseline=-0.0230
+[step  31700] train/recon_loss=0.1446  train/policy_loss=0.0027  train/reward=-0.0211  train/baseline=-0.0234
+[step  31800] train/recon_loss=0.1646  train/policy_loss=-0.0002  train/reward=-0.0239  train/baseline=-0.0238
+[step  31900] train/recon_loss=0.1288  train/policy_loss=0.0075  train/reward=-0.0178  train/baseline=-0.0233
+[step  31900] train/epoch_recon=0.1602  train/epoch_policy=-0.0001  train/epoch_reward=-0.0232  train/epoch=530.0000  val/recon_loss=0.1758  val/reward=-0.0268
+[step  32000] train/recon_loss=0.1710  train/policy_loss=-0.0061  train/reward=-0.0257  train/baseline=-0.0235
+[step  32100] train/recon_loss=0.1505  train/policy_loss=0.0023  train/reward=-0.0215  train/baseline=-0.0232
+[step  32200] train/recon_loss=0.1841  train/policy_loss=-0.0116  train/reward=-0.0298  train/baseline=-0.0242
+[step  32300] train/recon_loss=0.1490  train/policy_loss=0.0025  train/reward=-0.0215  train/baseline=-0.0233
+[step  32400] train/recon_loss=0.1730  train/policy_loss=-0.0016  train/reward=-0.0243  train/baseline=-0.0232
+[step  32450] train/epoch_recon=0.1584  train/epoch_policy=-0.0003  train/epoch_reward=-0.0231  train/epoch=540.0000  val/recon_loss=0.1704  val/reward=-0.0254
+[step  32500] train/recon_loss=0.1652  train/policy_loss=-0.0005  train/reward=-0.0241  train/baseline=-0.0238
+[step  32600] train/recon_loss=0.1351  train/policy_loss=0.0030  train/reward=-0.0196  train/baseline=-0.0225
+[step  32700] train/recon_loss=0.1671  train/policy_loss=-0.0053  train/reward=-0.0266  train/baseline=-0.0235
+[step  32800] train/recon_loss=0.1582  train/policy_loss=-0.0029  train/reward=-0.0251  train/baseline=-0.0235
+[step  32900] train/recon_loss=0.1659  train/policy_loss=-0.0046  train/reward=-0.0260  train/baseline=-0.0243
+[step  33000] train/recon_loss=0.1485  train/policy_loss=0.0024  train/reward=-0.0219  train/baseline=-0.0236
+[step  33000] train/epoch_recon=0.1589  train/epoch_policy=0.0004  train/epoch_reward=-0.0234  train/epoch=550.0000  val/recon_loss=0.1690  val/reward=-0.0255
+[step  33100] train/recon_loss=0.1692  train/policy_loss=-0.0038  train/reward=-0.0244  train/baseline=-0.0220
+[step  33200] train/recon_loss=0.1468  train/policy_loss=0.0023  train/reward=-0.0214  train/baseline=-0.0226
+[step  33300] train/recon_loss=0.1353  train/policy_loss=0.0033  train/reward=-0.0217  train/baseline=-0.0234
+[step  33400] train/recon_loss=0.1908  train/policy_loss=-0.0057  train/reward=-0.0281  train/baseline=-0.0238
+[step  33500] train/recon_loss=0.1385  train/policy_loss=0.0073  train/reward=-0.0194  train/baseline=-0.0233
+[step  33550] train/epoch_recon=0.1582  train/epoch_policy=0.0006  train/epoch_reward=-0.0232  train/epoch=560.0000  val/recon_loss=0.1667  val/reward=-0.0252
+[step  33600] train/recon_loss=0.1703  train/policy_loss=0.0003  train/reward=-0.0229  train/baseline=-0.0231
+[step  33700] train/recon_loss=0.1678  train/policy_loss=-0.0051  train/reward=-0.0257  train/baseline=-0.0223
+[step  33800] train/recon_loss=0.1467  train/policy_loss=0.0012  train/reward=-0.0208  train/baseline=-0.0218
+[step  33900] train/recon_loss=0.1472  train/policy_loss=0.0033  train/reward=-0.0200  train/baseline=-0.0233
+[step  34000] train/recon_loss=0.1501  train/policy_loss=-0.0008  train/reward=-0.0228  train/baseline=-0.0222
+[step  34100] train/recon_loss=0.2377  train/policy_loss=-0.0128  train/reward=-0.0374  train/baseline=-0.0244
+[step  34100] train/epoch_recon=0.1589  train/epoch_policy=-0.0005  train/epoch_reward=-0.0228  train/epoch=570.0000  val/recon_loss=0.1664  val/reward=-0.0248
+[step  34200] train/recon_loss=0.1506  train/policy_loss=0.0048  train/reward=-0.0200  train/baseline=-0.0229
+[step  34300] train/recon_loss=0.1290  train/policy_loss=0.0069  train/reward=-0.0183  train/baseline=-0.0232
+[step  34400] train/recon_loss=0.1481  train/policy_loss=0.0059  train/reward=-0.0193  train/baseline=-0.0229
+[step  34500] train/recon_loss=0.1952  train/policy_loss=-0.0104  train/reward=-0.0302  train/baseline=-0.0242
+[step  34600] train/recon_loss=0.1647  train/policy_loss=-0.0018  train/reward=-0.0255  train/baseline=-0.0244
+[step  34650] train/epoch_recon=0.1586  train/epoch_policy=-0.0000  train/epoch_reward=-0.0233  train/epoch=580.0000  val/recon_loss=0.1677  val/reward=-0.0253
+[step  34700] train/recon_loss=0.1577  train/policy_loss=0.0005  train/reward=-0.0219  train/baseline=-0.0223
+[step  34800] train/recon_loss=0.1697  train/policy_loss=-0.0013  train/reward=-0.0239  train/baseline=-0.0232
+[step  34900] train/recon_loss=0.1813  train/policy_loss=-0.0045  train/reward=-0.0288  train/baseline=-0.0238
+[step  35000] train/recon_loss=0.1713  train/policy_loss=-0.0103  train/reward=-0.0273  train/baseline=-0.0234
+[step  35100] train/recon_loss=0.1662  train/policy_loss=-0.0003  train/reward=-0.0241  train/baseline=-0.0240
+[step  35200] train/recon_loss=0.1484  train/policy_loss=0.0049  train/reward=-0.0195  train/baseline=-0.0226
+[step  35200] train/epoch_recon=0.1575  train/epoch_policy=0.0002  train/epoch_reward=-0.0229  train/epoch=590.0000  val/recon_loss=0.1720  val/reward=-0.0259
+[step  35300] train/recon_loss=0.1510  train/policy_loss=0.0024  train/reward=-0.0210  train/baseline=-0.0229
+[step  35400] train/recon_loss=0.1596  train/policy_loss=0.0037  train/reward=-0.0209  train/baseline=-0.0234
+[step  35500] train/recon_loss=0.1542  train/policy_loss=-0.0016  train/reward=-0.0237  train/baseline=-0.0228
+[step  35600] train/recon_loss=0.1623  train/policy_loss=-0.0038  train/reward=-0.0238  train/baseline=-0.0222
+[step  35700] train/recon_loss=0.1615  train/policy_loss=-0.0026  train/reward=-0.0240  train/baseline=-0.0219
+[step  35750] train/epoch_recon=0.1586  train/epoch_policy=0.0006  train/epoch_reward=-0.0229  train/epoch=600.0000  val/recon_loss=0.1656  val/reward=-0.0241
+[checkpoint] saved to checkpoints/ckpt_epoch0600.pt
+[step  35800] train/recon_loss=0.1666  train/policy_loss=0.0029  train/reward=-0.0214  train/baseline=-0.0228
+[step  35900] train/recon_loss=0.1244  train/policy_loss=0.0125  train/reward=-0.0167  train/baseline=-0.0223
+[step  36000] train/recon_loss=0.1630  train/policy_loss=-0.0043  train/reward=-0.0253  train/baseline=-0.0232
+[step  36100] train/recon_loss=0.1575  train/policy_loss=0.0007  train/reward=-0.0212  train/baseline=-0.0219
+[step  36200] train/recon_loss=0.1737  train/policy_loss=-0.0046  train/reward=-0.0260  train/baseline=-0.0238
+[step  36300] train/recon_loss=0.1881  train/policy_loss=-0.0098  train/reward=-0.0308  train/baseline=-0.0245
+[step  36300] train/epoch_recon=0.1564  train/epoch_policy=-0.0005  train/epoch_reward=-0.0230  train/epoch=610.0000  val/recon_loss=0.1732  val/reward=-0.0264
+[step  36400] train/recon_loss=0.1439  train/policy_loss=0.0016  train/reward=-0.0223  train/baseline=-0.0230
+[step  36500] train/recon_loss=0.1899  train/policy_loss=-0.0079  train/reward=-0.0282  train/baseline=-0.0240
+[step  36600] train/recon_loss=0.1607  train/policy_loss=0.0002  train/reward=-0.0230  train/baseline=-0.0231
+[step  36700] train/recon_loss=0.1418  train/policy_loss=0.0051  train/reward=-0.0202  train/baseline=-0.0226
+[step  36800] train/recon_loss=0.1324  train/policy_loss=0.0065  train/reward=-0.0177  train/baseline=-0.0221
+[step  36850] train/epoch_recon=0.1539  train/epoch_policy=0.0000  train/epoch_reward=-0.0227  train/epoch=620.0000  val/recon_loss=0.1625  val/reward=-0.0244
+[step  36900] train/recon_loss=0.1611  train/policy_loss=-0.0017  train/reward=-0.0231  train/baseline=-0.0222
+[step  37000] train/recon_loss=0.1144  train/policy_loss=0.0071  train/reward=-0.0170  train/baseline=-0.0216
+[step  37100] train/recon_loss=0.1727  train/policy_loss=-0.0056  train/reward=-0.0253  train/baseline=-0.0220
+[step  37200] train/recon_loss=0.1811  train/policy_loss=-0.0052  train/reward=-0.0269  train/baseline=-0.0219
+[step  37300] train/recon_loss=0.1830  train/policy_loss=-0.0100  train/reward=-0.0275  train/baseline=-0.0217
+[step  37400] train/recon_loss=0.1766  train/policy_loss=-0.0069  train/reward=-0.0272  train/baseline=-0.0228
+[step  37400] train/epoch_recon=0.1538  train/epoch_policy=0.0004  train/epoch_reward=-0.0222  train/epoch=630.0000  val/recon_loss=0.1859  val/reward=-0.0283
+[step  37500] train/recon_loss=0.1486  train/policy_loss=-0.0008  train/reward=-0.0225  train/baseline=-0.0219
+[step  37600] train/recon_loss=0.1469  train/policy_loss=0.0058  train/reward=-0.0199  train/baseline=-0.0222
+[step  37700] train/recon_loss=0.1548  train/policy_loss=-0.0012  train/reward=-0.0224  train/baseline=-0.0217
+[step  37800] train/recon_loss=0.1468  train/policy_loss=0.0041  train/reward=-0.0191  train/baseline=-0.0215
+[step  37900] train/recon_loss=0.1653  train/policy_loss=-0.0031  train/reward=-0.0257  train/baseline=-0.0227
+[step  37950] train/epoch_recon=0.1535  train/epoch_policy=0.0002  train/epoch_reward=-0.0224  train/epoch=640.0000  val/recon_loss=0.1659  val/reward=-0.0249
+[step  38000] train/recon_loss=0.1375  train/policy_loss=0.0011  train/reward=-0.0203  train/baseline=-0.0213
+[step  38100] train/recon_loss=0.1404  train/policy_loss=0.0031  train/reward=-0.0198  train/baseline=-0.0223
+[step  38200] train/recon_loss=0.1451  train/policy_loss=0.0007  train/reward=-0.0217  train/baseline=-0.0220
+[step  38300] train/recon_loss=0.1438  train/policy_loss=0.0013  train/reward=-0.0207  train/baseline=-0.0216
+[step  38400] train/recon_loss=0.1816  train/policy_loss=-0.0048  train/reward=-0.0287  train/baseline=-0.0230
+[step  38500] train/recon_loss=0.1457  train/policy_loss=0.0084  train/reward=-0.0174  train/baseline=-0.0218
+[step  38500] train/epoch_recon=0.1532  train/epoch_policy=-0.0002  train/epoch_reward=-0.0221  train/epoch=650.0000  val/recon_loss=0.1655  val/reward=-0.0252
+[step  38600] train/recon_loss=0.1526  train/policy_loss=0.0003  train/reward=-0.0212  train/baseline=-0.0214
+[step  38700] train/recon_loss=0.1527  train/policy_loss=-0.0012  train/reward=-0.0229  train/baseline=-0.0222
+[step  38800] train/recon_loss=0.1372  train/policy_loss=-0.0002  train/reward=-0.0227  train/baseline=-0.0225
+[step  38900] train/recon_loss=0.1421  train/policy_loss=0.0030  train/reward=-0.0207  train/baseline=-0.0227
+[step  39000] train/recon_loss=0.1522  train/policy_loss=0.0013  train/reward=-0.0225  train/baseline=-0.0235
+[step  39050] train/epoch_recon=0.1537  train/epoch_policy=0.0003  train/epoch_reward=-0.0224  train/epoch=660.0000  val/recon_loss=0.1786  val/reward=-0.0276
+[step  39100] train/recon_loss=0.1408  train/policy_loss=0.0005  train/reward=-0.0210  train/baseline=-0.0213
+[step  39200] train/recon_loss=0.1534  train/policy_loss=-0.0001  train/reward=-0.0222  train/baseline=-0.0222
+[step  39300] train/recon_loss=0.1583  train/policy_loss=0.0010  train/reward=-0.0208  train/baseline=-0.0219
+[step  39400] train/recon_loss=0.1492  train/policy_loss=-0.0006  train/reward=-0.0226  train/baseline=-0.0220
+[step  39500] train/recon_loss=0.1873  train/policy_loss=-0.0057  train/reward=-0.0274  train/baseline=-0.0228
+[step  39600] train/recon_loss=0.1533  train/policy_loss=0.0020  train/reward=-0.0209  train/baseline=-0.0221
+[step  39600] train/epoch_recon=0.1539  train/epoch_policy=0.0000  train/epoch_reward=-0.0225  train/epoch=670.0000  val/recon_loss=0.1675  val/reward=-0.0250
+[step  39700] train/recon_loss=0.1470  train/policy_loss=-0.0002  train/reward=-0.0221  train/baseline=-0.0218
+[step  39800] train/recon_loss=0.1518  train/policy_loss=0.0009  train/reward=-0.0216  train/baseline=-0.0224
+[step  39900] train/recon_loss=0.1799  train/policy_loss=-0.0121  train/reward=-0.0280  train/baseline=-0.0229
+[step  40000] train/recon_loss=0.1644  train/policy_loss=0.0013  train/reward=-0.0216  train/baseline=-0.0224
+[step  40100] train/recon_loss=0.1679  train/policy_loss=-0.0027  train/reward=-0.0248  train/baseline=-0.0223
+[step  40150] train/epoch_recon=0.1522  train/epoch_policy=0.0000  train/epoch_reward=-0.0219  train/epoch=680.0000  val/recon_loss=0.1675  val/reward=-0.0253
+[step  40200] train/recon_loss=0.1707  train/policy_loss=-0.0044  train/reward=-0.0255  train/baseline=-0.0220
+[step  40300] train/recon_loss=0.1506  train/policy_loss=-0.0008  train/reward=-0.0221  train/baseline=-0.0215
+[step  40400] train/recon_loss=0.1509  train/policy_loss=-0.0011  train/reward=-0.0233  train/baseline=-0.0214
+[step  40500] train/recon_loss=0.1857  train/policy_loss=-0.0087  train/reward=-0.0284  train/baseline=-0.0231
+[step  40600] train/recon_loss=0.1216  train/policy_loss=0.0064  train/reward=-0.0170  train/baseline=-0.0211
+[step  40700] train/recon_loss=0.1577  train/policy_loss=-0.0020  train/reward=-0.0243  train/baseline=-0.0226
+[step  40700] train/epoch_recon=0.1537  train/epoch_policy=0.0002  train/epoch_reward=-0.0223  train/epoch=690.0000  val/recon_loss=0.1822  val/reward=-0.0288
+[step  40800] train/recon_loss=0.1526  train/policy_loss=0.0008  train/reward=-0.0221  train/baseline=-0.0226
+[step  40900] train/recon_loss=0.1268  train/policy_loss=0.0066  train/reward=-0.0170  train/baseline=-0.0214
+[step  41000] train/recon_loss=0.1659  train/policy_loss=-0.0028  train/reward=-0.0249  train/baseline=-0.0212
+[step  41100] train/recon_loss=0.1224  train/policy_loss=0.0076  train/reward=-0.0157  train/baseline=-0.0212
+[step  41200] train/recon_loss=0.1461  train/policy_loss=-0.0016  train/reward=-0.0229  train/baseline=-0.0220
+[step  41250] train/epoch_recon=0.1539  train/epoch_policy=-0.0006  train/epoch_reward=-0.0222  train/epoch=700.0000  val/recon_loss=0.1735  val/reward=-0.0263
+[checkpoint] saved to checkpoints/ckpt_epoch0700.pt
+[step  41300] train/recon_loss=0.1497  train/policy_loss=0.0021  train/reward=-0.0204  train/baseline=-0.0222
+[step  41400] train/recon_loss=0.1433  train/policy_loss=0.0028  train/reward=-0.0204  train/baseline=-0.0226
+[step  41500] train/recon_loss=0.1633  train/policy_loss=-0.0016  train/reward=-0.0250  train/baseline=-0.0233
+[step  41600] train/recon_loss=0.1576  train/policy_loss=-0.0025  train/reward=-0.0237  train/baseline=-0.0215
+[step  41700] train/recon_loss=0.1856  train/policy_loss=-0.0092  train/reward=-0.0293  train/baseline=-0.0222
+[step  41800] train/recon_loss=0.1407  train/policy_loss=0.0036  train/reward=-0.0196  train/baseline=-0.0219
+[step  41800] train/epoch_recon=0.1526  train/epoch_policy=0.0004  train/epoch_reward=-0.0223  train/epoch=710.0000  val/recon_loss=0.1726  val/reward=-0.0268
+[step  41900] train/recon_loss=0.1394  train/policy_loss=0.0025  train/reward=-0.0192  train/baseline=-0.0211
+[step  42000] train/recon_loss=0.1677  train/policy_loss=-0.0008  train/reward=-0.0226  train/baseline=-0.0219
+[step  42100] train/recon_loss=0.1364  train/policy_loss=0.0049  train/reward=-0.0198  train/baseline=-0.0235
+[step  42200] train/recon_loss=0.1365  train/policy_loss=0.0036  train/reward=-0.0189  train/baseline=-0.0225
+[step  42300] train/recon_loss=0.1592  train/policy_loss=0.0017  train/reward=-0.0206  train/baseline=-0.0222
+[step  42350] train/epoch_recon=0.1555  train/epoch_policy=0.0003  train/epoch_reward=-0.0231  train/epoch=720.0000  val/recon_loss=0.1681  val/reward=-0.0262
+[step  42400] train/recon_loss=0.1536  train/policy_loss=-0.0017  train/reward=-0.0223  train/baseline=-0.0212
+[step  42500] train/recon_loss=0.1503  train/policy_loss=0.0004  train/reward=-0.0224  train/baseline=-0.0230
+[step  42600] train/recon_loss=0.1635  train/policy_loss=-0.0025  train/reward=-0.0264  train/baseline=-0.0239
+[step  42700] train/recon_loss=0.1600  train/policy_loss=-0.0014  train/reward=-0.0247  train/baseline=-0.0233
+[step  42800] train/recon_loss=0.1431  train/policy_loss=0.0013  train/reward=-0.0189  train/baseline=-0.0218
+[step  42900] train/recon_loss=0.1386  train/policy_loss=0.0045  train/reward=-0.0187  train/baseline=-0.0213
+[step  42900] train/epoch_recon=0.1527  train/epoch_policy=0.0001  train/epoch_reward=-0.0222  train/epoch=730.0000  val/recon_loss=0.1669  val/reward=-0.0252
+[step  43000] train/recon_loss=0.1428  train/policy_loss=0.0001  train/reward=-0.0195  train/baseline=-0.0197
+[step  43100] train/recon_loss=0.1368  train/policy_loss=0.0011  train/reward=-0.0191  train/baseline=-0.0210
+[step  43200] train/recon_loss=0.1553  train/policy_loss=-0.0005  train/reward=-0.0210  train/baseline=-0.0204
+[step  43300] train/recon_loss=0.1176  train/policy_loss=0.0037  train/reward=-0.0157  train/baseline=-0.0215
+[step  43400] train/recon_loss=0.1661  train/policy_loss=-0.0013  train/reward=-0.0261  train/baseline=-0.0233
+[step  43450] train/epoch_recon=0.1522  train/epoch_policy=0.0000  train/epoch_reward=-0.0221  train/epoch=740.0000  val/recon_loss=0.1616  val/reward=-0.0250
+[step  43500] train/recon_loss=0.1606  train/policy_loss=-0.0004  train/reward=-0.0221  train/baseline=-0.0212
+[step  43600] train/recon_loss=0.1690  train/policy_loss=-0.0025  train/reward=-0.0258  train/baseline=-0.0216
+[step  43700] train/recon_loss=0.1485  train/policy_loss=-0.0006  train/reward=-0.0219  train/baseline=-0.0209
+[step  43800] train/recon_loss=0.1460  train/policy_loss=0.0006  train/reward=-0.0202  train/baseline=-0.0211
+[step  43900] train/recon_loss=0.1419  train/policy_loss=0.0016  train/reward=-0.0184  train/baseline=-0.0209
+[step  44000] train/recon_loss=0.1358  train/policy_loss=0.0012  train/reward=-0.0177  train/baseline=-0.0221
+[step  44000] train/epoch_recon=0.1504  train/epoch_policy=0.0000  train/epoch_reward=-0.0221  train/epoch=750.0000  val/recon_loss=0.1661  val/reward=-0.0254
+[step  44100] train/recon_loss=0.1301  train/policy_loss=0.0008  train/reward=-0.0179  train/baseline=-0.0210
+[step  44200] train/recon_loss=0.1344  train/policy_loss=0.0012  train/reward=-0.0182  train/baseline=-0.0220
+[step  44300] train/recon_loss=0.1412  train/policy_loss=0.0005  train/reward=-0.0192  train/baseline=-0.0199
+[step  44400] train/recon_loss=0.1627  train/policy_loss=-0.0001  train/reward=-0.0216  train/baseline=-0.0212
+[step  44500] train/recon_loss=0.1534  train/policy_loss=-0.0006  train/reward=-0.0231  train/baseline=-0.0211
+[step  44550] train/epoch_recon=0.1500  train/epoch_policy=-0.0000  train/epoch_reward=-0.0217  train/epoch=760.0000  val/recon_loss=0.1675  val/reward=-0.0256
+[step  44600] train/recon_loss=0.1602  train/policy_loss=-0.0015  train/reward=-0.0243  train/baseline=-0.0223
+[step  44700] train/recon_loss=0.1768  train/policy_loss=-0.0046  train/reward=-0.0282  train/baseline=-0.0224
+[step  44800] train/recon_loss=0.1576  train/policy_loss=-0.0008  train/reward=-0.0235  train/baseline=-0.0224
+[step  44900] train/recon_loss=0.1400  train/policy_loss=0.0011  train/reward=-0.0182  train/baseline=-0.0206
+[step  45000] train/recon_loss=0.1299  train/policy_loss=0.0022  train/reward=-0.0176  train/baseline=-0.0208
+[step  45100] train/recon_loss=0.1689  train/policy_loss=-0.0020  train/reward=-0.0249  train/baseline=-0.0215
+[step  45100] train/epoch_recon=0.1482  train/epoch_policy=0.0001  train/epoch_reward=-0.0214  train/epoch=770.0000  val/recon_loss=0.1735  val/reward=-0.0266
+[step  45200] train/recon_loss=0.1626  train/policy_loss=-0.0007  train/reward=-0.0251  train/baseline=-0.0231
+[step  45300] train/recon_loss=0.1539  train/policy_loss=-0.0011  train/reward=-0.0222  train/baseline=-0.0205
+[step  45400] train/recon_loss=0.1489  train/policy_loss=-0.0001  train/reward=-0.0230  train/baseline=-0.0228
+[step  45500] train/recon_loss=0.1429  train/policy_loss=0.0005  train/reward=-0.0202  train/baseline=-0.0210
+[step  45600] train/recon_loss=0.1398  train/policy_loss=0.0014  train/reward=-0.0185  train/baseline=-0.0209
+[step  45650] train/epoch_recon=0.1500  train/epoch_policy=0.0000  train/epoch_reward=-0.0219  train/epoch=780.0000  val/recon_loss=0.1698  val/reward=-0.0262
+[step  45700] train/recon_loss=0.1441  train/policy_loss=0.0004  train/reward=-0.0201  train/baseline=-0.0207
+[step  45800] train/recon_loss=0.1436  train/policy_loss=-0.0007  train/reward=-0.0219  train/baseline=-0.0208
+[step  45900] train/recon_loss=0.1424  train/policy_loss=-0.0018  train/reward=-0.0220  train/baseline=-0.0201
+[step  46000] train/recon_loss=0.1534  train/policy_loss=0.0005  train/reward=-0.0209  train/baseline=-0.0219
+[step  46100] train/recon_loss=0.1433  train/policy_loss=0.0008  train/reward=-0.0201  train/baseline=-0.0207
+[step  46200] train/recon_loss=0.1743  train/policy_loss=-0.0070  train/reward=-0.0273  train/baseline=-0.0208
+[step  46200] train/epoch_recon=0.1461  train/epoch_policy=-0.0000  train/epoch_reward=-0.0208  train/epoch=790.0000  val/recon_loss=0.1667  val/reward=-0.0254
+[step  46300] train/recon_loss=0.1167  train/policy_loss=0.0048  train/reward=-0.0162  train/baseline=-0.0214
+[step  46400] train/recon_loss=0.1417  train/policy_loss=0.0014  train/reward=-0.0205  train/baseline=-0.0217
+[step  46500] train/recon_loss=0.1451  train/policy_loss=-0.0013  train/reward=-0.0219  train/baseline=-0.0208
+[step  46600] train/recon_loss=0.1457  train/policy_loss=-0.0005  train/reward=-0.0218  train/baseline=-0.0208
+[step  46700] train/recon_loss=0.1585  train/policy_loss=-0.0011  train/reward=-0.0218  train/baseline=-0.0197
+[step  46750] train/epoch_recon=0.1459  train/epoch_policy=-0.0002  train/epoch_reward=-0.0210  train/epoch=800.0000  val/recon_loss=0.1617  val/reward=-0.0242
+[checkpoint] saved to checkpoints/ckpt_epoch0800.pt
+[step  46800] train/recon_loss=0.1515  train/policy_loss=-0.0002  train/reward=-0.0231  train/baseline=-0.0229
+[step  46900] train/recon_loss=0.1600  train/policy_loss=-0.0004  train/reward=-0.0225  train/baseline=-0.0220
+[step  47000] train/recon_loss=0.1496  train/policy_loss=-0.0003  train/reward=-0.0222  train/baseline=-0.0219
+[step  47100] train/recon_loss=0.1393  train/policy_loss=0.0001  train/reward=-0.0208  train/baseline=-0.0211
+[step  47200] train/recon_loss=0.1523  train/policy_loss=-0.0001  train/reward=-0.0217  train/baseline=-0.0215
+[step  47300] train/recon_loss=0.1534  train/policy_loss=-0.0005  train/reward=-0.0213  train/baseline=-0.0205
+[step  47300] train/epoch_recon=0.1460  train/epoch_policy=-0.0000  train/epoch_reward=-0.0208  train/epoch=810.0000  val/recon_loss=0.1631  val/reward=-0.0249
+[step  47400] train/recon_loss=0.1547  train/policy_loss=-0.0013  train/reward=-0.0231  train/baseline=-0.0214
+[step  47500] train/recon_loss=0.1546  train/policy_loss=-0.0031  train/reward=-0.0238  train/baseline=-0.0208
+[step  47600] train/recon_loss=0.1366  train/policy_loss=0.0015  train/reward=-0.0188  train/baseline=-0.0214
+[step  47700] train/recon_loss=0.1391  train/policy_loss=0.0038  train/reward=-0.0187  train/baseline=-0.0212
+[step  47800] train/recon_loss=0.1466  train/policy_loss=0.0008  train/reward=-0.0199  train/baseline=-0.0214
+[step  47850] train/epoch_recon=0.1493  train/epoch_policy=0.0000  train/epoch_reward=-0.0216  train/epoch=820.0000  val/recon_loss=0.1617  val/reward=-0.0241
+[step  47900] train/recon_loss=0.1301  train/policy_loss=0.0015  train/reward=-0.0191  train/baseline=-0.0215
+[step  48000] train/recon_loss=0.1312  train/policy_loss=0.0015  train/reward=-0.0180  train/baseline=-0.0208
+[step  48100] train/recon_loss=0.1498  train/policy_loss=0.0004  train/reward=-0.0209  train/baseline=-0.0216
+[step  48200] train/recon_loss=0.1787  train/policy_loss=-0.0027  train/reward=-0.0257  train/baseline=-0.0214
+[step  48300] train/recon_loss=0.1646  train/policy_loss=-0.0026  train/reward=-0.0257  train/baseline=-0.0209
+[step  48400] train/recon_loss=0.1369  train/policy_loss=0.0040  train/reward=-0.0172  train/baseline=-0.0207
+[step  48400] train/epoch_recon=0.1471  train/epoch_policy=-0.0000  train/epoch_reward=-0.0210  train/epoch=830.0000  val/recon_loss=0.1604  val/reward=-0.0245
+[step  48500] train/recon_loss=0.1274  train/policy_loss=0.0018  train/reward=-0.0179  train/baseline=-0.0204
+[step  48600] train/recon_loss=0.1481  train/policy_loss=0.0006  train/reward=-0.0201  train/baseline=-0.0214
+[step  48700] train/recon_loss=0.1619  train/policy_loss=-0.0007  train/reward=-0.0228  train/baseline=-0.0219
+[step  48800] train/recon_loss=0.1182  train/policy_loss=0.0039  train/reward=-0.0150  train/baseline=-0.0196
+[step  48900] train/recon_loss=0.1725  train/policy_loss=-0.0031  train/reward=-0.0252  train/baseline=-0.0207
+[step  48950] train/epoch_recon=0.1485  train/epoch_policy=-0.0001  train/epoch_reward=-0.0217  train/epoch=840.0000  val/recon_loss=0.1561  val/reward=-0.0232
+[step  49000] train/recon_loss=0.1377  train/policy_loss=-0.0005  train/reward=-0.0215  train/baseline=-0.0209
+[step  49100] train/recon_loss=0.1595  train/policy_loss=-0.0029  train/reward=-0.0243  train/baseline=-0.0216
+[step  49200] train/recon_loss=0.1403  train/policy_loss=0.0021  train/reward=-0.0190  train/baseline=-0.0203
+[step  49300] train/recon_loss=0.1437  train/policy_loss=-0.0012  train/reward=-0.0222  train/baseline=-0.0210
+[step  49400] train/recon_loss=0.1479  train/policy_loss=-0.0007  train/reward=-0.0205  train/baseline=-0.0199
+[step  49500] train/recon_loss=0.1441  train/policy_loss=-0.0001  train/reward=-0.0215  train/baseline=-0.0214
+[step  49500] train/epoch_recon=0.1472  train/epoch_policy=-0.0001  train/epoch_reward=-0.0212  train/epoch=850.0000  val/recon_loss=0.1600  val/reward=-0.0233
+[step  49600] train/recon_loss=0.1454  train/policy_loss=-0.0003  train/reward=-0.0221  train/baseline=-0.0218
+[step  49700] train/recon_loss=0.1562  train/policy_loss=-0.0018  train/reward=-0.0221  train/baseline=-0.0212
+[step  49800] train/recon_loss=0.1295  train/policy_loss=0.0026  train/reward=-0.0177  train/baseline=-0.0204
+[step  49900] train/recon_loss=0.1609  train/policy_loss=-0.0041  train/reward=-0.0251  train/baseline=-0.0216
+[step  50000] train/recon_loss=0.1459  train/policy_loss=0.0005  train/reward=-0.0198  train/baseline=-0.0202
+[step  50050] train/epoch_recon=0.1455  train/epoch_policy=-0.0001  train/epoch_reward=-0.0207  train/epoch=860.0000  val/recon_loss=0.1659  val/reward=-0.0245
+[step  50100] train/recon_loss=0.1651  train/policy_loss=-0.0023  train/reward=-0.0230  train/baseline=-0.0206
+[step  50200] train/recon_loss=0.1614  train/policy_loss=-0.0019  train/reward=-0.0239  train/baseline=-0.0219
+[step  50300] train/recon_loss=0.1751  train/policy_loss=-0.0064  train/reward=-0.0280  train/baseline=-0.0227
+[step  50400] train/recon_loss=0.1509  train/policy_loss=-0.0001  train/reward=-0.0212  train/baseline=-0.0211
+[step  50500] train/recon_loss=0.1377  train/policy_loss=0.0009  train/reward=-0.0180  train/baseline=-0.0210
+[step  50600] train/recon_loss=0.1527  train/policy_loss=-0.0006  train/reward=-0.0217  train/baseline=-0.0208
+[step  50600] train/epoch_recon=0.1471  train/epoch_policy=-0.0000  train/epoch_reward=-0.0214  train/epoch=870.0000  val/recon_loss=0.1613  val/reward=-0.0237
+[step  50700] train/recon_loss=0.1515  train/policy_loss=0.0006  train/reward=-0.0206  train/baseline=-0.0222
+[step  50800] train/recon_loss=0.1325  train/policy_loss=0.0014  train/reward=-0.0189  train/baseline=-0.0208
+[step  50900] train/recon_loss=0.1397  train/policy_loss=0.0008  train/reward=-0.0195  train/baseline=-0.0207
+[step  51000] train/recon_loss=0.1661  train/policy_loss=-0.0022  train/reward=-0.0251  train/baseline=-0.0218
+[step  51100] train/recon_loss=0.1383  train/policy_loss=0.0006  train/reward=-0.0195  train/baseline=-0.0213
+[step  51150] train/epoch_recon=0.1463  train/epoch_policy=-0.0001  train/epoch_reward=-0.0210  train/epoch=880.0000  val/recon_loss=0.1642  val/reward=-0.0240
+[step  51200] train/recon_loss=0.1739  train/policy_loss=-0.0018  train/reward=-0.0260  train/baseline=-0.0220
+[step  51300] train/recon_loss=0.1392  train/policy_loss=0.0002  train/reward=-0.0201  train/baseline=-0.0203
+[step  51400] train/recon_loss=0.1339  train/policy_loss=0.0017  train/reward=-0.0183  train/baseline=-0.0213
+[step  51500] train/recon_loss=0.1446  train/policy_loss=-0.0004  train/reward=-0.0217  train/baseline=-0.0210
+[step  51600] train/recon_loss=0.1420  train/policy_loss=0.0000  train/reward=-0.0207  train/baseline=-0.0208
+[step  51700] train/recon_loss=0.1371  train/policy_loss=0.0013  train/reward=-0.0200  train/baseline=-0.0222
+[step  51700] train/epoch_recon=0.1471  train/epoch_policy=0.0001  train/epoch_reward=-0.0213  train/epoch=890.0000  val/recon_loss=0.1668  val/reward=-0.0241
+[step  51800] train/recon_loss=0.1478  train/policy_loss=0.0004  train/reward=-0.0193  train/baseline=-0.0200
+[step  51900] train/recon_loss=0.1546  train/policy_loss=-0.0018  train/reward=-0.0214  train/baseline=-0.0200
+[step  52000] train/recon_loss=0.1523  train/policy_loss=0.0004  train/reward=-0.0214  train/baseline=-0.0217
+[step  52100] train/recon_loss=0.1478  train/policy_loss=-0.0016  train/reward=-0.0233  train/baseline=-0.0209
+[step  52200] train/recon_loss=0.1661  train/policy_loss=-0.0046  train/reward=-0.0251  train/baseline=-0.0211
+[step  52250] train/epoch_recon=0.1462  train/epoch_policy=-0.0000  train/epoch_reward=-0.0210  train/epoch=900.0000  val/recon_loss=0.1616  val/reward=-0.0239
+[checkpoint] saved to checkpoints/ckpt_epoch0900.pt
+[step  52300] train/recon_loss=0.1650  train/policy_loss=-0.0025  train/reward=-0.0242  train/baseline=-0.0210
+[step  52400] train/recon_loss=0.1677  train/policy_loss=-0.0021  train/reward=-0.0256  train/baseline=-0.0213
+[step  52500] train/recon_loss=0.1301  train/policy_loss=0.0037  train/reward=-0.0172  train/baseline=-0.0220
+[step  52600] train/recon_loss=0.1333  train/policy_loss=0.0004  train/reward=-0.0192  train/baseline=-0.0199
+[step  52700] train/recon_loss=0.1545  train/policy_loss=-0.0012  train/reward=-0.0215  train/baseline=-0.0201
+[step  52800] train/recon_loss=0.1307  train/policy_loss=0.0028  train/reward=-0.0182  train/baseline=-0.0208
+[step  52800] train/epoch_recon=0.1432  train/epoch_policy=0.0001  train/epoch_reward=-0.0205  train/epoch=910.0000  val/recon_loss=0.1636  val/reward=-0.0243
+[step  52900] train/recon_loss=0.1483  train/policy_loss=0.0007  train/reward=-0.0188  train/baseline=-0.0197
+[step  53000] train/recon_loss=0.1752  train/policy_loss=-0.0042  train/reward=-0.0262  train/baseline=-0.0211
+[step  53100] train/recon_loss=0.1691  train/policy_loss=-0.0014  train/reward=-0.0262  train/baseline=-0.0205
+[step  53200] train/recon_loss=0.1717  train/policy_loss=-0.0014  train/reward=-0.0245  train/baseline=-0.0209
+[step  53300] train/recon_loss=0.1497  train/policy_loss=-0.0001  train/reward=-0.0203  train/baseline=-0.0201
+[step  53350] train/epoch_recon=0.1489  train/epoch_policy=-0.0001  train/epoch_reward=-0.0211  train/epoch=920.0000  val/recon_loss=0.1603  val/reward=-0.0239
+[step  53400] train/recon_loss=0.1560  train/policy_loss=-0.0005  train/reward=-0.0235  train/baseline=-0.0219
+[step  53500] train/recon_loss=0.1439  train/policy_loss=0.0000  train/reward=-0.0213  train/baseline=-0.0214
+[step  53600] train/recon_loss=0.1439  train/policy_loss=-0.0003  train/reward=-0.0218  train/baseline=-0.0204
+[step  53700] train/recon_loss=0.1705  train/policy_loss=-0.0007  train/reward=-0.0258  train/baseline=-0.0222
+[step  53800] train/recon_loss=0.1222  train/policy_loss=0.0009  train/reward=-0.0182  train/baseline=-0.0204
+[step  53900] train/recon_loss=0.1577  train/policy_loss=-0.0019  train/reward=-0.0237  train/baseline=-0.0203
+[step  53900] train/epoch_recon=0.1446  train/epoch_policy=-0.0001  train/epoch_reward=-0.0205  train/epoch=930.0000  val/recon_loss=0.1612  val/reward=-0.0244
+[step  54000] train/recon_loss=0.1541  train/policy_loss=-0.0000  train/reward=-0.0202  train/baseline=-0.0201
+[step  54100] train/recon_loss=0.1525  train/policy_loss=0.0000  train/reward=-0.0206  train/baseline=-0.0208
+[step  54200] train/recon_loss=0.1345  train/policy_loss=0.0008  train/reward=-0.0185  train/baseline=-0.0203
+[step  54300] train/recon_loss=0.1381  train/policy_loss=0.0007  train/reward=-0.0192  train/baseline=-0.0212
+[step  54400] train/recon_loss=0.1432  train/policy_loss=0.0001  train/reward=-0.0199  train/baseline=-0.0202
+[step  54450] train/epoch_recon=0.1448  train/epoch_policy=-0.0000  train/epoch_reward=-0.0208  train/epoch=940.0000  val/recon_loss=0.1703  val/reward=-0.0255
+[step  54500] train/recon_loss=0.1485  train/policy_loss=-0.0004  train/reward=-0.0232  train/baseline=-0.0217
+[step  54600] train/recon_loss=0.1766  train/policy_loss=-0.0007  train/reward=-0.0234  train/baseline=-0.0225
+[step  54700] train/recon_loss=0.1423  train/policy_loss=-0.0008  train/reward=-0.0211  train/baseline=-0.0198
+[step  54800] train/recon_loss=0.1284  train/policy_loss=0.0011  train/reward=-0.0170  train/baseline=-0.0194
+[step  54900] train/recon_loss=0.1555  train/policy_loss=-0.0013  train/reward=-0.0233  train/baseline=-0.0214
+[step  55000] train/recon_loss=0.1447  train/policy_loss=0.0017  train/reward=-0.0190  train/baseline=-0.0212
+[step  55000] train/epoch_recon=0.1454  train/epoch_policy=0.0001  train/epoch_reward=-0.0208  train/epoch=950.0000  val/recon_loss=0.1648  val/reward=-0.0244
+[step  55100] train/recon_loss=0.1410  train/policy_loss=0.0003  train/reward=-0.0213  train/baseline=-0.0222
+[step  55200] train/recon_loss=0.1642  train/policy_loss=-0.0021  train/reward=-0.0256  train/baseline=-0.0205
+[step  55300] train/recon_loss=0.1342  train/policy_loss=0.0010  train/reward=-0.0199  train/baseline=-0.0221
+[step  55400] train/recon_loss=0.1337  train/policy_loss=0.0000  train/reward=-0.0199  train/baseline=-0.0199
+[step  55500] train/recon_loss=0.2014  train/policy_loss=-0.0024  train/reward=-0.0310  train/baseline=-0.0212
+[step  55550] train/epoch_recon=0.1436  train/epoch_policy=0.0001  train/epoch_reward=-0.0205  train/epoch=960.0000  val/recon_loss=0.1669  val/reward=-0.0253
+[step  55600] train/recon_loss=0.1510  train/policy_loss=-0.0002  train/reward=-0.0217  train/baseline=-0.0211
+[step  55700] train/recon_loss=0.1476  train/policy_loss=0.0006  train/reward=-0.0204  train/baseline=-0.0219
+[step  55800] train/recon_loss=0.1612  train/policy_loss=-0.0014  train/reward=-0.0235  train/baseline=-0.0213
+[step  55900] train/recon_loss=0.1443  train/policy_loss=0.0001  train/reward=-0.0207  train/baseline=-0.0209
+[step  56000] train/recon_loss=0.1368  train/policy_loss=-0.0002  train/reward=-0.0216  train/baseline=-0.0211
+[step  56100] train/recon_loss=0.1524  train/policy_loss=-0.0004  train/reward=-0.0233  train/baseline=-0.0221
+[step  56100] train/epoch_recon=0.1443  train/epoch_policy=-0.0002  train/epoch_reward=-0.0208  train/epoch=970.0000  val/recon_loss=0.1768  val/reward=-0.0264
+[step  56200] train/recon_loss=0.1474  train/policy_loss=-0.0000  train/reward=-0.0213  train/baseline=-0.0212
+[step  56300] train/recon_loss=0.1553  train/policy_loss=-0.0000  train/reward=-0.0210  train/baseline=-0.0209
+[step  56400] train/recon_loss=0.1366  train/policy_loss=0.0001  train/reward=-0.0200  train/baseline=-0.0207
+[step  56500] train/recon_loss=0.1369  train/policy_loss=0.0003  train/reward=-0.0213  train/baseline=-0.0217
+[step  56600] train/recon_loss=0.1715  train/policy_loss=-0.0013  train/reward=-0.0265  train/baseline=-0.0210
+[step  56650] train/epoch_recon=0.1451  train/epoch_policy=0.0001  train/epoch_reward=-0.0207  train/epoch=980.0000  val/recon_loss=0.1699  val/reward=-0.0254
+[step  56700] train/recon_loss=0.1529  train/policy_loss=-0.0007  train/reward=-0.0222  train/baseline=-0.0202
+[step  56800] train/recon_loss=0.1397  train/policy_loss=0.0009  train/reward=-0.0190  train/baseline=-0.0210
+[step  56900] train/recon_loss=0.1185  train/policy_loss=0.0011  train/reward=-0.0176  train/baseline=-0.0204
+[step  57000] train/recon_loss=0.1242  train/policy_loss=0.0009  train/reward=-0.0186  train/baseline=-0.0211
+[step  57100] train/recon_loss=0.1437  train/policy_loss=0.0011  train/reward=-0.0187  train/baseline=-0.0212
+[step  57200] train/recon_loss=0.1175  train/policy_loss=0.0029  train/reward=-0.0159  train/baseline=-0.0218
+[step  57200] train/epoch_recon=0.1495  train/epoch_policy=0.0001  train/epoch_reward=-0.0219  train/epoch=990.0000  val/recon_loss=0.1641  val/reward=-0.0248
+[step  57300] train/recon_loss=0.1429  train/policy_loss=0.0011  train/reward=-0.0200  train/baseline=-0.0213
+[step  57400] train/recon_loss=0.1232  train/policy_loss=0.0013  train/reward=-0.0191  train/baseline=-0.0211
+[step  57500] train/recon_loss=0.1483  train/policy_loss=-0.0012  train/reward=-0.0232  train/baseline=-0.0209
+[step  57600] train/recon_loss=0.1789  train/policy_loss=-0.0010  train/reward=-0.0246  train/baseline=-0.0221
+[step  57700] train/recon_loss=0.1389  train/policy_loss=0.0003  train/reward=-0.0206  train/baseline=-0.0211
+[step  57750] train/epoch_recon=0.1469  train/epoch_policy=0.0001  train/epoch_reward=-0.0210  train/epoch=1000.0000  val/recon_loss=0.1655  val/reward=-0.0245
+[checkpoint] saved to checkpoints/ckpt_epoch1000.pt
+[step  57800] train/recon_loss=0.1627  train/policy_loss=-0.0016  train/reward=-0.0245  train/baseline=-0.0221
+[step  57900] train/recon_loss=0.1563  train/policy_loss=-0.0016  train/reward=-0.0246  train/baseline=-0.0202
+[step  58000] train/recon_loss=0.1814  train/policy_loss=-0.0006  train/reward=-0.0284  train/baseline=-0.0224
+[step  58100] train/recon_loss=0.1861  train/policy_loss=-0.0011  train/reward=-0.0256  train/baseline=-0.0216
+[step  58200] train/recon_loss=0.1905  train/policy_loss=-0.0013  train/reward=-0.0300  train/baseline=-0.0234
+[step  58300] train/recon_loss=0.1625  train/policy_loss=-0.0016  train/reward=-0.0249  train/baseline=-0.0209
+[step  58300] train/epoch_recon=0.1463  train/epoch_policy=-0.0000  train/epoch_reward=-0.0210  train/epoch=1010.0000  val/recon_loss=0.1705  val/reward=-0.0261
+[step  58400] train/recon_loss=0.1154  train/policy_loss=0.0026  train/reward=-0.0149  train/baseline=-0.0214
+[step  58500] train/recon_loss=0.1671  train/policy_loss=-0.0019  train/reward=-0.0246  train/baseline=-0.0224
+[step  58600] train/recon_loss=0.1452  train/policy_loss=-0.0004  train/reward=-0.0226  train/baseline=-0.0215
+[step  58700] train/recon_loss=0.1623  train/policy_loss=0.0004  train/reward=-0.0198  train/baseline=-0.0216
+[step  58800] train/recon_loss=0.1408  train/policy_loss=0.0008  train/reward=-0.0204  train/baseline=-0.0216
+[step  58850] train/epoch_recon=0.1479  train/epoch_policy=0.0001  train/epoch_reward=-0.0215  train/epoch=1020.0000  val/recon_loss=0.1698  val/reward=-0.0260
+[step  58900] train/recon_loss=0.1364  train/policy_loss=0.0006  train/reward=-0.0193  train/baseline=-0.0221
+[step  59000] train/recon_loss=0.1517  train/policy_loss=0.0004  train/reward=-0.0195  train/baseline=-0.0210
+[step  59100] train/recon_loss=0.1425  train/policy_loss=-0.0003  train/reward=-0.0214  train/baseline=-0.0205
+[step  59200] train/recon_loss=0.1610  train/policy_loss=-0.0002  train/reward=-0.0227  train/baseline=-0.0220
+[step  59300] train/recon_loss=0.1549  train/policy_loss=0.0000  train/reward=-0.0206  train/baseline=-0.0209
+[step  59400] train/recon_loss=0.1662  train/policy_loss=-0.0022  train/reward=-0.0226  train/baseline=-0.0213
+[step  59400] train/epoch_recon=0.1451  train/epoch_policy=-0.0001  train/epoch_reward=-0.0205  train/epoch=1030.0000  val/recon_loss=0.1674  val/reward=-0.0249
+[step  59500] train/recon_loss=0.1673  train/policy_loss=-0.0020  train/reward=-0.0261  train/baseline=-0.0217
+[step  59600] train/recon_loss=0.1662  train/policy_loss=-0.0003  train/reward=-0.0250  train/baseline=-0.0215
+[step  59700] train/recon_loss=0.1357  train/policy_loss=0.0003  train/reward=-0.0181  train/baseline=-0.0194
+[step  59800] train/recon_loss=0.1543  train/policy_loss=-0.0008  train/reward=-0.0240  train/baseline=-0.0217
+[step  59900] train/recon_loss=0.1541  train/policy_loss=-0.0000  train/reward=-0.0227  train/baseline=-0.0219
+[step  59950] train/epoch_recon=0.1460  train/epoch_policy=0.0001  train/epoch_reward=-0.0212  train/epoch=1040.0000  val/recon_loss=0.1636  val/reward=-0.0246
+[step  60000] train/recon_loss=0.1483  train/policy_loss=0.0010  train/reward=-0.0194  train/baseline=-0.0214
+[step  60100] train/recon_loss=0.1253  train/policy_loss=0.0027  train/reward=-0.0159  train/baseline=-0.0208
+[step  60200] train/recon_loss=0.1475  train/policy_loss=0.0001  train/reward=-0.0193  train/baseline=-0.0205
+[step  60300] train/recon_loss=0.1320  train/policy_loss=0.0016  train/reward=-0.0171  train/baseline=-0.0196
+[step  60400] train/recon_loss=0.1190  train/policy_loss=0.0002  train/reward=-0.0161  train/baseline=-0.0199
+[step  60500] train/recon_loss=0.1291  train/policy_loss=0.0005  train/reward=-0.0181  train/baseline=-0.0200
+[step  60500] train/epoch_recon=0.1447  train/epoch_policy=0.0001  train/epoch_reward=-0.0205  train/epoch=1050.0000  val/recon_loss=0.1659  val/reward=-0.0248
+[step  60600] train/recon_loss=0.1749  train/policy_loss=-0.0010  train/reward=-0.0245  train/baseline=-0.0215
+[step  60700] train/recon_loss=0.1457  train/policy_loss=0.0009  train/reward=-0.0189  train/baseline=-0.0219
+[step  60800] train/recon_loss=0.1379  train/policy_loss=0.0001  train/reward=-0.0201  train/baseline=-0.0206
+[step  60900] train/recon_loss=0.1405  train/policy_loss=0.0003  train/reward=-0.0193  train/baseline=-0.0208
+[step  61000] train/recon_loss=0.1864  train/policy_loss=-0.0006  train/reward=-0.0295  train/baseline=-0.0213
+[step  61050] train/epoch_recon=0.1490  train/epoch_policy=-0.0001  train/epoch_reward=-0.0218  train/epoch=1060.0000  val/recon_loss=0.1614  val/reward=-0.0237
+[step  61100] train/recon_loss=0.1490  train/policy_loss=-0.0001  train/reward=-0.0215  train/baseline=-0.0206
+[step  61200] train/recon_loss=0.1408  train/policy_loss=0.0000  train/reward=-0.0204  train/baseline=-0.0208
+[step  61300] train/recon_loss=0.1354  train/policy_loss=0.0003  train/reward=-0.0196  train/baseline=-0.0204
+[step  61400] train/recon_loss=0.1352  train/policy_loss=0.0006  train/reward=-0.0180  train/baseline=-0.0202
+[step  61500] train/recon_loss=0.0958  train/policy_loss=0.0008  train/reward=-0.0132  train/baseline=-0.0203
+[step  61600] train/recon_loss=0.1244  train/policy_loss=0.0005  train/reward=-0.0185  train/baseline=-0.0202
+[step  61600] train/epoch_recon=0.1433  train/epoch_policy=0.0000  train/epoch_reward=-0.0204  train/epoch=1070.0000  val/recon_loss=0.1696  val/reward=-0.0258
+[step  61700] train/recon_loss=0.1335  train/policy_loss=0.0006  train/reward=-0.0179  train/baseline=-0.0209
+[step  61800] train/recon_loss=0.1280  train/policy_loss=0.0005  train/reward=-0.0168  train/baseline=-0.0211
+[step  61900] train/recon_loss=0.1484  train/policy_loss=-0.0001  train/reward=-0.0212  train/baseline=-0.0204
+[step  62000] train/recon_loss=0.1580  train/policy_loss=-0.0018  train/reward=-0.0249  train/baseline=-0.0213
+[step  62100] train/recon_loss=0.1884  train/policy_loss=-0.0004  train/reward=-0.0293  train/baseline=-0.0229
+[step  62150] train/epoch_recon=0.1475  train/epoch_policy=0.0001  train/epoch_reward=-0.0212  train/epoch=1080.0000  val/recon_loss=0.1653  val/reward=-0.0244
+[step  62200] train/recon_loss=0.1845  train/policy_loss=-0.0011  train/reward=-0.0275  train/baseline=-0.0222
+[step  62300] train/recon_loss=0.1560  train/policy_loss=-0.0000  train/reward=-0.0211  train/baseline=-0.0210
+[step  62400] train/recon_loss=0.1326  train/policy_loss=0.0002  train/reward=-0.0197  train/baseline=-0.0213
+[step  62500] train/recon_loss=0.1275  train/policy_loss=0.0003  train/reward=-0.0176  train/baseline=-0.0206
+[step  62600] train/recon_loss=0.1506  train/policy_loss=0.0001  train/reward=-0.0199  train/baseline=-0.0211
+[step  62700] train/recon_loss=0.2364  train/policy_loss=-0.0005  train/reward=-0.0337  train/baseline=-0.0213
+[step  62700] train/epoch_recon=0.1465  train/epoch_policy=0.0000  train/epoch_reward=-0.0207  train/epoch=1090.0000  val/recon_loss=0.1714  val/reward=-0.0255
+[step  62800] train/recon_loss=0.1359  train/policy_loss=-0.0000  train/reward=-0.0197  train/baseline=-0.0194
+[step  62900] train/recon_loss=0.1286  train/policy_loss=0.0002  train/reward=-0.0195  train/baseline=-0.0207
+[step  63000] train/recon_loss=0.1299  train/policy_loss=0.0000  train/reward=-0.0185  train/baseline=-0.0201
+[step  63100] train/recon_loss=0.1675  train/policy_loss=-0.0005  train/reward=-0.0236  train/baseline=-0.0220
+[step  63200] train/recon_loss=0.1408  train/policy_loss=-0.0000  train/reward=-0.0205  train/baseline=-0.0201
+[step  63250] train/epoch_recon=0.1441  train/epoch_policy=-0.0000  train/epoch_reward=-0.0208  train/epoch=1100.0000  val/recon_loss=0.1647  val/reward=-0.0243
+[checkpoint] saved to checkpoints/ckpt_epoch1100.pt
+[step  63300] train/recon_loss=0.1379  train/policy_loss=0.0001  train/reward=-0.0195  train/baseline=-0.0216
+[step  63400] train/recon_loss=0.1600  train/policy_loss=-0.0001  train/reward=-0.0215  train/baseline=-0.0204
+[step  63500] train/recon_loss=0.1212  train/policy_loss=0.0003  train/reward=-0.0180  train/baseline=-0.0210
+[step  63600] train/recon_loss=0.1402  train/policy_loss=-0.0002  train/reward=-0.0213  train/baseline=-0.0195
+[step  63700] train/recon_loss=0.1373  train/policy_loss=0.0010  train/reward=-0.0178  train/baseline=-0.0206
+[step  63800] train/recon_loss=0.1219  train/policy_loss=0.0005  train/reward=-0.0161  train/baseline=-0.0211
+[step  63800] train/epoch_recon=0.1433  train/epoch_policy=-0.0000  train/epoch_reward=-0.0206  train/epoch=1110.0000  val/recon_loss=0.1663  val/reward=-0.0253
+[step  63900] train/recon_loss=0.1675  train/policy_loss=-0.0007  train/reward=-0.0265  train/baseline=-0.0218
+[step  64000] train/recon_loss=0.1414  train/policy_loss=0.0000  train/reward=-0.0202  train/baseline=-0.0203
+[step  64100] train/recon_loss=0.1408  train/policy_loss=0.0004  train/reward=-0.0180  train/baseline=-0.0204
+[step  64200] train/recon_loss=0.1250  train/policy_loss=0.0003  train/reward=-0.0171  train/baseline=-0.0209
+[step  64300] train/recon_loss=0.1457  train/policy_loss=-0.0002  train/reward=-0.0220  train/baseline=-0.0203
+[step  64350] train/epoch_recon=0.1451  train/epoch_policy=-0.0000  train/epoch_reward=-0.0208  train/epoch=1120.0000  val/recon_loss=0.1692  val/reward=-0.0264
+[step  64400] train/recon_loss=0.1452  train/policy_loss=0.0001  train/reward=-0.0198  train/baseline=-0.0208
+[step  64500] train/recon_loss=0.1387  train/policy_loss=0.0005  train/reward=-0.0174  train/baseline=-0.0202
+[step  64600] train/recon_loss=0.1378  train/policy_loss=0.0001  train/reward=-0.0201  train/baseline=-0.0206
+[step  64700] train/recon_loss=0.1317  train/policy_loss=0.0002  train/reward=-0.0194  train/baseline=-0.0216
+[step  64800] train/recon_loss=0.1742  train/policy_loss=-0.0004  train/reward=-0.0270  train/baseline=-0.0219
+[step  64900] train/recon_loss=0.1737  train/policy_loss=-0.0003  train/reward=-0.0256  train/baseline=-0.0222
+[step  64900] train/epoch_recon=0.1487  train/epoch_policy=-0.0001  train/epoch_reward=-0.0216  train/epoch=1130.0000  val/recon_loss=0.1706  val/reward=-0.0256
+[step  65000] train/recon_loss=0.1542  train/policy_loss=-0.0022  train/reward=-0.0241  train/baseline=-0.0202
+[step  65100] train/recon_loss=0.1344  train/policy_loss=0.0000  train/reward=-0.0192  train/baseline=-0.0205
+[step  65200] train/recon_loss=0.1316  train/policy_loss=0.0009  train/reward=-0.0178  train/baseline=-0.0213
+[step  65300] train/recon_loss=0.1234  train/policy_loss=0.0007  train/reward=-0.0186  train/baseline=-0.0209
+[step  65400] train/recon_loss=0.1393  train/policy_loss=0.0007  train/reward=-0.0194  train/baseline=-0.0213
+[step  65450] train/epoch_recon=0.1461  train/epoch_policy=-0.0001  train/epoch_reward=-0.0214  train/epoch=1140.0000  val/recon_loss=0.1665  val/reward=-0.0253
+[step  65500] train/recon_loss=0.1320  train/policy_loss=0.0006  train/reward=-0.0196  train/baseline=-0.0216
+[step  65600] train/recon_loss=0.1456  train/policy_loss=0.0002  train/reward=-0.0212  train/baseline=-0.0227
+[step  65700] train/recon_loss=0.1661  train/policy_loss=-0.0006  train/reward=-0.0235  train/baseline=-0.0213
+[step  65800] train/recon_loss=0.1635  train/policy_loss=-0.0005  train/reward=-0.0252  train/baseline=-0.0218
+[step  65900] train/recon_loss=0.1568  train/policy_loss=-0.0005  train/reward=-0.0230  train/baseline=-0.0209
+[step  66000] train/recon_loss=0.1409  train/policy_loss=0.0000  train/reward=-0.0215  train/baseline=-0.0218
+[step  66000] train/epoch_recon=0.1480  train/epoch_policy=-0.0001  train/epoch_reward=-0.0217  train/epoch=1150.0000  val/recon_loss=0.1680  val/reward=-0.0252
+[step  66100] train/recon_loss=0.1318  train/policy_loss=0.0002  train/reward=-0.0180  train/baseline=-0.0203
+[step  66200] train/recon_loss=0.1677  train/policy_loss=-0.0004  train/reward=-0.0255  train/baseline=-0.0217
+[step  66300] train/recon_loss=0.1332  train/policy_loss=0.0001  train/reward=-0.0195  train/baseline=-0.0210
+[step  66400] train/recon_loss=0.1414  train/policy_loss=-0.0003  train/reward=-0.0222  train/baseline=-0.0207
+[step  66500] train/recon_loss=0.1447  train/policy_loss=-0.0001  train/reward=-0.0220  train/baseline=-0.0205
+[step  66550] train/epoch_recon=0.1444  train/epoch_policy=-0.0001  train/epoch_reward=-0.0207  train/epoch=1160.0000  val/recon_loss=0.1607  val/reward=-0.0227
+[step  66600] train/recon_loss=0.1947  train/policy_loss=-0.0001  train/reward=-0.0301  train/baseline=-0.0217
+[step  66700] train/recon_loss=0.1771  train/policy_loss=-0.0010  train/reward=-0.0274  train/baseline=-0.0219
+[step  66800] train/recon_loss=0.1757  train/policy_loss=-0.0002  train/reward=-0.0265  train/baseline=-0.0223
+[step  66900] train/recon_loss=0.1480  train/policy_loss=0.0001  train/reward=-0.0209  train/baseline=-0.0212
+[step  67000] train/recon_loss=0.1490  train/policy_loss=0.0001  train/reward=-0.0200  train/baseline=-0.0208
+[step  67100] train/recon_loss=0.1641  train/policy_loss=-0.0004  train/reward=-0.0239  train/baseline=-0.0207
+[step  67100] train/epoch_recon=0.1437  train/epoch_policy=0.0000  train/epoch_reward=-0.0204  train/epoch=1170.0000  val/recon_loss=0.1641  val/reward=-0.0241
+[step  67200] train/recon_loss=0.1401  train/policy_loss=0.0001  train/reward=-0.0194  train/baseline=-0.0201
+[step  67300] train/recon_loss=0.1353  train/policy_loss=0.0005  train/reward=-0.0181  train/baseline=-0.0202
+[step  67400] train/recon_loss=0.1273  train/policy_loss=0.0014  train/reward=-0.0169  train/baseline=-0.0208
+[step  67500] train/recon_loss=0.1320  train/policy_loss=0.0001  train/reward=-0.0188  train/baseline=-0.0204
+[step  67600] train/recon_loss=0.1431  train/policy_loss=-0.0005  train/reward=-0.0218  train/baseline=-0.0205
+[step  67650] train/epoch_recon=0.1443  train/epoch_policy=-0.0000  train/epoch_reward=-0.0208  train/epoch=1180.0000  val/recon_loss=0.1604  val/reward=-0.0236
+[step  67700] train/recon_loss=0.1772  train/policy_loss=-0.0009  train/reward=-0.0267  train/baseline=-0.0210
+[step  67800] train/recon_loss=0.1286  train/policy_loss=0.0002  train/reward=-0.0176  train/baseline=-0.0197
+[step  67900] train/recon_loss=0.1086  train/policy_loss=0.0005  train/reward=-0.0137  train/baseline=-0.0205
+[step  68000] train/recon_loss=0.1664  train/policy_loss=-0.0003  train/reward=-0.0240  train/baseline=-0.0206
+[step  68100] train/recon_loss=0.1311  train/policy_loss=0.0002  train/reward=-0.0182  train/baseline=-0.0197
+[step  68200] train/recon_loss=0.1406  train/policy_loss=0.0000  train/reward=-0.0195  train/baseline=-0.0197
+[step  68200] train/epoch_recon=0.1434  train/epoch_policy=0.0001  train/epoch_reward=-0.0205  train/epoch=1190.0000  val/recon_loss=0.1617  val/reward=-0.0240
+[step  68300] train/recon_loss=0.1574  train/policy_loss=-0.0002  train/reward=-0.0239  train/baseline=-0.0218
+[step  68400] train/recon_loss=0.1391  train/policy_loss=0.0001  train/reward=-0.0196  train/baseline=-0.0201
+[step  68500] train/recon_loss=0.1523  train/policy_loss=-0.0002  train/reward=-0.0216  train/baseline=-0.0198
+[step  68600] train/recon_loss=0.1431  train/policy_loss=-0.0005  train/reward=-0.0210  train/baseline=-0.0195
+[step  68700] train/recon_loss=0.1495  train/policy_loss=-0.0003  train/reward=-0.0236  train/baseline=-0.0218
+[step  68750] train/epoch_recon=0.1453  train/epoch_policy=-0.0000  train/epoch_reward=-0.0212  train/epoch=1200.0000  val/recon_loss=0.1687  val/reward=-0.0245
+[checkpoint] saved to checkpoints/ckpt_epoch1200.pt
+[step  68800] train/recon_loss=0.1656  train/policy_loss=-0.0005  train/reward=-0.0236  train/baseline=-0.0219
+[step  68900] train/recon_loss=0.1355  train/policy_loss=-0.0001  train/reward=-0.0216  train/baseline=-0.0208
+[step  69000] train/recon_loss=0.1605  train/policy_loss=-0.0007  train/reward=-0.0238  train/baseline=-0.0208
+[step  69100] train/recon_loss=0.1447  train/policy_loss=-0.0000  train/reward=-0.0220  train/baseline=-0.0215
+[step  69200] train/recon_loss=0.1520  train/policy_loss=-0.0002  train/reward=-0.0237  train/baseline=-0.0208
+[step  69300] train/recon_loss=0.1396  train/policy_loss=0.0007  train/reward=-0.0171  train/baseline=-0.0207
+[step  69300] train/epoch_recon=0.1469  train/epoch_policy=-0.0000  train/epoch_reward=-0.0213  train/epoch=1210.0000  val/recon_loss=0.1679  val/reward=-0.0252
+[step  69400] train/recon_loss=0.1441  train/policy_loss=-0.0000  train/reward=-0.0215  train/baseline=-0.0212
+[step  69500] train/recon_loss=0.1564  train/policy_loss=-0.0004  train/reward=-0.0246  train/baseline=-0.0214
+[step  69600] train/recon_loss=0.1393  train/policy_loss=0.0000  train/reward=-0.0204  train/baseline=-0.0205
+[step  69700] train/recon_loss=0.1540  train/policy_loss=-0.0009  train/reward=-0.0237  train/baseline=-0.0211
+[step  69800] train/recon_loss=0.1324  train/policy_loss=0.0002  train/reward=-0.0197  train/baseline=-0.0205
+[step  69850] train/epoch_recon=0.1450  train/epoch_policy=-0.0001  train/epoch_reward=-0.0210  train/epoch=1220.0000  val/recon_loss=0.1633  val/reward=-0.0250
+[step  69900] train/recon_loss=0.1342  train/policy_loss=0.0005  train/reward=-0.0188  train/baseline=-0.0210
+[step  70000] train/recon_loss=0.1469  train/policy_loss=-0.0006  train/reward=-0.0222  train/baseline=-0.0210
+[step  70100] train/recon_loss=0.1303  train/policy_loss=0.0014  train/reward=-0.0168  train/baseline=-0.0207
+[step  70200] train/recon_loss=0.1705  train/policy_loss=-0.0004  train/reward=-0.0262  train/baseline=-0.0210
+[step  70300] train/recon_loss=0.1417  train/policy_loss=0.0001  train/reward=-0.0202  train/baseline=-0.0205
+[step  70400] train/recon_loss=0.1078  train/policy_loss=0.0001  train/reward=-0.0156  train/baseline=-0.0205
+[step  70400] train/epoch_recon=0.1446  train/epoch_policy=0.0000  train/epoch_reward=-0.0208  train/epoch=1230.0000  val/recon_loss=0.1594  val/reward=-0.0236
+[step  70500] train/recon_loss=0.1801  train/policy_loss=-0.0004  train/reward=-0.0258  train/baseline=-0.0227
+[step  70600] train/recon_loss=0.2012  train/policy_loss=-0.0013  train/reward=-0.0319  train/baseline=-0.0260
+[step  70700] train/recon_loss=0.1561  train/policy_loss=0.0003  train/reward=-0.0222  train/baseline=-0.0227
+[step  70800] train/recon_loss=0.1547  train/policy_loss=-0.0021  train/reward=-0.0245  train/baseline=-0.0226
+[step  70900] train/recon_loss=0.1349  train/policy_loss=0.0002  train/reward=-0.0202  train/baseline=-0.0220
+[step  70950] train/epoch_recon=0.1497  train/epoch_policy=0.0000  train/epoch_reward=-0.0217  train/epoch=1240.0000  val/recon_loss=0.1624  val/reward=-0.0240
+[step  71000] train/recon_loss=0.1532  train/policy_loss=-0.0005  train/reward=-0.0241  train/baseline=-0.0217
+[step  71100] train/recon_loss=0.1436  train/policy_loss=0.0001  train/reward=-0.0201  train/baseline=-0.0210
+[step  71200] train/recon_loss=0.1559  train/policy_loss=0.0002  train/reward=-0.0207  train/baseline=-0.0215
+[step  71300] train/recon_loss=0.1403  train/policy_loss=0.0003  train/reward=-0.0202  train/baseline=-0.0212
+[step  71400] train/recon_loss=0.1443  train/policy_loss=0.0003  train/reward=-0.0203  train/baseline=-0.0212
+[step  71500] train/recon_loss=0.1365  train/policy_loss=0.0008  train/reward=-0.0197  train/baseline=-0.0219
+[step  71500] train/epoch_recon=0.1480  train/epoch_policy=-0.0000  train/epoch_reward=-0.0215  train/epoch=1250.0000  val/recon_loss=0.1656  val/reward=-0.0243
+[step  71600] train/recon_loss=0.1329  train/policy_loss=0.0005  train/reward=-0.0198  train/baseline=-0.0216
+[step  71700] train/recon_loss=0.1388  train/policy_loss=0.0007  train/reward=-0.0172  train/baseline=-0.0210
+[step  71800] train/recon_loss=0.1214  train/policy_loss=0.0009  train/reward=-0.0164  train/baseline=-0.0208
+[step  71900] train/recon_loss=0.1638  train/policy_loss=-0.0003  train/reward=-0.0226  train/baseline=-0.0218
+[step  72000] train/recon_loss=0.1608  train/policy_loss=-0.0006  train/reward=-0.0240  train/baseline=-0.0215
+[step  72050] train/epoch_recon=0.1494  train/epoch_policy=-0.0000  train/epoch_reward=-0.0220  train/epoch=1260.0000  val/recon_loss=0.1633  val/reward=-0.0242
+[step  72100] train/recon_loss=0.1588  train/policy_loss=-0.0005  train/reward=-0.0228  train/baseline=-0.0207
+[step  72200] train/recon_loss=0.1288  train/policy_loss=0.0003  train/reward=-0.0205  train/baseline=-0.0210
+[step  72300] train/recon_loss=0.1374  train/policy_loss=-0.0003  train/reward=-0.0214  train/baseline=-0.0208
+[step  72400] train/recon_loss=0.1688  train/policy_loss=-0.0001  train/reward=-0.0219  train/baseline=-0.0207
+[step  72500] train/recon_loss=0.1334  train/policy_loss=0.0006  train/reward=-0.0178  train/baseline=-0.0214
+[step  72600] train/recon_loss=0.1458  train/policy_loss=0.0001  train/reward=-0.0196  train/baseline=-0.0209
+[step  72600] train/epoch_recon=0.1473  train/epoch_policy=0.0001  train/epoch_reward=-0.0214  train/epoch=1270.0000  val/recon_loss=0.1681  val/reward=-0.0258
+[step  72700] train/recon_loss=0.1573  train/policy_loss=-0.0021  train/reward=-0.0247  train/baseline=-0.0210
+[step  72800] train/recon_loss=0.1186  train/policy_loss=0.0011  train/reward=-0.0174  train/baseline=-0.0209
+[step  72900] train/recon_loss=0.1270  train/policy_loss=0.0009  train/reward=-0.0174  train/baseline=-0.0217
+[step  73000] train/recon_loss=0.1463  train/policy_loss=-0.0004  train/reward=-0.0223  train/baseline=-0.0208
+[step  73100] train/recon_loss=0.1365  train/policy_loss=0.0001  train/reward=-0.0216  train/baseline=-0.0218
+[step  73150] train/epoch_recon=0.1479  train/epoch_policy=-0.0001  train/epoch_reward=-0.0214  train/epoch=1280.0000  val/recon_loss=0.1673  val/reward=-0.0249
+[step  73200] train/recon_loss=0.1667  train/policy_loss=-0.0004  train/reward=-0.0247  train/baseline=-0.0218
+[step  73300] train/recon_loss=0.1531  train/policy_loss=-0.0005  train/reward=-0.0238  train/baseline=-0.0226
+[step  73400] train/recon_loss=0.1433  train/policy_loss=0.0001  train/reward=-0.0211  train/baseline=-0.0215
+[step  73500] train/recon_loss=0.1650  train/policy_loss=-0.0002  train/reward=-0.0224  train/baseline=-0.0218
+[step  73600] train/recon_loss=0.1515  train/policy_loss=-0.0008  train/reward=-0.0237  train/baseline=-0.0215
+[step  73700] train/recon_loss=0.1416  train/policy_loss=0.0002  train/reward=-0.0194  train/baseline=-0.0206
+[step  73700] train/epoch_recon=0.1456  train/epoch_policy=-0.0000  train/epoch_reward=-0.0208  train/epoch=1290.0000  val/recon_loss=0.1766  val/reward=-0.0268
+[step  73800] train/recon_loss=0.1504  train/policy_loss=0.0001  train/reward=-0.0199  train/baseline=-0.0201
+[step  73900] train/recon_loss=0.1296  train/policy_loss=0.0002  train/reward=-0.0182  train/baseline=-0.0200
+[step  74000] train/recon_loss=0.1610  train/policy_loss=0.0000  train/reward=-0.0217  train/baseline=-0.0217
+[step  74100] train/recon_loss=0.1857  train/policy_loss=-0.0024  train/reward=-0.0255  train/baseline=-0.0215
+[step  74200] train/recon_loss=0.1597  train/policy_loss=-0.0008  train/reward=-0.0240  train/baseline=-0.0218
+[step  74250] train/epoch_recon=0.1471  train/epoch_policy=-0.0000  train/epoch_reward=-0.0212  train/epoch=1300.0000  val/recon_loss=0.1689  val/reward=-0.0251
+[checkpoint] saved to checkpoints/ckpt_epoch1300.pt
+[step  74300] train/recon_loss=0.1258  train/policy_loss=0.0021  train/reward=-0.0169  train/baseline=-0.0200
+[step  74400] train/recon_loss=0.1210  train/policy_loss=0.0013  train/reward=-0.0173  train/baseline=-0.0211
+[step  74500] train/recon_loss=0.1432  train/policy_loss=-0.0001  train/reward=-0.0212  train/baseline=-0.0206
+[step  74600] train/recon_loss=0.1520  train/policy_loss=-0.0008  train/reward=-0.0225  train/baseline=-0.0207
+[step  74700] train/recon_loss=0.1527  train/policy_loss=-0.0002  train/reward=-0.0211  train/baseline=-0.0205
+[step  74800] train/recon_loss=0.1268  train/policy_loss=0.0004  train/reward=-0.0192  train/baseline=-0.0208
+[step  74800] train/epoch_recon=0.1447  train/epoch_policy=0.0001  train/epoch_reward=-0.0205  train/epoch=1310.0000  val/recon_loss=0.1676  val/reward=-0.0252
+[step  74900] train/recon_loss=0.1438  train/policy_loss=0.0007  train/reward=-0.0196  train/baseline=-0.0210
+[step  75000] train/recon_loss=0.1549  train/policy_loss=-0.0001  train/reward=-0.0212  train/baseline=-0.0205
+[step  75100] train/recon_loss=0.1234  train/policy_loss=0.0004  train/reward=-0.0174  train/baseline=-0.0192
+[step  75200] train/recon_loss=0.1436  train/policy_loss=0.0001  train/reward=-0.0200  train/baseline=-0.0209
+[step  75300] train/recon_loss=0.1895  train/policy_loss=-0.0016  train/reward=-0.0294  train/baseline=-0.0220
+[step  75350] train/epoch_recon=0.1439  train/epoch_policy=0.0000  train/epoch_reward=-0.0209  train/epoch=1320.0000  val/recon_loss=0.1596  val/reward=-0.0235
+[step  75400] train/recon_loss=0.1419  train/policy_loss=0.0000  train/reward=-0.0211  train/baseline=-0.0212
+[step  75500] train/recon_loss=0.1268  train/policy_loss=0.0012  train/reward=-0.0170  train/baseline=-0.0204
+[step  75600] train/recon_loss=0.1357  train/policy_loss=-0.0000  train/reward=-0.0212  train/baseline=-0.0211
+[step  75700] train/recon_loss=0.1460  train/policy_loss=-0.0002  train/reward=-0.0226  train/baseline=-0.0202
+[step  75800] train/recon_loss=0.1398  train/policy_loss=0.0005  train/reward=-0.0188  train/baseline=-0.0200
+[step  75900] train/recon_loss=0.1572  train/policy_loss=-0.0002  train/reward=-0.0230  train/baseline=-0.0202
+[step  75900] train/epoch_recon=0.1448  train/epoch_policy=0.0000  train/epoch_reward=-0.0208  train/epoch=1330.0000  val/recon_loss=0.1617  val/reward=-0.0240
+[step  76000] train/recon_loss=0.1449  train/policy_loss=-0.0000  train/reward=-0.0224  train/baseline=-0.0202
+[step  76100] train/recon_loss=0.1352  train/policy_loss=0.0001  train/reward=-0.0209  train/baseline=-0.0213
+[step  76200] train/recon_loss=0.1223  train/policy_loss=0.0005  train/reward=-0.0158  train/baseline=-0.0198
+[step  76300] train/recon_loss=0.1546  train/policy_loss=-0.0003  train/reward=-0.0216  train/baseline=-0.0204
+[step  76400] train/recon_loss=0.1651  train/policy_loss=-0.0001  train/reward=-0.0237  train/baseline=-0.0212
+[step  76450] train/epoch_recon=0.1457  train/epoch_policy=-0.0000  train/epoch_reward=-0.0206  train/epoch=1340.0000  val/recon_loss=0.1709  val/reward=-0.0256
+[step  76500] train/recon_loss=0.1461  train/policy_loss=-0.0001  train/reward=-0.0208  train/baseline=-0.0201
+[step  76600] train/recon_loss=0.1506  train/policy_loss=-0.0002  train/reward=-0.0233  train/baseline=-0.0207
+[step  76700] train/recon_loss=0.1240  train/policy_loss=0.0002  train/reward=-0.0175  train/baseline=-0.0198
+[step  76800] train/recon_loss=0.1424  train/policy_loss=-0.0000  train/reward=-0.0201  train/baseline=-0.0200
+[step  76900] train/recon_loss=0.1409  train/policy_loss=-0.0001  train/reward=-0.0220  train/baseline=-0.0207
+[step  77000] train/recon_loss=0.1684  train/policy_loss=-0.0000  train/reward=-0.0215  train/baseline=-0.0209
+[step  77000] train/epoch_recon=0.1436  train/epoch_policy=0.0000  train/epoch_reward=-0.0206  train/epoch=1350.0000  val/recon_loss=0.1684  val/reward=-0.0253
+[step  77100] train/recon_loss=0.1267  train/policy_loss=0.0004  train/reward=-0.0166  train/baseline=-0.0195
+[step  77200] train/recon_loss=0.1521  train/policy_loss=-0.0003  train/reward=-0.0221  train/baseline=-0.0204
+[step  77300] train/recon_loss=0.1437  train/policy_loss=0.0002  train/reward=-0.0190  train/baseline=-0.0201
+[step  77400] train/recon_loss=0.1538  train/policy_loss=-0.0001  train/reward=-0.0230  train/baseline=-0.0205
+[step  77500] train/recon_loss=0.1371  train/policy_loss=0.0000  train/reward=-0.0201  train/baseline=-0.0202
+[step  77550] train/epoch_recon=0.1439  train/epoch_policy=0.0000  train/epoch_reward=-0.0206  train/epoch=1360.0000  val/recon_loss=0.1632  val/reward=-0.0242
+[step  77600] train/recon_loss=0.1587  train/policy_loss=-0.0001  train/reward=-0.0228  train/baseline=-0.0210
+[step  77700] train/recon_loss=0.1916  train/policy_loss=-0.0005  train/reward=-0.0301  train/baseline=-0.0216
+[step  77800] train/recon_loss=0.1390  train/policy_loss=-0.0000  train/reward=-0.0209  train/baseline=-0.0203
+[step  77900] train/recon_loss=0.1351  train/policy_loss=0.0004  train/reward=-0.0177  train/baseline=-0.0205
+[step  78000] train/recon_loss=0.1313  train/policy_loss=0.0001  train/reward=-0.0185  train/baseline=-0.0211
+[step  78100] train/recon_loss=0.1363  train/policy_loss=0.0001  train/reward=-0.0195  train/baseline=-0.0202
+[step  78100] train/epoch_recon=0.1428  train/epoch_policy=0.0000  train/epoch_reward=-0.0203  train/epoch=1370.0000  val/recon_loss=0.1593  val/reward=-0.0237
+[step  78200] train/recon_loss=0.1353  train/policy_loss=0.0001  train/reward=-0.0205  train/baseline=-0.0218
+[step  78300] train/recon_loss=0.1467  train/policy_loss=-0.0002  train/reward=-0.0222  train/baseline=-0.0208
+[step  78400] train/recon_loss=0.1299  train/policy_loss=0.0000  train/reward=-0.0192  train/baseline=-0.0198
+[step  78500] train/recon_loss=0.1493  train/policy_loss=-0.0000  train/reward=-0.0231  train/baseline=-0.0202
+[step  78600] train/recon_loss=0.1209  train/policy_loss=0.0000  train/reward=-0.0182  train/baseline=-0.0202
+[step  78650] train/epoch_recon=0.1436  train/epoch_policy=0.0000  train/epoch_reward=-0.0206  train/epoch=1380.0000  val/recon_loss=0.1689  val/reward=-0.0248
+[step  78700] train/recon_loss=0.1419  train/policy_loss=0.0000  train/reward=-0.0204  train/baseline=-0.0205
+[step  78800] train/recon_loss=0.1382  train/policy_loss=0.0000  train/reward=-0.0210  train/baseline=-0.0218
+[step  78900] train/recon_loss=0.1226  train/policy_loss=0.0001  train/reward=-0.0177  train/baseline=-0.0211
+[step  79000] train/recon_loss=0.1508  train/policy_loss=-0.0000  train/reward=-0.0223  train/baseline=-0.0215
+[step  79100] train/recon_loss=0.1732  train/policy_loss=-0.0005  train/reward=-0.0275  train/baseline=-0.0214
+[step  79200] train/recon_loss=0.1508  train/policy_loss=-0.0002  train/reward=-0.0237  train/baseline=-0.0212
+[step  79200] train/epoch_recon=0.1439  train/epoch_policy=-0.0000  train/epoch_reward=-0.0207  train/epoch=1390.0000  val/recon_loss=0.1784  val/reward=-0.0268
+[step  79300] train/recon_loss=0.1480  train/policy_loss=-0.0000  train/reward=-0.0230  train/baseline=-0.0214
+[step  79400] train/recon_loss=0.1539  train/policy_loss=-0.0000  train/reward=-0.0230  train/baseline=-0.0217
+[step  79500] train/recon_loss=0.1221  train/policy_loss=0.0003  train/reward=-0.0169  train/baseline=-0.0202
+[step  79600] train/recon_loss=0.1500  train/policy_loss=0.0000  train/reward=-0.0212  train/baseline=-0.0222
+[step  79700] train/recon_loss=0.1526  train/policy_loss=-0.0001  train/reward=-0.0233  train/baseline=-0.0211
+[step  79750] train/epoch_recon=0.1463  train/epoch_policy=-0.0000  train/epoch_reward=-0.0215  train/epoch=1400.0000  val/recon_loss=0.1732  val/reward=-0.0262
+[checkpoint] saved to checkpoints/ckpt_epoch1400.pt
+[step  79800] train/recon_loss=0.1577  train/policy_loss=-0.0000  train/reward=-0.0225  train/baseline=-0.0204
+[step  79900] train/recon_loss=0.1523  train/policy_loss=-0.0000  train/reward=-0.0224  train/baseline=-0.0219
+[step  80000] train/recon_loss=0.1448  train/policy_loss=-0.0001  train/reward=-0.0223  train/baseline=-0.0208
+[step  80100] train/recon_loss=0.1423  train/policy_loss=0.0000  train/reward=-0.0194  train/baseline=-0.0206
+[step  80200] train/recon_loss=0.1480  train/policy_loss=0.0001  train/reward=-0.0195  train/baseline=-0.0206
+[step  80300] train/recon_loss=0.1174  train/policy_loss=0.0002  train/reward=-0.0151  train/baseline=-0.0197
+[step  80300] train/epoch_recon=0.1427  train/epoch_policy=-0.0000  train/epoch_reward=-0.0202  train/epoch=1410.0000  val/recon_loss=0.1659  val/reward=-0.0252
+[step  80400] train/recon_loss=0.1472  train/policy_loss=-0.0001  train/reward=-0.0218  train/baseline=-0.0202
+[step  80500] train/recon_loss=0.1238  train/policy_loss=0.0002  train/reward=-0.0161  train/baseline=-0.0202
+[step  80600] train/recon_loss=0.1427  train/policy_loss=0.0000  train/reward=-0.0210  train/baseline=-0.0211
+[step  80700] train/recon_loss=0.1585  train/policy_loss=-0.0004  train/reward=-0.0246  train/baseline=-0.0217
+[step  80800] train/recon_loss=0.1521  train/policy_loss=0.0001  train/reward=-0.0193  train/baseline=-0.0198
+[step  80850] train/epoch_recon=0.1423  train/epoch_policy=0.0000  train/epoch_reward=-0.0204  train/epoch=1420.0000  val/recon_loss=0.1580  val/reward=-0.0231
+[step  80900] train/recon_loss=0.1412  train/policy_loss=-0.0000  train/reward=-0.0207  train/baseline=-0.0207
+[step  81000] train/recon_loss=0.1846  train/policy_loss=-0.0010  train/reward=-0.0289  train/baseline=-0.0215
+[step  81100] train/recon_loss=0.1455  train/policy_loss=0.0000  train/reward=-0.0202  train/baseline=-0.0208
+[step  81200] train/recon_loss=0.1224  train/policy_loss=0.0000  train/reward=-0.0169  train/baseline=-0.0197
+[step  81300] train/recon_loss=0.1163  train/policy_loss=0.0001  train/reward=-0.0170  train/baseline=-0.0198
+[step  81400] train/recon_loss=0.1408  train/policy_loss=-0.0000  train/reward=-0.0214  train/baseline=-0.0208
+[step  81400] train/epoch_recon=0.1439  train/epoch_policy=0.0000  train/epoch_reward=-0.0208  train/epoch=1430.0000  val/recon_loss=0.1650  val/reward=-0.0246
+[step  81500] train/recon_loss=0.1162  train/policy_loss=0.0003  train/reward=-0.0158  train/baseline=-0.0201
+[step  81600] train/recon_loss=0.1367  train/policy_loss=-0.0000  train/reward=-0.0194  train/baseline=-0.0192
+[step  81700] train/recon_loss=0.1212  train/policy_loss=0.0002  train/reward=-0.0172  train/baseline=-0.0206
+[step  81800] train/recon_loss=0.1325  train/policy_loss=0.0001  train/reward=-0.0185  train/baseline=-0.0201
+[step  81900] train/recon_loss=0.1340  train/policy_loss=0.0000  train/reward=-0.0188  train/baseline=-0.0199
+[step  81950] train/epoch_recon=0.1432  train/epoch_policy=0.0000  train/epoch_reward=-0.0206  train/epoch=1440.0000  val/recon_loss=0.1670  val/reward=-0.0246
+[step  82000] train/recon_loss=0.1280  train/policy_loss=0.0002  train/reward=-0.0182  train/baseline=-0.0204
+[step  82100] train/recon_loss=0.1282  train/policy_loss=0.0000  train/reward=-0.0188  train/baseline=-0.0198
+[step  82200] train/recon_loss=0.1664  train/policy_loss=-0.0001  train/reward=-0.0262  train/baseline=-0.0211
+[step  82300] train/recon_loss=0.1428  train/policy_loss=-0.0004  train/reward=-0.0220  train/baseline=-0.0196
+[step  82400] train/recon_loss=0.1566  train/policy_loss=-0.0000  train/reward=-0.0231  train/baseline=-0.0210
+[step  82500] train/recon_loss=0.1360  train/policy_loss=0.0001  train/reward=-0.0200  train/baseline=-0.0209
+[step  82500] train/epoch_recon=0.1441  train/epoch_policy=0.0000  train/epoch_reward=-0.0208  train/epoch=1450.0000  val/recon_loss=0.1651  val/reward=-0.0245
+[step  82600] train/recon_loss=0.1305  train/policy_loss=0.0000  train/reward=-0.0188  train/baseline=-0.0191
+[step  82700] train/recon_loss=0.1456  train/policy_loss=0.0003  train/reward=-0.0174  train/baseline=-0.0205
+[step  82800] train/recon_loss=0.1464  train/policy_loss=-0.0000  train/reward=-0.0227  train/baseline=-0.0209
+[step  82900] train/recon_loss=0.1736  train/policy_loss=-0.0001  train/reward=-0.0246  train/baseline=-0.0206
+[step  83000] train/recon_loss=0.1377  train/policy_loss=0.0001  train/reward=-0.0185  train/baseline=-0.0196
+[step  83050] train/epoch_recon=0.1427  train/epoch_policy=-0.0001  train/epoch_reward=-0.0204  train/epoch=1460.0000  val/recon_loss=0.1624  val/reward=-0.0242
+[step  83100] train/recon_loss=0.1508  train/policy_loss=-0.0000  train/reward=-0.0222  train/baseline=-0.0206
+[step  83200] train/recon_loss=0.1209  train/policy_loss=0.0004  train/reward=-0.0154  train/baseline=-0.0198
+[step  83300] train/recon_loss=0.1263  train/policy_loss=0.0000  train/reward=-0.0187  train/baseline=-0.0192
+[step  83400] train/recon_loss=0.1399  train/policy_loss=0.0001  train/reward=-0.0184  train/baseline=-0.0188
+[step  83500] train/recon_loss=0.1340  train/policy_loss=0.0001  train/reward=-0.0183  train/baseline=-0.0199
+[step  83600] train/recon_loss=0.1357  train/policy_loss=0.0000  train/reward=-0.0201  train/baseline=-0.0203
+[step  83600] train/epoch_recon=0.1406  train/epoch_policy=-0.0000  train/epoch_reward=-0.0199  train/epoch=1470.0000  val/recon_loss=0.1604  val/reward=-0.0235
+[step  83700] train/recon_loss=0.1363  train/policy_loss=0.0001  train/reward=-0.0185  train/baseline=-0.0193
+[step  83800] train/recon_loss=0.1668  train/policy_loss=-0.0006  train/reward=-0.0249  train/baseline=-0.0204
+[step  83900] train/recon_loss=0.1481  train/policy_loss=-0.0000  train/reward=-0.0208  train/baseline=-0.0199
+[step  84000] train/recon_loss=0.1406  train/policy_loss=0.0002  train/reward=-0.0177  train/baseline=-0.0200
+[step  84100] train/recon_loss=0.1508  train/policy_loss=-0.0004  train/reward=-0.0232  train/baseline=-0.0206
+[step  84150] train/epoch_recon=0.1399  train/epoch_policy=0.0000  train/epoch_reward=-0.0198  train/epoch=1480.0000  val/recon_loss=0.1616  val/reward=-0.0242
+[step  84200] train/recon_loss=0.1434  train/policy_loss=-0.0000  train/reward=-0.0202  train/baseline=-0.0200
+[step  84300] train/recon_loss=0.1342  train/policy_loss=-0.0000  train/reward=-0.0197  train/baseline=-0.0193
+[step  84400] train/recon_loss=0.1302  train/policy_loss=-0.0000  train/reward=-0.0198  train/baseline=-0.0195
+[step  84500] train/recon_loss=0.1180  train/policy_loss=0.0002  train/reward=-0.0167  train/baseline=-0.0207
+[step  84600] train/recon_loss=0.1417  train/policy_loss=0.0000  train/reward=-0.0203  train/baseline=-0.0205
+[step  84700] train/recon_loss=0.1536  train/policy_loss=-0.0000  train/reward=-0.0211  train/baseline=-0.0210
+[step  84700] train/epoch_recon=0.1418  train/epoch_policy=-0.0000  train/epoch_reward=-0.0201  train/epoch=1490.0000  val/recon_loss=0.1727  val/reward=-0.0259
+[step  84800] train/recon_loss=0.1259  train/policy_loss=0.0002  train/reward=-0.0172  train/baseline=-0.0192
+[step  84900] train/recon_loss=0.1709  train/policy_loss=-0.0001  train/reward=-0.0245  train/baseline=-0.0204
+[step  85000] train/recon_loss=0.1449  train/policy_loss=-0.0002  train/reward=-0.0219  train/baseline=-0.0205
+[step  85100] train/recon_loss=0.1273  train/policy_loss=0.0010  train/reward=-0.0158  train/baseline=-0.0208
+[step  85200] train/recon_loss=0.1284  train/policy_loss=0.0000  train/reward=-0.0197  train/baseline=-0.0199
+[step  85250] train/epoch_recon=0.1397  train/epoch_policy=0.0000  train/epoch_reward=-0.0198  train/epoch=1500.0000  val/recon_loss=0.1638  val/reward=-0.0246
+[checkpoint] saved to checkpoints/ckpt_epoch1500.pt
+[step  85300] train/recon_loss=0.1557  train/policy_loss=-0.0002  train/reward=-0.0240  train/baseline=-0.0203
+[step  85400] train/recon_loss=0.1334  train/policy_loss=0.0004  train/reward=-0.0181  train/baseline=-0.0197
+[step  85500] train/recon_loss=0.1725  train/policy_loss=-0.0001  train/reward=-0.0257  train/baseline=-0.0214
+[step  85600] train/recon_loss=0.1524  train/policy_loss=-0.0000  train/reward=-0.0209  train/baseline=-0.0196
+[step  85700] train/recon_loss=0.1451  train/policy_loss=-0.0001  train/reward=-0.0225  train/baseline=-0.0200
+[step  85800] train/recon_loss=0.1664  train/policy_loss=-0.0002  train/reward=-0.0220  train/baseline=-0.0190
+[step  85800] train/epoch_recon=0.1394  train/epoch_policy=0.0000  train/epoch_reward=-0.0195  train/epoch=1510.0000  val/recon_loss=0.1632  val/reward=-0.0246
+[step  85900] train/recon_loss=0.1189  train/policy_loss=0.0001  train/reward=-0.0159  train/baseline=-0.0194
+[step  86000] train/recon_loss=0.1432  train/policy_loss=0.0001  train/reward=-0.0197  train/baseline=-0.0200
+[step  86100] train/recon_loss=0.1394  train/policy_loss=-0.0001  train/reward=-0.0207  train/baseline=-0.0201
+[step  86200] train/recon_loss=0.1463  train/policy_loss=0.0000  train/reward=-0.0188  train/baseline=-0.0200
+[step  86300] train/recon_loss=0.1265  train/policy_loss=0.0000  train/reward=-0.0167  train/baseline=-0.0190
+[step  86350] train/epoch_recon=0.1387  train/epoch_policy=-0.0000  train/epoch_reward=-0.0194  train/epoch=1520.0000  val/recon_loss=0.1609  val/reward=-0.0237
+[step  86400] train/recon_loss=0.1246  train/policy_loss=0.0005  train/reward=-0.0169  train/baseline=-0.0197
+[step  86500] train/recon_loss=0.1379  train/policy_loss=-0.0003  train/reward=-0.0215  train/baseline=-0.0197
+[step  86600] train/recon_loss=0.1354  train/policy_loss=0.0000  train/reward=-0.0184  train/baseline=-0.0203
+[step  86700] train/recon_loss=0.1446  train/policy_loss=-0.0000  train/reward=-0.0201  train/baseline=-0.0196
+[step  86800] train/recon_loss=0.1392  train/policy_loss=0.0001  train/reward=-0.0181  train/baseline=-0.0208
+[step  86900] train/recon_loss=0.1357  train/policy_loss=-0.0000  train/reward=-0.0192  train/baseline=-0.0186
+[step  86900] train/epoch_recon=0.1390  train/epoch_policy=0.0000  train/epoch_reward=-0.0195  train/epoch=1530.0000  val/recon_loss=0.1642  val/reward=-0.0246
+[step  87000] train/recon_loss=0.1457  train/policy_loss=-0.0000  train/reward=-0.0201  train/baseline=-0.0198
+[step  87100] train/recon_loss=0.1487  train/policy_loss=-0.0001  train/reward=-0.0210  train/baseline=-0.0204
+[step  87200] train/recon_loss=0.1504  train/policy_loss=-0.0004  train/reward=-0.0219  train/baseline=-0.0194
+[step  87300] train/recon_loss=0.1371  train/policy_loss=0.0001  train/reward=-0.0175  train/baseline=-0.0189
+[step  87400] train/recon_loss=0.1497  train/policy_loss=-0.0003  train/reward=-0.0214  train/baseline=-0.0206
+[step  87450] train/epoch_recon=0.1406  train/epoch_policy=-0.0000  train/epoch_reward=-0.0199  train/epoch=1540.0000  val/recon_loss=0.1632  val/reward=-0.0243
+[step  87500] train/recon_loss=0.1461  train/policy_loss=-0.0000  train/reward=-0.0203  train/baseline=-0.0199
+[step  87600] train/recon_loss=0.1545  train/policy_loss=0.0000  train/reward=-0.0202  train/baseline=-0.0202
+[step  87700] train/recon_loss=0.1345  train/policy_loss=0.0002  train/reward=-0.0185  train/baseline=-0.0202
+[step  87800] train/recon_loss=0.1405  train/policy_loss=-0.0001  train/reward=-0.0203  train/baseline=-0.0200
+[step  87900] train/recon_loss=0.1302  train/policy_loss=0.0001  train/reward=-0.0178  train/baseline=-0.0186
+[step  88000] train/recon_loss=0.1478  train/policy_loss=0.0001  train/reward=-0.0186  train/baseline=-0.0202
+[step  88000] train/epoch_recon=0.1416  train/epoch_policy=-0.0000  train/epoch_reward=-0.0201  train/epoch=1550.0000  val/recon_loss=0.1592  val/reward=-0.0234
+[step  88100] train/recon_loss=0.1314  train/policy_loss=0.0002  train/reward=-0.0180  train/baseline=-0.0191
+[step  88200] train/recon_loss=0.1093  train/policy_loss=0.0015  train/reward=-0.0139  train/baseline=-0.0204
+[step  88300] train/recon_loss=0.1570  train/policy_loss=-0.0005  train/reward=-0.0223  train/baseline=-0.0204
+[step  88400] train/recon_loss=0.1223  train/policy_loss=0.0008  train/reward=-0.0173  train/baseline=-0.0207
+[step  88500] train/recon_loss=0.1485  train/policy_loss=-0.0003  train/reward=-0.0218  train/baseline=-0.0203
+[step  88550] train/epoch_recon=0.1414  train/epoch_policy=0.0001  train/epoch_reward=-0.0200  train/epoch=1560.0000  val/recon_loss=0.1667  val/reward=-0.0254
+[step  88600] train/recon_loss=0.1224  train/policy_loss=0.0004  train/reward=-0.0163  train/baseline=-0.0195
+[step  88700] train/recon_loss=0.1440  train/policy_loss=-0.0001  train/reward=-0.0207  train/baseline=-0.0197
+[step  88800] train/recon_loss=0.1381  train/policy_loss=-0.0001  train/reward=-0.0210  train/baseline=-0.0203
+[step  88900] train/recon_loss=0.1408  train/policy_loss=0.0003  train/reward=-0.0182  train/baseline=-0.0197
+[step  89000] train/recon_loss=0.1511  train/policy_loss=-0.0003  train/reward=-0.0220  train/baseline=-0.0205
+[step  89100] train/recon_loss=0.1473  train/policy_loss=-0.0000  train/reward=-0.0213  train/baseline=-0.0204
+[step  89100] train/epoch_recon=0.1413  train/epoch_policy=-0.0001  train/epoch_reward=-0.0200  train/epoch=1570.0000  val/recon_loss=0.1646  val/reward=-0.0243
+[step  89200] train/recon_loss=0.1315  train/policy_loss=0.0001  train/reward=-0.0169  train/baseline=-0.0197
+[step  89300] train/recon_loss=0.1477  train/policy_loss=-0.0000  train/reward=-0.0218  train/baseline=-0.0214
+[step  89400] train/recon_loss=0.1722  train/policy_loss=-0.0015  train/reward=-0.0261  train/baseline=-0.0210
+[step  89500] train/recon_loss=0.1574  train/policy_loss=-0.0004  train/reward=-0.0237  train/baseline=-0.0207
+[step  89600] train/recon_loss=0.1699  train/policy_loss=-0.0002  train/reward=-0.0233  train/baseline=-0.0200
+[step  89650] train/epoch_recon=0.1475  train/epoch_policy=-0.0001  train/epoch_reward=-0.0212  train/epoch=1580.0000  val/recon_loss=0.1686  val/reward=-0.0249
+[step  89700] train/recon_loss=0.1224  train/policy_loss=0.0005  train/reward=-0.0167  train/baseline=-0.0212
+[step  89800] train/recon_loss=0.1647  train/policy_loss=-0.0008  train/reward=-0.0240  train/baseline=-0.0195
+[step  89900] train/recon_loss=0.1602  train/policy_loss=-0.0001  train/reward=-0.0222  train/baseline=-0.0209
+[step  90000] train/recon_loss=0.1561  train/policy_loss=-0.0001  train/reward=-0.0207  train/baseline=-0.0203
+[step  90100] train/recon_loss=0.1430  train/policy_loss=0.0002  train/reward=-0.0197  train/baseline=-0.0205
+[step  90200] train/recon_loss=0.1315  train/policy_loss=0.0001  train/reward=-0.0192  train/baseline=-0.0196
+[step  90200] train/epoch_recon=0.1394  train/epoch_policy=0.0000  train/epoch_reward=-0.0197  train/epoch=1590.0000  val/recon_loss=0.1662  val/reward=-0.0251
+[step  90300] train/recon_loss=0.1703  train/policy_loss=-0.0007  train/reward=-0.0222  train/baseline=-0.0204
+[step  90400] train/recon_loss=0.1314  train/policy_loss=0.0005  train/reward=-0.0178  train/baseline=-0.0209
+[step  90500] train/recon_loss=0.1251  train/policy_loss=0.0004  train/reward=-0.0161  train/baseline=-0.0199
+[step  90600] train/recon_loss=0.1495  train/policy_loss=-0.0005  train/reward=-0.0208  train/baseline=-0.0191
+[step  90700] train/recon_loss=0.1742  train/policy_loss=-0.0006  train/reward=-0.0254  train/baseline=-0.0200
+[step  90750] train/epoch_recon=0.1414  train/epoch_policy=-0.0001  train/epoch_reward=-0.0200  train/epoch=1600.0000  val/recon_loss=0.1628  val/reward=-0.0247
+[checkpoint] saved to checkpoints/ckpt_epoch1600.pt
+[step  90800] train/recon_loss=0.1223  train/policy_loss=0.0003  train/reward=-0.0181  train/baseline=-0.0202
+[step  90900] train/recon_loss=0.1267  train/policy_loss=0.0001  train/reward=-0.0170  train/baseline=-0.0202
+[step  91000] train/recon_loss=0.1618  train/policy_loss=-0.0005  train/reward=-0.0231  train/baseline=-0.0204
+[step  91100] train/recon_loss=0.1534  train/policy_loss=-0.0003  train/reward=-0.0228  train/baseline=-0.0202
+[step  91200] train/recon_loss=0.1199  train/policy_loss=0.0001  train/reward=-0.0169  train/baseline=-0.0193
+[step  91300] train/recon_loss=0.1563  train/policy_loss=-0.0003  train/reward=-0.0220  train/baseline=-0.0203
+[step  91300] train/epoch_recon=0.1414  train/epoch_policy=-0.0001  train/epoch_reward=-0.0201  train/epoch=1610.0000  val/recon_loss=0.1654  val/reward=-0.0245
+[step  91400] train/recon_loss=0.1346  train/policy_loss=0.0002  train/reward=-0.0185  train/baseline=-0.0213
+[step  91500] train/recon_loss=0.1445  train/policy_loss=-0.0006  train/reward=-0.0230  train/baseline=-0.0204
+[step  91600] train/recon_loss=0.1428  train/policy_loss=0.0004  train/reward=-0.0188  train/baseline=-0.0198
+[step  91700] train/recon_loss=0.1416  train/policy_loss=0.0001  train/reward=-0.0197  train/baseline=-0.0205
+[step  91800] train/recon_loss=0.1365  train/policy_loss=0.0001  train/reward=-0.0186  train/baseline=-0.0202
+[step  91850] train/epoch_recon=0.1419  train/epoch_policy=-0.0000  train/epoch_reward=-0.0205  train/epoch=1620.0000  val/recon_loss=0.1685  val/reward=-0.0254
+[step  91900] train/recon_loss=0.1648  train/policy_loss=-0.0003  train/reward=-0.0227  train/baseline=-0.0203
+[step  92000] train/recon_loss=0.1375  train/policy_loss=0.0002  train/reward=-0.0184  train/baseline=-0.0204
+[step  92100] train/recon_loss=0.1253  train/policy_loss=0.0006  train/reward=-0.0171  train/baseline=-0.0200
+[step  92200] train/recon_loss=0.1334  train/policy_loss=0.0003  train/reward=-0.0179  train/baseline=-0.0194
+[step  92300] train/recon_loss=0.1539  train/policy_loss=-0.0003  train/reward=-0.0216  train/baseline=-0.0203
+[step  92400] train/recon_loss=0.1306  train/policy_loss=0.0003  train/reward=-0.0194  train/baseline=-0.0209
+[step  92400] train/epoch_recon=0.1414  train/epoch_policy=-0.0000  train/epoch_reward=-0.0204  train/epoch=1630.0000  val/recon_loss=0.1684  val/reward=-0.0255
+[step  92500] train/recon_loss=0.1391  train/policy_loss=-0.0000  train/reward=-0.0208  train/baseline=-0.0207
+[step  92600] train/recon_loss=0.1697  train/policy_loss=-0.0007  train/reward=-0.0234  train/baseline=-0.0195
+[step  92700] train/recon_loss=0.1158  train/policy_loss=0.0002  train/reward=-0.0169  train/baseline=-0.0199
+[step  92800] train/recon_loss=0.1244  train/policy_loss=0.0001  train/reward=-0.0201  train/baseline=-0.0204
+[step  92900] train/recon_loss=0.1404  train/policy_loss=0.0000  train/reward=-0.0194  train/baseline=-0.0195
+[step  92950] train/epoch_recon=0.1413  train/epoch_policy=-0.0000  train/epoch_reward=-0.0201  train/epoch=1640.0000  val/recon_loss=0.1674  val/reward=-0.0256
+[step  93000] train/recon_loss=0.1449  train/policy_loss=-0.0001  train/reward=-0.0218  train/baseline=-0.0203
+[step  93100] train/recon_loss=0.1371  train/policy_loss=0.0000  train/reward=-0.0210  train/baseline=-0.0212
+[step  93200] train/recon_loss=0.1405  train/policy_loss=-0.0001  train/reward=-0.0213  train/baseline=-0.0196
+[step  93300] train/recon_loss=0.1393  train/policy_loss=0.0001  train/reward=-0.0195  train/baseline=-0.0202
+[step  93400] train/recon_loss=0.1304  train/policy_loss=0.0002  train/reward=-0.0187  train/baseline=-0.0204
+[step  93500] train/recon_loss=0.1238  train/policy_loss=0.0005  train/reward=-0.0184  train/baseline=-0.0212
+[step  93500] train/epoch_recon=0.1436  train/epoch_policy=-0.0000  train/epoch_reward=-0.0206  train/epoch=1650.0000  val/recon_loss=0.1691  val/reward=-0.0255
+[step  93600] train/recon_loss=0.1414  train/policy_loss=0.0001  train/reward=-0.0185  train/baseline=-0.0203
+[step  93700] train/recon_loss=0.1591  train/policy_loss=0.0000  train/reward=-0.0206  train/baseline=-0.0207
+[step  93800] train/recon_loss=0.1225  train/policy_loss=0.0006  train/reward=-0.0172  train/baseline=-0.0209
+[step  93900] train/recon_loss=0.1214  train/policy_loss=0.0005  train/reward=-0.0159  train/baseline=-0.0198
+[step  94000] train/recon_loss=0.1462  train/policy_loss=-0.0000  train/reward=-0.0210  train/baseline=-0.0198
+[step  94050] train/epoch_recon=0.1399  train/epoch_policy=0.0000  train/epoch_reward=-0.0198  train/epoch=1660.0000  val/recon_loss=0.1695  val/reward=-0.0259
+[step  94100] train/recon_loss=0.1179  train/policy_loss=0.0007  train/reward=-0.0162  train/baseline=-0.0197
+[step  94200] train/recon_loss=0.1384  train/policy_loss=0.0001  train/reward=-0.0184  train/baseline=-0.0202
+[step  94300] train/recon_loss=0.1466  train/policy_loss=-0.0000  train/reward=-0.0217  train/baseline=-0.0208
+[step  94400] train/recon_loss=0.1289  train/policy_loss=0.0001  train/reward=-0.0178  train/baseline=-0.0202
+[step  94500] train/recon_loss=0.1585  train/policy_loss=-0.0001  train/reward=-0.0227  train/baseline=-0.0198
+[step  94600] train/recon_loss=0.1356  train/policy_loss=-0.0000  train/reward=-0.0213  train/baseline=-0.0204
+[step  94600] train/epoch_recon=0.1416  train/epoch_policy=0.0000  train/epoch_reward=-0.0206  train/epoch=1670.0000  val/recon_loss=0.1772  val/reward=-0.0268
+[step  94700] train/recon_loss=0.1423  train/policy_loss=-0.0001  train/reward=-0.0200  train/baseline=-0.0195
+[step  94800] train/recon_loss=0.1493  train/policy_loss=-0.0003  train/reward=-0.0217  train/baseline=-0.0201
+[step  94900] train/recon_loss=0.1359  train/policy_loss=0.0000  train/reward=-0.0192  train/baseline=-0.0196
+[step  95000] train/recon_loss=0.1518  train/policy_loss=-0.0001  train/reward=-0.0202  train/baseline=-0.0199
+[step  95100] train/recon_loss=0.1505  train/policy_loss=0.0001  train/reward=-0.0196  train/baseline=-0.0203
+[step  95150] train/epoch_recon=0.1397  train/epoch_policy=0.0000  train/epoch_reward=-0.0199  train/epoch=1680.0000  val/recon_loss=0.1741  val/reward=-0.0262
+[step  95200] train/recon_loss=0.1426  train/policy_loss=0.0003  train/reward=-0.0182  train/baseline=-0.0204
+[step  95300] train/recon_loss=0.1315  train/policy_loss=0.0001  train/reward=-0.0203  train/baseline=-0.0208
+[step  95400] train/recon_loss=0.1497  train/policy_loss=0.0001  train/reward=-0.0201  train/baseline=-0.0206
+[step  95500] train/recon_loss=0.1358  train/policy_loss=0.0004  train/reward=-0.0189  train/baseline=-0.0209
+[step  95600] train/recon_loss=0.1461  train/policy_loss=-0.0001  train/reward=-0.0205  train/baseline=-0.0197
+[step  95700] train/recon_loss=0.1387  train/policy_loss=0.0001  train/reward=-0.0191  train/baseline=-0.0207
+[step  95700] train/epoch_recon=0.1428  train/epoch_policy=0.0000  train/epoch_reward=-0.0206  train/epoch=1690.0000  val/recon_loss=0.1712  val/reward=-0.0265
+[step  95800] train/recon_loss=0.1391  train/policy_loss=-0.0000  train/reward=-0.0192  train/baseline=-0.0188
+[step  95900] train/recon_loss=0.1331  train/policy_loss=0.0003  train/reward=-0.0182  train/baseline=-0.0207
+[step  96000] train/recon_loss=0.1297  train/policy_loss=0.0001  train/reward=-0.0200  train/baseline=-0.0204
+[step  96100] train/recon_loss=0.1499  train/policy_loss=-0.0004  train/reward=-0.0222  train/baseline=-0.0204
+[step  96200] train/recon_loss=0.1654  train/policy_loss=-0.0007  train/reward=-0.0242  train/baseline=-0.0208
+[step  96250] train/epoch_recon=0.1407  train/epoch_policy=0.0000  train/epoch_reward=-0.0200  train/epoch=1700.0000  val/recon_loss=0.1706  val/reward=-0.0256
+[checkpoint] saved to checkpoints/ckpt_epoch1700.pt
+[step  96300] train/recon_loss=0.1329  train/policy_loss=0.0009  train/reward=-0.0164  train/baseline=-0.0200
+[step  96400] train/recon_loss=0.1251  train/policy_loss=0.0011  train/reward=-0.0173  train/baseline=-0.0201
+[step  96500] train/recon_loss=0.1490  train/policy_loss=-0.0002  train/reward=-0.0223  train/baseline=-0.0211
+[step  96600] train/recon_loss=0.1412  train/policy_loss=0.0004  train/reward=-0.0188  train/baseline=-0.0204
+[step  96700] train/recon_loss=0.1349  train/policy_loss=-0.0004  train/reward=-0.0207  train/baseline=-0.0193
+[step  96800] train/recon_loss=0.1319  train/policy_loss=0.0003  train/reward=-0.0178  train/baseline=-0.0207
+[step  96800] train/epoch_recon=0.1433  train/epoch_policy=0.0000  train/epoch_reward=-0.0205  train/epoch=1710.0000  val/recon_loss=0.1671  val/reward=-0.0253
+[step  96900] train/recon_loss=0.1524  train/policy_loss=-0.0010  train/reward=-0.0219  train/baseline=-0.0202
+[step  97000] train/recon_loss=0.1650  train/policy_loss=-0.0014  train/reward=-0.0248  train/baseline=-0.0202
+[step  97100] train/recon_loss=0.1339  train/policy_loss=0.0005  train/reward=-0.0183  train/baseline=-0.0198
+[step  97200] train/recon_loss=0.1649  train/policy_loss=-0.0008  train/reward=-0.0252  train/baseline=-0.0206
+[step  97300] train/recon_loss=0.1365  train/policy_loss=0.0002  train/reward=-0.0185  train/baseline=-0.0193
+[step  97350] train/epoch_recon=0.1423  train/epoch_policy=-0.0002  train/epoch_reward=-0.0204  train/epoch=1720.0000  val/recon_loss=0.1674  val/reward=-0.0250
+[step  97400] train/recon_loss=0.1237  train/policy_loss=0.0020  train/reward=-0.0162  train/baseline=-0.0202
+[step  97500] train/recon_loss=0.1268  train/policy_loss=0.0002  train/reward=-0.0193  train/baseline=-0.0208
+[step  97600] train/recon_loss=0.1272  train/policy_loss=0.0005  train/reward=-0.0167  train/baseline=-0.0206
+[step  97700] train/recon_loss=0.1269  train/policy_loss=0.0006  train/reward=-0.0185  train/baseline=-0.0206
+[step  97800] train/recon_loss=0.1211  train/policy_loss=0.0009  train/reward=-0.0175  train/baseline=-0.0206
+[step  97900] train/recon_loss=0.1413  train/policy_loss=0.0008  train/reward=-0.0177  train/baseline=-0.0202
+[step  97900] train/epoch_recon=0.1433  train/epoch_policy=0.0001  train/epoch_reward=-0.0207  train/epoch=1730.0000  val/recon_loss=0.1685  val/reward=-0.0255
+[step  98000] train/recon_loss=0.1278  train/policy_loss=0.0003  train/reward=-0.0188  train/baseline=-0.0200
+[step  98100] train/recon_loss=0.1448  train/policy_loss=-0.0001  train/reward=-0.0200  train/baseline=-0.0195
+[step  98200] train/recon_loss=0.1525  train/policy_loss=-0.0005  train/reward=-0.0220  train/baseline=-0.0209
+[step  98300] train/recon_loss=0.1513  train/policy_loss=-0.0002  train/reward=-0.0221  train/baseline=-0.0205
+[step  98400] train/recon_loss=0.1715  train/policy_loss=-0.0021  train/reward=-0.0260  train/baseline=-0.0208
+[step  98450] train/epoch_recon=0.1413  train/epoch_policy=-0.0001  train/epoch_reward=-0.0206  train/epoch=1740.0000  val/recon_loss=0.1746  val/reward=-0.0266
+[step  98500] train/recon_loss=0.1464  train/policy_loss=-0.0005  train/reward=-0.0218  train/baseline=-0.0208
+[step  98600] train/recon_loss=0.1223  train/policy_loss=0.0009  train/reward=-0.0170  train/baseline=-0.0203
+[step  98700] train/recon_loss=0.1210  train/policy_loss=0.0008  train/reward=-0.0171  train/baseline=-0.0199
+[step  98800] train/recon_loss=0.1639  train/policy_loss=-0.0008  train/reward=-0.0237  train/baseline=-0.0209
+[step  98900] train/recon_loss=0.1629  train/policy_loss=-0.0008  train/reward=-0.0230  train/baseline=-0.0207
+[step  99000] train/recon_loss=0.1332  train/policy_loss=0.0000  train/reward=-0.0199  train/baseline=-0.0201
+[step  99000] train/epoch_recon=0.1420  train/epoch_policy=0.0001  train/epoch_reward=-0.0204  train/epoch=1750.0000  val/recon_loss=0.1661  val/reward=-0.0248
+[step  99100] train/recon_loss=0.1496  train/policy_loss=-0.0017  train/reward=-0.0222  train/baseline=-0.0195
+[step  99200] train/recon_loss=0.1686  train/policy_loss=-0.0002  train/reward=-0.0226  train/baseline=-0.0216
+[step  99300] train/recon_loss=0.1611  train/policy_loss=-0.0004  train/reward=-0.0242  train/baseline=-0.0210
+[step  99400] train/recon_loss=0.1144  train/policy_loss=0.0010  train/reward=-0.0155  train/baseline=-0.0208
+[step  99500] train/recon_loss=0.1384  train/policy_loss=0.0001  train/reward=-0.0203  train/baseline=-0.0205
+[step  99550] train/epoch_recon=0.1408  train/epoch_policy=0.0000  train/epoch_reward=-0.0202  train/epoch=1760.0000  val/recon_loss=0.1690  val/reward=-0.0256
+[step  99600] train/recon_loss=0.1334  train/policy_loss=-0.0000  train/reward=-0.0200  train/baseline=-0.0195
+[step  99700] train/recon_loss=0.1299  train/policy_loss=0.0004  train/reward=-0.0171  train/baseline=-0.0198
+[step  99800] train/recon_loss=0.1565  train/policy_loss=-0.0008  train/reward=-0.0241  train/baseline=-0.0213
+[step  99900] train/recon_loss=0.1404  train/policy_loss=0.0001  train/reward=-0.0192  train/baseline=-0.0197
+[step 100000] train/recon_loss=0.1614  train/policy_loss=-0.0005  train/reward=-0.0232  train/baseline=-0.0207
+[step 100100] train/recon_loss=0.1538  train/policy_loss=-0.0002  train/reward=-0.0222  train/baseline=-0.0200
+[step 100100] train/epoch_recon=0.1405  train/epoch_policy=-0.0000  train/epoch_reward=-0.0200  train/epoch=1770.0000  val/recon_loss=0.1609  val/reward=-0.0239
+[step 100200] train/recon_loss=0.1698  train/policy_loss=-0.0001  train/reward=-0.0257  train/baseline=-0.0206
+[step 100300] train/recon_loss=0.1360  train/policy_loss=0.0002  train/reward=-0.0184  train/baseline=-0.0196
+[step 100400] train/recon_loss=0.1210  train/policy_loss=0.0002  train/reward=-0.0177  train/baseline=-0.0197
+[step 100500] train/recon_loss=0.1294  train/policy_loss=0.0002  train/reward=-0.0178  train/baseline=-0.0200
+[step 100600] train/recon_loss=0.1457  train/policy_loss=-0.0000  train/reward=-0.0221  train/baseline=-0.0218
+[step 100650] train/epoch_recon=0.1400  train/epoch_policy=0.0001  train/epoch_reward=-0.0203  train/epoch=1780.0000  val/recon_loss=0.1674  val/reward=-0.0250
+[step 100700] train/recon_loss=0.1461  train/policy_loss=-0.0001  train/reward=-0.0215  train/baseline=-0.0210
+[step 100800] train/recon_loss=0.1105  train/policy_loss=0.0010  train/reward=-0.0141  train/baseline=-0.0202
+[step 100900] train/recon_loss=0.1191  train/policy_loss=0.0000  train/reward=-0.0172  train/baseline=-0.0201
+[step 101000] train/recon_loss=0.1636  train/policy_loss=-0.0002  train/reward=-0.0216  train/baseline=-0.0201
+[step 101100] train/recon_loss=0.1394  train/policy_loss=0.0000  train/reward=-0.0207  train/baseline=-0.0208
+[step 101200] train/recon_loss=0.1371  train/policy_loss=-0.0001  train/reward=-0.0214  train/baseline=-0.0206
+[step 101200] train/epoch_recon=0.1420  train/epoch_policy=-0.0000  train/epoch_reward=-0.0205  train/epoch=1790.0000  val/recon_loss=0.1749  val/reward=-0.0260
+[step 101300] train/recon_loss=0.1341  train/policy_loss=0.0002  train/reward=-0.0186  train/baseline=-0.0207
+[step 101400] train/recon_loss=0.1324  train/policy_loss=0.0002  train/reward=-0.0188  train/baseline=-0.0194
+[step 101500] train/recon_loss=0.1365  train/policy_loss=0.0005  train/reward=-0.0183  train/baseline=-0.0198
+[step 101600] train/recon_loss=0.1575  train/policy_loss=-0.0004  train/reward=-0.0219  train/baseline=-0.0201
+[step 101700] train/recon_loss=0.1463  train/policy_loss=-0.0000  train/reward=-0.0201  train/baseline=-0.0200
+[step 101750] train/epoch_recon=0.1399  train/epoch_policy=-0.0000  train/epoch_reward=-0.0199  train/epoch=1800.0000  val/recon_loss=0.1649  val/reward=-0.0245
+[checkpoint] saved to checkpoints/ckpt_epoch1800.pt
+[step 101800] train/recon_loss=0.1554  train/policy_loss=-0.0002  train/reward=-0.0223  train/baseline=-0.0209
+[step 101900] train/recon_loss=0.1579  train/policy_loss=-0.0004  train/reward=-0.0247  train/baseline=-0.0205
+[step 102000] train/recon_loss=0.1300  train/policy_loss=0.0003  train/reward=-0.0177  train/baseline=-0.0190
+[step 102100] train/recon_loss=0.1567  train/policy_loss=-0.0006  train/reward=-0.0235  train/baseline=-0.0213
+[step 102200] train/recon_loss=0.1302  train/policy_loss=0.0005  train/reward=-0.0176  train/baseline=-0.0193
+[step 102300] train/recon_loss=0.1301  train/policy_loss=0.0001  train/reward=-0.0190  train/baseline=-0.0202
+[step 102300] train/epoch_recon=0.1402  train/epoch_policy=0.0000  train/epoch_reward=-0.0202  train/epoch=1810.0000  val/recon_loss=0.1637  val/reward=-0.0247
+[step 102400] train/recon_loss=0.1422  train/policy_loss=-0.0001  train/reward=-0.0216  train/baseline=-0.0207
+[step 102500] train/recon_loss=0.1680  train/policy_loss=-0.0013  train/reward=-0.0249  train/baseline=-0.0211
+[step 102600] train/recon_loss=0.1286  train/policy_loss=0.0001  train/reward=-0.0195  train/baseline=-0.0204
+[step 102700] train/recon_loss=0.1376  train/policy_loss=0.0004  train/reward=-0.0178  train/baseline=-0.0195
+[step 102800] train/recon_loss=0.1345  train/policy_loss=0.0001  train/reward=-0.0200  train/baseline=-0.0209
+[step 102850] train/epoch_recon=0.1392  train/epoch_policy=0.0001  train/epoch_reward=-0.0198  train/epoch=1820.0000  val/recon_loss=0.1649  val/reward=-0.0249
+[step 102900] train/recon_loss=0.1567  train/policy_loss=-0.0019  train/reward=-0.0243  train/baseline=-0.0200
+[step 103000] train/recon_loss=0.1599  train/policy_loss=-0.0005  train/reward=-0.0245  train/baseline=-0.0201
+[step 103100] train/recon_loss=0.1354  train/policy_loss=0.0003  train/reward=-0.0183  train/baseline=-0.0201
+[step 103200] train/recon_loss=0.1460  train/policy_loss=0.0004  train/reward=-0.0192  train/baseline=-0.0208
+[step 103300] train/recon_loss=0.1383  train/policy_loss=-0.0002  train/reward=-0.0217  train/baseline=-0.0205
+[step 103400] train/recon_loss=0.1651  train/policy_loss=-0.0011  train/reward=-0.0236  train/baseline=-0.0200
+[step 103400] train/epoch_recon=0.1390  train/epoch_policy=0.0001  train/epoch_reward=-0.0200  train/epoch=1830.0000  val/recon_loss=0.1724  val/reward=-0.0264
+[step 103500] train/recon_loss=0.1562  train/policy_loss=-0.0004  train/reward=-0.0224  train/baseline=-0.0199
+[step 103600] train/recon_loss=0.1358  train/policy_loss=0.0015  train/reward=-0.0172  train/baseline=-0.0201
+[step 103700] train/recon_loss=0.1258  train/policy_loss=0.0004  train/reward=-0.0188  train/baseline=-0.0201
+[step 103800] train/recon_loss=0.1285  train/policy_loss=0.0004  train/reward=-0.0169  train/baseline=-0.0190
+[step 103900] train/recon_loss=0.1487  train/policy_loss=-0.0002  train/reward=-0.0207  train/baseline=-0.0197
+[step 103950] train/epoch_recon=0.1399  train/epoch_policy=0.0001  train/epoch_reward=-0.0199  train/epoch=1840.0000  val/recon_loss=0.1691  val/reward=-0.0257
+[step 104000] train/recon_loss=0.1537  train/policy_loss=-0.0008  train/reward=-0.0243  train/baseline=-0.0201
+[step 104100] train/recon_loss=0.1435  train/policy_loss=-0.0010  train/reward=-0.0222  train/baseline=-0.0202
+[step 104200] train/recon_loss=0.1145  train/policy_loss=0.0003  train/reward=-0.0180  train/baseline=-0.0197
+[step 104300] train/recon_loss=0.1294  train/policy_loss=0.0004  train/reward=-0.0178  train/baseline=-0.0195
+[step 104400] train/recon_loss=0.1549  train/policy_loss=0.0000  train/reward=-0.0203  train/baseline=-0.0204
+[step 104500] train/recon_loss=0.1345  train/policy_loss=-0.0011  train/reward=-0.0210  train/baseline=-0.0195
+[step 104500] train/epoch_recon=0.1367  train/epoch_policy=0.0001  train/epoch_reward=-0.0195  train/epoch=1850.0000  val/recon_loss=0.1795  val/reward=-0.0277
+[step 104600] train/recon_loss=0.1381  train/policy_loss=-0.0003  train/reward=-0.0214  train/baseline=-0.0194
+[step 104700] train/recon_loss=0.1554  train/policy_loss=-0.0010  train/reward=-0.0234  train/baseline=-0.0205
+[step 104800] train/recon_loss=0.1354  train/policy_loss=-0.0001  train/reward=-0.0208  train/baseline=-0.0198
+[step 104900] train/recon_loss=0.1313  train/policy_loss=0.0002  train/reward=-0.0187  train/baseline=-0.0198
+[step 105000] train/recon_loss=0.1419  train/policy_loss=-0.0000  train/reward=-0.0204  train/baseline=-0.0204
+[step 105050] train/epoch_recon=0.1398  train/epoch_policy=-0.0000  train/epoch_reward=-0.0203  train/epoch=1860.0000  val/recon_loss=0.1646  val/reward=-0.0246
+[step 105100] train/recon_loss=0.1395  train/policy_loss=0.0001  train/reward=-0.0189  train/baseline=-0.0201
+[step 105200] train/recon_loss=0.1249  train/policy_loss=0.0003  train/reward=-0.0182  train/baseline=-0.0195
+[step 105300] train/recon_loss=0.1588  train/policy_loss=-0.0012  train/reward=-0.0232  train/baseline=-0.0213
+[step 105400] train/recon_loss=0.1452  train/policy_loss=-0.0009  train/reward=-0.0222  train/baseline=-0.0201
+[step 105500] train/recon_loss=0.1222  train/policy_loss=0.0006  train/reward=-0.0168  train/baseline=-0.0199
+[step 105600] train/recon_loss=0.1357  train/policy_loss=0.0002  train/reward=-0.0197  train/baseline=-0.0201
+[step 105600] train/epoch_recon=0.1398  train/epoch_policy=0.0000  train/epoch_reward=-0.0200  train/epoch=1870.0000  val/recon_loss=0.1641  val/reward=-0.0247
+[step 105700] train/recon_loss=0.1655  train/policy_loss=-0.0021  train/reward=-0.0240  train/baseline=-0.0200
+[step 105800] train/recon_loss=0.1429  train/policy_loss=-0.0000  train/reward=-0.0201  train/baseline=-0.0199
+[step 105900] train/recon_loss=0.1251  train/policy_loss=0.0008  train/reward=-0.0177  train/baseline=-0.0199
+[step 106000] train/recon_loss=0.1600  train/policy_loss=-0.0005  train/reward=-0.0233  train/baseline=-0.0200
+[step 106100] train/recon_loss=0.1271  train/policy_loss=0.0007  train/reward=-0.0185  train/baseline=-0.0203
+[step 106150] train/epoch_recon=0.1385  train/epoch_policy=0.0001  train/epoch_reward=-0.0198  train/epoch=1880.0000  val/recon_loss=0.1623  val/reward=-0.0242
+[step 106200] train/recon_loss=0.1832  train/policy_loss=-0.0014  train/reward=-0.0287  train/baseline=-0.0206
+[step 106300] train/recon_loss=0.1482  train/policy_loss=0.0004  train/reward=-0.0188  train/baseline=-0.0202
+[step 106400] train/recon_loss=0.1593  train/policy_loss=-0.0007  train/reward=-0.0227  train/baseline=-0.0199
+[step 106500] train/recon_loss=0.1520  train/policy_loss=-0.0006  train/reward=-0.0231  train/baseline=-0.0199
+[step 106600] train/recon_loss=0.1238  train/policy_loss=0.0002  train/reward=-0.0167  train/baseline=-0.0194
+[step 106700] train/recon_loss=0.1263  train/policy_loss=0.0009  train/reward=-0.0174  train/baseline=-0.0198
+[step 106700] train/epoch_recon=0.1407  train/epoch_policy=-0.0001  train/epoch_reward=-0.0200  train/epoch=1890.0000  val/recon_loss=0.1706  val/reward=-0.0258
+[step 106800] train/recon_loss=0.1246  train/policy_loss=0.0003  train/reward=-0.0175  train/baseline=-0.0200
+[step 106900] train/recon_loss=0.1342  train/policy_loss=0.0007  train/reward=-0.0183  train/baseline=-0.0198
+[step 107000] train/recon_loss=0.1534  train/policy_loss=-0.0007  train/reward=-0.0240  train/baseline=-0.0198
+[step 107100] train/recon_loss=0.1498  train/policy_loss=-0.0001  train/reward=-0.0196  train/baseline=-0.0191
+[step 107200] train/recon_loss=0.1548  train/policy_loss=-0.0001  train/reward=-0.0208  train/baseline=-0.0201
+[step 107250] train/epoch_recon=0.1394  train/epoch_policy=-0.0000  train/epoch_reward=-0.0200  train/epoch=1900.0000  val/recon_loss=0.1689  val/reward=-0.0253
+[checkpoint] saved to checkpoints/ckpt_epoch1900.pt
+[step 107300] train/recon_loss=0.1028  train/policy_loss=0.0006  train/reward=-0.0139  train/baseline=-0.0192
+[step 107400] train/recon_loss=0.1276  train/policy_loss=0.0005  train/reward=-0.0184  train/baseline=-0.0206
+[step 107500] train/recon_loss=0.1186  train/policy_loss=0.0005  train/reward=-0.0164  train/baseline=-0.0201
+[step 107600] train/recon_loss=0.1271  train/policy_loss=0.0005  train/reward=-0.0174  train/baseline=-0.0197
+[step 107700] train/recon_loss=0.1374  train/policy_loss=-0.0001  train/reward=-0.0212  train/baseline=-0.0200
+[step 107800] train/recon_loss=0.1478  train/policy_loss=-0.0004  train/reward=-0.0219  train/baseline=-0.0199
+[step 107800] train/epoch_recon=0.1399  train/epoch_policy=-0.0000  train/epoch_reward=-0.0201  train/epoch=1910.0000  val/recon_loss=0.1658  val/reward=-0.0251
+[step 107900] train/recon_loss=0.1575  train/policy_loss=-0.0015  train/reward=-0.0238  train/baseline=-0.0203
+[step 108000] train/recon_loss=0.1172  train/policy_loss=0.0005  train/reward=-0.0158  train/baseline=-0.0200
+[step 108100] train/recon_loss=0.1063  train/policy_loss=0.0008  train/reward=-0.0141  train/baseline=-0.0197
+[step 108200] train/recon_loss=0.1363  train/policy_loss=-0.0001  train/reward=-0.0211  train/baseline=-0.0200
+[step 108300] train/recon_loss=0.1372  train/policy_loss=-0.0000  train/reward=-0.0208  train/baseline=-0.0203
+[step 108350] train/epoch_recon=0.1429  train/epoch_policy=-0.0000  train/epoch_reward=-0.0207  train/epoch=1920.0000  val/recon_loss=0.1651  val/reward=-0.0246
+[step 108400] train/recon_loss=0.1154  train/policy_loss=0.0009  train/reward=-0.0153  train/baseline=-0.0194
+[step 108500] train/recon_loss=0.1357  train/policy_loss=0.0002  train/reward=-0.0187  train/baseline=-0.0197
+[step 108600] train/recon_loss=0.1476  train/policy_loss=0.0003  train/reward=-0.0182  train/baseline=-0.0198
+[step 108700] train/recon_loss=0.1226  train/policy_loss=0.0003  train/reward=-0.0168  train/baseline=-0.0190
+[step 108800] train/recon_loss=0.1583  train/policy_loss=-0.0003  train/reward=-0.0239  train/baseline=-0.0197
+[step 108900] train/recon_loss=0.1191  train/policy_loss=0.0003  train/reward=-0.0177  train/baseline=-0.0187
+[step 108900] train/epoch_recon=0.1354  train/epoch_policy=0.0000  train/epoch_reward=-0.0191  train/epoch=1930.0000  val/recon_loss=0.1739  val/reward=-0.0261
+[step 109000] train/recon_loss=0.1351  train/policy_loss=0.0001  train/reward=-0.0182  train/baseline=-0.0197
+[step 109100] train/recon_loss=0.1401  train/policy_loss=-0.0000  train/reward=-0.0205  train/baseline=-0.0203
+[step 109200] train/recon_loss=0.1562  train/policy_loss=-0.0004  train/reward=-0.0216  train/baseline=-0.0198
+[step 109300] train/recon_loss=0.1345  train/policy_loss=0.0000  train/reward=-0.0195  train/baseline=-0.0198
+[step 109400] train/recon_loss=0.1642  train/policy_loss=-0.0003  train/reward=-0.0253  train/baseline=-0.0205
+[step 109450] train/epoch_recon=0.1383  train/epoch_policy=-0.0000  train/epoch_reward=-0.0199  train/epoch=1940.0000  val/recon_loss=0.1605  val/reward=-0.0240
+[step 109500] train/recon_loss=0.1209  train/policy_loss=0.0007  train/reward=-0.0164  train/baseline=-0.0192
+[step 109600] train/recon_loss=0.1146  train/policy_loss=0.0002  train/reward=-0.0160  train/baseline=-0.0190
+[step 109700] train/recon_loss=0.1593  train/policy_loss=-0.0005  train/reward=-0.0241  train/baseline=-0.0200
+[step 109800] train/recon_loss=0.1390  train/policy_loss=-0.0000  train/reward=-0.0215  train/baseline=-0.0198
+[step 109900] train/recon_loss=0.1098  train/policy_loss=0.0004  train/reward=-0.0165  train/baseline=-0.0198
+[step 110000] train/recon_loss=0.1405  train/policy_loss=-0.0001  train/reward=-0.0203  train/baseline=-0.0195
+[step 110000] train/epoch_recon=0.1368  train/epoch_policy=0.0000  train/epoch_reward=-0.0193  train/epoch=1950.0000  val/recon_loss=0.1625  val/reward=-0.0244
+[step 110100] train/recon_loss=0.1265  train/policy_loss=0.0000  train/reward=-0.0192  train/baseline=-0.0194
+[step 110200] train/recon_loss=0.1469  train/policy_loss=0.0001  train/reward=-0.0196  train/baseline=-0.0206
+[step 110300] train/recon_loss=0.1511  train/policy_loss=-0.0002  train/reward=-0.0231  train/baseline=-0.0201
+[step 110400] train/recon_loss=0.1271  train/policy_loss=0.0001  train/reward=-0.0166  train/baseline=-0.0199
+[step 110500] train/recon_loss=0.1501  train/policy_loss=-0.0000  train/reward=-0.0219  train/baseline=-0.0196
+[step 110550] train/epoch_recon=0.1387  train/epoch_policy=0.0000  train/epoch_reward=-0.0198  train/epoch=1960.0000  val/recon_loss=0.1683  val/reward=-0.0262
+[step 110600] train/recon_loss=0.1111  train/policy_loss=0.0003  train/reward=-0.0165  train/baseline=-0.0183
+[step 110700] train/recon_loss=0.1402  train/policy_loss=-0.0002  train/reward=-0.0205  train/baseline=-0.0192
+[step 110800] train/recon_loss=0.1364  train/policy_loss=-0.0000  train/reward=-0.0204  train/baseline=-0.0203
+[step 110900] train/recon_loss=0.1295  train/policy_loss=0.0001  train/reward=-0.0181  train/baseline=-0.0189
+[step 111000] train/recon_loss=0.1315  train/policy_loss=0.0002  train/reward=-0.0186  train/baseline=-0.0201
+[step 111100] train/recon_loss=0.1666  train/policy_loss=-0.0003  train/reward=-0.0247  train/baseline=-0.0194
+[step 111100] train/epoch_recon=0.1377  train/epoch_policy=0.0000  train/epoch_reward=-0.0197  train/epoch=1970.0000  val/recon_loss=0.1620  val/reward=-0.0247
+[step 111200] train/recon_loss=0.1403  train/policy_loss=0.0001  train/reward=-0.0184  train/baseline=-0.0189
+[step 111300] train/recon_loss=0.1463  train/policy_loss=-0.0004  train/reward=-0.0223  train/baseline=-0.0196
+[step 111400] train/recon_loss=0.1324  train/policy_loss=0.0001  train/reward=-0.0182  train/baseline=-0.0193
+[step 111500] train/recon_loss=0.1379  train/policy_loss=-0.0000  train/reward=-0.0204  train/baseline=-0.0197
+[step 111600] train/recon_loss=0.1337  train/policy_loss=0.0001  train/reward=-0.0188  train/baseline=-0.0207
+[step 111650] train/epoch_recon=0.1370  train/epoch_policy=-0.0000  train/epoch_reward=-0.0195  train/epoch=1980.0000  val/recon_loss=0.1605  val/reward=-0.0239
+[step 111700] train/recon_loss=0.1404  train/policy_loss=0.0001  train/reward=-0.0182  train/baseline=-0.0188
+[step 111800] train/recon_loss=0.1613  train/policy_loss=-0.0002  train/reward=-0.0248  train/baseline=-0.0199
+[step 111900] train/recon_loss=0.1238  train/policy_loss=0.0003  train/reward=-0.0178  train/baseline=-0.0193
+[step 112000] train/recon_loss=0.1467  train/policy_loss=-0.0001  train/reward=-0.0216  train/baseline=-0.0202
+[step 112100] train/recon_loss=0.1449  train/policy_loss=-0.0000  train/reward=-0.0222  train/baseline=-0.0200
+[step 112200] train/recon_loss=0.1235  train/policy_loss=0.0000  train/reward=-0.0160  train/baseline=-0.0193
+[step 112200] train/epoch_recon=0.1366  train/epoch_policy=0.0000  train/epoch_reward=-0.0193  train/epoch=1990.0000  val/recon_loss=0.1630  val/reward=-0.0249
+[step 112300] train/recon_loss=0.1622  train/policy_loss=-0.0005  train/reward=-0.0213  train/baseline=-0.0191
+[step 112400] train/recon_loss=0.1499  train/policy_loss=-0.0001  train/reward=-0.0230  train/baseline=-0.0198
+[step 112500] train/recon_loss=0.1273  train/policy_loss=0.0001  train/reward=-0.0176  train/baseline=-0.0197
+[step 112600] train/recon_loss=0.1326  train/policy_loss=-0.0000  train/reward=-0.0198  train/baseline=-0.0197
+[step 112700] train/recon_loss=0.1224  train/policy_loss=0.0001  train/reward=-0.0163  train/baseline=-0.0198
+wandb: uploading history steps 1202-1202, summary, console lines 1327-1327; updating run metadata
+wandb: uploading history steps 1202-1202, summary, console lines 1327-1327; uploading output.log; uploading wandb-summary.json; uploading config.yaml
+wandb: uploading history steps 1202-1202, summary, console lines 1327-1327
+wandb: uploading history steps 1203-1204, summary, console lines 1328-1331
+wandb: 
+wandb: Run history:
+wandb:      pretrain/epoch ▁▃▅▆█
+wandb: pretrain/recon_loss █▃█▁▁
+wandb:      train/baseline ▁▂▂▁▂▂▄▄▃▃▄▅▆▅▅▅▆▇▆▅▆▆▆▆▇▆▆▆▆▆▇▇▆▆▆▇▇▇█▇
+wandb:         train/epoch ▁▁▁▁▂▂▃▃▃▄▄▄▄▄▄▅▅▅▅▅▅▆▆▆▆▆▆▆▆▆▇▇▇▇▇█████
+wandb:  train/epoch_policy ▁▇▅▄█▃▅▅▅▅▅▄▅▅▆▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅▅
+wandb:   train/epoch_recon ██▇▅▅▄▅▄▄▄▅▄▃▃▄▃▂▂▂▃▂▃▂▂▃▃▂▂▂▂▂▂▂▂▂▁▁▁▂▁
+wandb:  train/epoch_reward ▁▁▂▃▃▄▅▄▅▄▅▅▆▆▆▆▆▇▇▇▇▇▇▇▇▇▆▇▆▇█▇▇▇▇▇██▇█
+wandb:   train/policy_loss █▃▅▄▂▃▅▃▂▁▄▄▂▄▄▂▄▄▃▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▃▄▄▄
+wandb:    train/recon_loss ▃▂▄▃▄▄▂▂▄▃▂▄█▃▄▁▄▃▃▂▂▂▃▂▂▄▄▃▁▄▂▂▁▂▂▂▂▂▂▁
+wandb:        train/reward ▂▁▃▃▅▆▄▂▄▃▇▂▆▅▄▄▄▆▅▃▅▄█▆▆▇▆▂▄▃▇▅▆█▅▄▅▃▆▄
+wandb:                  +2 ...
+wandb: 
+wandb: Run summary:
+wandb:      pretrain/epoch 50
+wandb: pretrain/recon_loss 0.03474
+wandb:      train/baseline -0.01977
+wandb:         train/epoch 2000
+wandb:  train/epoch_policy 2e-05
+wandb:   train/epoch_recon 0.13735
+wandb:  train/epoch_reward -0.0197
+wandb:   train/policy_loss 8e-05
+wandb:    train/recon_loss 0.12241
+wandb:        train/reward -0.01628
+wandb:                  +2 ...
+wandb: 
+wandb: 🚀 View run fancy-plasma-6 at: https://wandb.ai/jie20-zju/lookaround-2026/runs/w45u9hpc
+wandb: ⭐️ View project at: https://wandb.ai/jie20-zju/lookaround-2026
+wandb: Synced 5 W&B file(s), 0 media file(s), 0 artifact file(s) and 0 other file(s)
+wandb: Find logs at: ./wandb/run-20260414_145337-w45u9hpc/logs
+[step 112750] train/epoch_recon=0.1374  train/epoch_policy=0.0000  train/epoch_reward=-0.0197  train/epoch=2000.0000  val/recon_loss=0.1595  val/reward=-0.0237
+[checkpoint] saved to checkpoints/ckpt_epoch2000.pt
+
+Training complete.
