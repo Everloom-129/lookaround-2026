@@ -14,7 +14,7 @@ class Config:
 
     # Model
     d_enc: int = 256            # ViewEncoder output dim
-    d_loc_in: int = 3           # LocationSensor input: [abs_elev, d_elev, d_azim]
+    d_loc_in: int = 4           # LocationSensor input: [rel_elev, rel_azim, t/T, abs_elev]
     d_loc: int = 16             # LocationSensor output dim
     d_hidden: int = 256         # LSTM hidden dim
     n_actions: int = 14         # 3-elev × 5-azim neighborhood minus center

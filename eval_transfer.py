@@ -104,9 +104,10 @@ def extract_features_per_step(
                 x_t = get_view(batch, e, a, n_azim=n_azim).to(device)
 
                 p_t = torch.stack([
+                    rel_elev.float().to(device) / max(n_elev - 1, 1),
+                    rel_azim.float().to(device) / n_azim,
+                    torch.full((B,), t / T, dtype=torch.float32, device=device),
                     elev_cur.float().to(device) / max(n_elev - 1, 1),
-                    d_elev_prev.float() / max(n_elev - 1, 1),
-                    d_azim_prev.float() / n_azim,
                 ], dim=1)
 
                 patch_feat = encoder(x_t)
@@ -125,7 +126,8 @@ def extract_features_per_step(
                         ], dim=1).to(device)
                         time_frac = torch.full((B, 1), t / T,
                                                dtype=torch.float32, device=device)
-                        logits = policy(a_t, rel_pos, time_frac)
+                        abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1).to(device)
+                        logits = policy(a_t, rel_pos, time_frac, abs_elev_norm)
                         action, _, _ = policy.get_action(logits, deterministic=True)
                     else:
                         action = policy.get_action(B, device)
@@ -219,8 +221,8 @@ def main():
 
     # Load datasets
     import h5py
-    train_dataset = SUN360Dataset(cfg.data_dir, split="train")
-    val_dataset   = SUN360Dataset(cfg.data_dir, split="val")
+    train_dataset = SUN360Dataset(cfg.data_dir, split="train", mean_subtract=True)
+    val_dataset   = SUN360Dataset(cfg.data_dir, split="val", mean_subtract=True)
     cfg.n_elev  = train_dataset.n_elev
     cfg.n_azim  = train_dataset.n_azim
     cfg.n_views = train_dataset.n_views

@@ -86,9 +86,10 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
                 shared_observed[(e, a)] = x_t
 
                 p_t = torch.stack([
+                    rel_elev.float() / max(n_elev - 1, 1),
+                    rel_azim.float() / n_azim,
+                    torch.full((B,), t / T, dtype=torch.float32, device=device),
                     elev_cur.float() / max(n_elev - 1, 1),
-                    d_elev_prev.float() / max(n_elev - 1, 1),
-                    d_azim_prev.float() / n_azim,
                 ], dim=1).to(device)
 
                 patch_feat = encoder(x_t)
@@ -111,7 +112,8 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
                         ], dim=1).to(device)
                         time_frac = torch.full((B, 1), t / T,
                                                dtype=torch.float32, device=device)
-                        logits = policy(a_t, rel_pos, time_frac)
+                        abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1).to(device)
+                        logits = policy(a_t, rel_pos, time_frac, abs_elev_norm)
                         action, _, _ = policy.get_action(logits, deterministic=True)
                     else:
                         action = policy.get_action(B, device)
@@ -156,7 +158,7 @@ def main():
     device = torch.device(args.device if args.device else ("cuda" if torch.cuda.is_available() else "cpu"))
     print(f"Device: {device}")
 
-    dataset = SUN360Dataset(cfg.data_dir, split=args.split)
+    dataset = SUN360Dataset(cfg.data_dir, split=args.split, mean_subtract=True)
     cfg.n_elev = dataset.n_elev; cfg.n_azim = dataset.n_azim; cfg.n_views = dataset.n_views
     loader = DataLoader(dataset, batch_size=cfg.batch_size,
                         shuffle=False, num_workers=2)

@@ -21,6 +21,7 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, random_split
 
 from config import Config
+from data.combined import make_combined_loaders
 from data.sun360 import SUN360Dataset
 from data.utils import circ_shift_viewgrid, get_view, paste_observed, step_position
 from models.actor import Actor
@@ -29,8 +30,8 @@ from models.completion import CompletionHead
 from models.encoder import ViewEncoder
 from models.location import LocationSensor
 from models.memory import AgentMemory
-from utils.logging import init_logging, log_metrics
-from utils.rewards import compute_reinforce_loss, update_ema_baseline
+from utils.logging import init_logging, log_metrics, log_val_recon
+from utils.rewards import LearnedBaseline, compute_reinforce_loss
 
 
 # ---------------------------------------------------------------------------
@@ -100,12 +101,14 @@ def run_episode(
         x_t = get_view(batch, int(e), int(a), n_azim=n_azim).to(device)  # (B, C, H, W)
         shared_observed[(e, a)] = x_t.detach()
 
-        # Proprioceptive metadata
+        # Proprioceptive metadata: [rel_elev_norm, rel_azim_norm, t/T, abs_elev_norm]
+        # Matches original location_ipsz = 2+1+1 (rel_pos + time + knownElev)
         p_t = torch.stack([
-            elev_cur.float() / max(n_elev - 1, 1),   # abs elev norm
-            d_elev_prev.float() / max(n_elev - 1, 1), # rel elev change
-            d_azim_prev.float() / n_azim,             # rel azim change
-        ], dim=1).to(device)  # (B, 3)
+            rel_elev.float() / max(n_elev - 1, 1),   # cumulative rel elev from start
+            rel_azim.float() / n_azim,                # cumulative rel azim from start
+            torch.full((B,), t / T, dtype=torch.float32, device=device),  # t/T
+            elev_cur.float() / max(n_elev - 1, 1),   # absolute elevation norm
+        ], dim=1).to(device)  # (B, 4)
 
         # --- Encode + Combine ---
         patch_feat = encoder(x_t)              # (B, 256)
@@ -131,7 +134,8 @@ def run_episode(
             ], dim=1).to(device)  # (B, 2)
             time_frac = torch.full((B, 1), t / T,
                                    dtype=torch.float32, device=device)
-            logits = actor(a_t, rel_pos, time_frac)        # (B, 14)
+            abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1).to(device)  # (B, 1)
+            logits = actor(a_t, rel_pos, time_frac, abs_elev_norm)  # (B, 14)
             action, log_prob, _ = actor.get_action(
                 logits, deterministic=deterministic
             )
@@ -161,38 +165,66 @@ def run_episode(
 # Loss computation
 # ---------------------------------------------------------------------------
 
-def compute_losses(recon_list, target, log_probs, ema_baseline, config):
+def compute_losses(recon_list, target, log_probs, baseline_value):
     """
-    recon_list: list of T tensors (B, N_views, C, H, W) — already shifted + pasted
-    target:     (B, N_views, C, H, W)
-    log_probs:  list of T-1 (B,) tensors
-    ema_baseline: current scalar baseline
+    recon_list:     list of T tensors (B, N_views, C, H, W) — already shifted + pasted
+    target:         (B, N_views, C, H, W)  — mean-subtracted
+    log_probs:      list of T-1 (B,) tensors
+    baseline_value: scalar tensor from LearnedBaseline() (for advantage computation)
 
     Returns:
-        total_loss, recon_loss_val, policy_loss_val, reward_val, new_baseline
+        recon_loss:  scalar tensor — sum of MSE over all T steps (for monitoring)
+        policy_loss: scalar tensor — REINFORCE loss (for actor optimizer)
+        reward:      (B,) tensor  — per-sample -MSE at final step (for baseline training)
     """
-    # Reconstruction loss: sum over all timesteps
+    # Reconstruction loss: sum over all timesteps (scalar, for monitoring only in phase 2)
     recon_losses = [F.mse_loss(r, target) for r in recon_list]
     recon_loss = sum(recon_losses)
 
-    # REINFORCE: reward = -MSE at FINAL step
-    reward = -recon_losses[-1].detach()
-    new_baseline = update_ema_baseline(ema_baseline, reward.item(),
-                                       alpha=config.baseline_decay)
+    # Per-sample reward: -(mean pixel MSE at final step) — shape (B,)
+    final_diff = (recon_list[-1].detach() - target.detach())
+    reward = -final_diff.pow(2).mean(dim=[1, 2, 3, 4])  # (B,)
 
-    policy_loss = compute_reinforce_loss(log_probs, reward, ema_baseline)
-    total_loss = recon_loss + config.lambda_policy * policy_loss
+    policy_loss = compute_reinforce_loss(log_probs, reward, baseline_value)
 
-    return (total_loss,
-            recon_loss.item(),
-            policy_loss.item() if isinstance(policy_loss, torch.Tensor) else 0.0,
-            reward.item(),
-            new_baseline)
+    return recon_loss, policy_loss, reward
 
 
 # ---------------------------------------------------------------------------
 # Training phases
 # ---------------------------------------------------------------------------
+
+def validate(val_loader, encoder, loc_sensor, combine, memory, completion,
+             actor, config, device):
+    """Run one pass over val set; return avg recon_loss and avg reward."""
+    encoder.eval(); loc_sensor.eval(); combine.eval()
+    memory.eval(); completion.eval()
+    if actor is not None:
+        actor.eval()
+
+    total_recon = 0.0
+    total_reward = 0.0
+    n = 0
+    with torch.no_grad():
+        for batch in val_loader:
+            batch = batch.to(device)
+            recon_list, _, _ = run_episode(
+                batch, encoder, loc_sensor, combine, memory, completion,
+                actor=actor, config=config, device=device, T=config.T,
+                deterministic=True,
+            )
+            recon_losses = [F.mse_loss(r, batch) for r in recon_list]
+            total_recon  += sum(recon_losses).item()
+            total_reward += (-recon_losses[-1]).item()
+            n += 1
+
+    encoder.train(); loc_sensor.train(); combine.train()
+    memory.train(); completion.train()
+    if actor is not None:
+        actor.train()
+
+    return total_recon / max(n, 1), total_reward / max(n, 1)
+
 
 def pretrain(loader, encoder, loc_sensor, combine, memory, completion,
              optimizer, config, device, run):
@@ -232,76 +264,139 @@ def pretrain(loader, encoder, loc_sensor, combine, memory, completion,
 
 
 def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
-               optimizer, config, device, run, global_step=0):
-    """Phase 2: T=6, reconstruction + REINFORCE."""
-    ema_baseline = 0.0
-    all_params = (list(encoder.parameters()) + list(loc_sensor.parameters()) +
-                  list(combine.parameters()) + list(memory.parameters()) +
-                  list(completion.parameters()) + list(actor.parameters()))
+               config, device, run, global_step=0, val_loader=None, mean_vg=None):
+    """Phase 2: T=6, REINFORCE only (encoder/decoder/memory frozen, actor trains).
 
-    encoder.train(); loc_sensor.train(); combine.train()
-    memory.train(); completion.train(); actor.train()
+    Matches original: finetune_lrMult=0 freezes pretrained modules; only Actor
+    and the learned baseline scalar are updated. Baseline trained at 150× actor lr.
+    """
+    # Freeze all pretrained modules — only actor (and baseline) update in phase 2
+    for module in [encoder, loc_sensor, combine, memory, completion]:
+        for p in module.parameters():
+            p.requires_grad = False
+
+    # Actor-only optimizer with weight decay (matching original weightDecay=0.005)
+    actor_optimizer = torch.optim.Adam(
+        actor.parameters(), lr=config.lr, weight_decay=0.005
+    )
+    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        actor_optimizer, mode="min", factor=0.5,
+        patience=200, threshold=0.0002, min_lr=1e-6,
+    )
+
+    # Learned scalar baseline (matches original nn.Add(1), trained at 150× actor lr)
+    learned_baseline = LearnedBaseline().to(device)
+    baseline_optimizer = torch.optim.Adam(
+        learned_baseline.parameters(), lr=config.lr * 150
+    )
+
+    encoder.eval(); loc_sensor.eval(); combine.eval()
+    memory.eval(); completion.eval(); actor.train()
+
+    # Cache one fixed val sample for visualization (grabbed once, reused every epoch)
+    _vis_batch = None
+    if val_loader is not None and run is not None:
+        _vis_batch = next(iter(val_loader))[:1].to(device)  # (1, N_views, C, H, W)
 
     for epoch in range(config.n_epochs):
-        epoch_recon = 0.0
+        actor.train()
         epoch_policy = 0.0
         epoch_reward = 0.0
+        epoch_recon  = 0.0
         n_batches = 0
 
         for batch in loader:
             batch = batch.to(device)
-            target = batch
+            B = batch.shape[0]
 
             recon_list, log_probs, _ = run_episode(
                 batch, encoder, loc_sensor, combine, memory, completion,
                 actor=actor, config=config, device=device, T=config.T,
             )
 
-            total_loss, recon_val, policy_val, reward_val, ema_baseline = \
-                compute_losses(recon_list, target, log_probs,
-                               ema_baseline, config)
+            recon_loss, policy_loss, reward = compute_losses(
+                recon_list, batch, log_probs, learned_baseline()
+            )
 
-            optimizer.zero_grad()
-            total_loss.backward()
-            nn.utils.clip_grad_norm_(all_params, config.max_grad_norm)
-            optimizer.step()
+            # Update baseline (MSE against per-sample reward)
+            baseline_optimizer.zero_grad()
+            baseline_loss = F.mse_loss(
+                learned_baseline.value.expand(B), reward.detach()
+            )
+            baseline_loss.backward()
+            baseline_optimizer.step()
 
-            epoch_recon  += recon_val
-            epoch_policy += policy_val
-            epoch_reward += reward_val
+            # Update actor (REINFORCE)
+            actor_optimizer.zero_grad()
+            policy_loss.backward()
+            nn.utils.clip_grad_norm_(actor.parameters(), config.max_grad_norm)
+            actor_optimizer.step()
+
+            epoch_policy += policy_loss.item()
+            epoch_reward += reward.mean().item()
+            epoch_recon  += recon_loss.item()
             n_batches += 1
             global_step += 1
 
             if global_step % config.log_every == 0:
                 log_metrics({
-                    "train/recon_loss":  recon_val,
-                    "train/policy_loss": policy_val,
-                    "train/reward":      reward_val,
-                    "train/baseline":    ema_baseline,
+                    "train/policy_loss": policy_loss.item(),
+                    "train/reward":      reward.mean().item(),
+                    "train/recon_loss":  recon_loss.item(),
+                    "train/baseline":    learned_baseline.value.item(),
                 }, step=global_step, run=run)
 
-        # Epoch summary
+        # Epoch summary + val
         if (epoch + 1) % 10 == 0:
-            log_metrics({
-                "train/epoch_recon":  epoch_recon  / n_batches,
+            metrics = {
                 "train/epoch_policy": epoch_policy / n_batches,
                 "train/epoch_reward": epoch_reward / n_batches,
+                "train/epoch_recon":  epoch_recon  / n_batches,
                 "train/epoch":        epoch + 1,
-            }, step=global_step, run=run)
+            }
+            if val_loader is not None:
+                val_recon, val_reward = validate(
+                    val_loader, encoder, loc_sensor, combine, memory,
+                    completion, actor, config, device,
+                )
+                # validate() restores .train() on all modules; re-freeze frozen ones
+                encoder.eval(); loc_sensor.eval(); combine.eval()
+                memory.eval(); completion.eval()
+                metrics["val/recon_loss"] = val_recon
+                metrics["val/reward"]     = val_reward
+                scheduler.step(val_recon)
+
+                # Log reconstruction images for the fixed val sample
+                if _vis_batch is not None:
+                    actor.eval()
+                    with torch.no_grad():
+                        vis_recon, _, _ = run_episode(
+                            _vis_batch, encoder, loc_sensor, combine, memory,
+                            completion, actor=actor, config=config, device=device,
+                            T=config.T, deterministic=True,
+                        )
+                    actor.train()
+                    log_val_recon(run, global_step, vis_recon, _vis_batch,
+                                  config.n_elev, config.n_azim, mean_vg=mean_vg)
+            log_metrics(metrics, step=global_step, run=run)
 
         # Checkpoint
         if (epoch + 1) % config.save_every == 0:
             _save_checkpoint(epoch + 1, encoder, loc_sensor, combine,
-                             memory, completion, actor, optimizer, config)
+                             memory, completion, actor, config,
+                             actor_optimizer=actor_optimizer,
+                             baseline=learned_baseline,
+                             baseline_optimizer=baseline_optimizer)
 
     return global_step
 
 
 def _save_checkpoint(epoch, encoder, loc_sensor, combine, memory,
-                     completion, actor, optimizer, config):
+                     completion, actor, config,
+                     actor_optimizer=None, baseline=None, baseline_optimizer=None):
     os.makedirs(config.checkpoint_dir, exist_ok=True)
     path = os.path.join(config.checkpoint_dir, f"ckpt_epoch{epoch:04d}.pt")
-    torch.save({
+    state = {
         "epoch": epoch,
         "encoder": encoder.state_dict(),
         "loc_sensor": loc_sensor.state_dict(),
@@ -309,13 +404,20 @@ def _save_checkpoint(epoch, encoder, loc_sensor, combine, memory,
         "memory": memory.state_dict(),
         "completion": completion.state_dict(),
         "actor": actor.state_dict(),
-        "optimizer": optimizer.state_dict(),
-    }, path)
+    }
+    if actor_optimizer is not None:
+        state["actor_optimizer"] = actor_optimizer.state_dict()
+    if baseline is not None:
+        state["baseline"] = baseline.state_dict()
+    if baseline_optimizer is not None:
+        state["baseline_optimizer"] = baseline_optimizer.state_dict()
+    torch.save(state, path)
     print(f"[checkpoint] saved to {path}")
 
 
 def load_checkpoint(path, encoder, loc_sensor, combine, memory,
-                    completion, actor, optimizer=None):
+                    completion, actor, actor_optimizer=None,
+                    baseline=None, baseline_optimizer=None):
     ckpt = torch.load(path, map_location="cpu")
     encoder.load_state_dict(ckpt["encoder"])
     loc_sensor.load_state_dict(ckpt["loc_sensor"])
@@ -323,8 +425,12 @@ def load_checkpoint(path, encoder, loc_sensor, combine, memory,
     memory.load_state_dict(ckpt["memory"])
     completion.load_state_dict(ckpt["completion"])
     actor.load_state_dict(ckpt["actor"])
-    if optimizer and "optimizer" in ckpt:
-        optimizer.load_state_dict(ckpt["optimizer"])
+    if actor_optimizer and "actor_optimizer" in ckpt:
+        actor_optimizer.load_state_dict(ckpt["actor_optimizer"])
+    if baseline and "baseline" in ckpt:
+        baseline.load_state_dict(ckpt["baseline"])
+    if baseline_optimizer and "baseline_optimizer" in ckpt:
+        baseline_optimizer.load_state_dict(ckpt["baseline_optimizer"])
     return ckpt.get("epoch", 0)
 
 
@@ -350,20 +456,41 @@ def main(args=None):
     device = torch.device(device_str)
     print(f"Device: {device}")
 
-    # Dataset — load from split files in data_dir
-    print(f"Loading dataset from {cfg.data_dir} ...")
-    dataset = SUN360Dataset(cfg.data_dir, split="train")
-    # Override config dimensions from actual data
-    cfg.n_elev  = dataset.n_elev
-    cfg.n_azim  = dataset.n_azim
-    cfg.n_views = dataset.n_views
-    cfg.view_height = dataset.view_H
-    cfg.view_width  = dataset.view_W
-    print(f"Grid: {cfg.n_elev}×{cfg.n_azim} = {cfg.n_views} views, each 3×{cfg.view_height}×{cfg.view_width}")
+    # Dataset
+    extra_data_dir = (args.extra_data_dir
+                      if (args and hasattr(args, 'extra_data_dir') and args.extra_data_dir)
+                      else None)
 
-    loader = DataLoader(dataset, batch_size=cfg.batch_size,
-                        shuffle=True, num_workers=2, pin_memory=False)
-    print(f"Train samples: {len(dataset)}, batches/epoch: {len(loader)}")
+    val_dataset = None  # set below in single-dataset mode (provides mean_viewgrid)
+    if extra_data_dir:
+        # Combined mode: indoor360 (4:3:3 resplit) + sun360
+        print(f"Combined mode: {cfg.data_dir} (4:3:3 resplit) + {extra_data_dir}")
+        loader, val_loader, n_elev, n_azim = make_combined_loaders(
+            indoor_dir=cfg.data_dir,
+            sun360_dir=extra_data_dir,
+            batch_size=cfg.batch_size,
+        )
+        cfg.n_elev = n_elev; cfg.n_azim = n_azim
+        cfg.n_views = n_elev * n_azim
+        cfg.view_height = 32; cfg.view_width = 32
+    else:
+        print(f"Loading dataset from {cfg.data_dir} ...")
+        dataset = SUN360Dataset(cfg.data_dir, split="train", mean_subtract=True)
+        cfg.n_elev  = dataset.n_elev
+        cfg.n_azim  = dataset.n_azim
+        cfg.n_views = dataset.n_views
+        cfg.view_height = dataset.view_H
+        cfg.view_width  = dataset.view_W
+        loader = DataLoader(dataset, batch_size=cfg.batch_size,
+                            shuffle=True, num_workers=2, pin_memory=False)
+        print(f"Train samples: {len(dataset)}, batches/epoch: {len(loader)}")
+        val_dataset = SUN360Dataset(cfg.data_dir, split="val", mean_subtract=True)
+        val_loader = DataLoader(val_dataset, batch_size=cfg.batch_size,
+                                shuffle=False, num_workers=2, pin_memory=False)
+        print(f"Val samples: {len(val_dataset)}")
+
+    print(f"Grid: {cfg.n_elev}×{cfg.n_azim} = {cfg.n_views} views, each 3×{cfg.view_height}×{cfg.view_width}")
+    print(f"Train batches/epoch: {len(loader)}  Val batches: {len(val_loader)}")
 
     # Models
     encoder    = ViewEncoder(d_enc=cfg.d_enc).to(device)
@@ -384,14 +511,15 @@ def main(args=None):
     print(f"Total parameters: {total_params:,}")
 
     # Logging
-    run = init_logging(cfg)
+    run_name = args.run_name if (args and hasattr(args, 'run_name') and args.run_name) else None
+    run = init_logging(cfg, run_name=run_name)
 
     # ---- Phase 1: Pretrain (T=1) ----
     print(f"\n=== Phase 1: Pretraining ({cfg.pretrain_epochs} epochs, T=1) ===")
     pretrain_params = (list(encoder.parameters()) + list(loc_sensor.parameters()) +
                        list(combine.parameters()) + list(memory.parameters()) +
                        list(completion.parameters()))
-    optimizer = torch.optim.Adam(pretrain_params, lr=cfg.lr)
+    optimizer = torch.optim.Adam(pretrain_params, lr=cfg.lr, weight_decay=0.005)
     global_step = pretrain(loader, encoder, loc_sensor, combine, memory,
                            completion, optimizer, cfg, device, run)
 
@@ -408,13 +536,11 @@ def main(args=None):
 
     # ---- Phase 2: Full training (T=6) ----
     print(f"\n=== Phase 2: Full training ({cfg.n_epochs} epochs, T={cfg.T}) ===")
-    all_params = (list(encoder.parameters()) + list(loc_sensor.parameters()) +
-                  list(combine.parameters()) + list(memory.parameters()) +
-                  list(completion.parameters()) + list(actor.parameters()))
-    optimizer = torch.optim.Adam(all_params, lr=cfg.lr)
 
+    mean_vg = getattr(val_dataset, "mean_viewgrid", None)  # (N_views, C, H, W) or None
     train_full(loader, encoder, loc_sensor, combine, memory, completion,
-               actor, optimizer, cfg, device, run, global_step=global_step)
+               actor, cfg, device, run, global_step=global_step,
+               val_loader=val_loader, mean_vg=mean_vg)
 
     print("\nTraining complete.")
     if run:
@@ -432,5 +558,11 @@ if __name__ == "__main__":
                         help="Enable wandb logging")
     parser.add_argument("--device", type=str, default=None,
                         help="Device string, e.g. 'cuda:2' (default: auto)")
+    parser.add_argument("--extra-data-dir", type=str, default=None,
+                        help="Second dataset dir; triggers combined mode: "
+                             "--data-dir is indoor360 (4:3:3 resplit), "
+                             "--extra-data-dir is SUN360 (existing splits)")
+    parser.add_argument("--run-name", type=str, default=None,
+                        help="Wandb run name (auto-generated if omitted)")
     args = parser.parse_args()
     main(args)

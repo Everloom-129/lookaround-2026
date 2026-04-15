@@ -88,7 +88,7 @@ def load_model_and_data() -> str:
         cfg = Config()
         cfg.data_dir = DATA_DIR
 
-        val_dataset = SUN360Dataset(DATA_DIR, split="val")
+        val_dataset = SUN360Dataset(DATA_DIR, split="val", mean_subtract=True)
         cfg.n_elev  = val_dataset.n_elev
         cfg.n_azim  = val_dataset.n_azim
         cfg.n_views = val_dataset.n_views
@@ -337,10 +337,11 @@ def run_one_step(state: dict) -> dict:
         x_t = get_view(vg, e, a, n_azim=n_azim).to(DEVICE)
         state["observed"][(e, a)] = x_t
 
-        d_elev = torch.tensor([[state["d_elev_prev"] / max(n_elev - 1, 1)]], dtype=torch.float32, device=DEVICE)
-        d_azim = torch.tensor([[state["d_azim_prev"] / n_azim]], dtype=torch.float32, device=DEVICE)
-        elev_n = torch.tensor([[e / max(n_elev - 1, 1)]], dtype=torch.float32, device=DEVICE)
-        p_t = torch.cat([elev_n, d_elev, d_azim], dim=1)
+        rel_elev_n = torch.tensor([[state["rel_elev"] / max(n_elev - 1, 1)]], dtype=torch.float32, device=DEVICE)
+        rel_azim_n = torch.tensor([[state["rel_azim"] / n_azim]], dtype=torch.float32, device=DEVICE)
+        time_n     = torch.tensor([[t / T]], dtype=torch.float32, device=DEVICE)
+        elev_n     = torch.tensor([[e / max(n_elev - 1, 1)]], dtype=torch.float32, device=DEVICE)
+        p_t = torch.cat([rel_elev_n, rel_azim_n, time_n, elev_n], dim=1)
 
         patch_feat = encoder(x_t)
         loc_feat   = loc_sensor(p_t)
@@ -366,7 +367,8 @@ def run_one_step(state: dict) -> dict:
                     state["rel_azim"] / n_azim,
                 ]], dtype=torch.float32, device=DEVICE)
                 time_frac = torch.tensor([[t / T]], dtype=torch.float32, device=DEVICE)
-                logits = policy(a_t, rel_pos, time_frac)
+                abs_elev_norm = torch.tensor([[e / max(n_elev - 1, 1)]], dtype=torch.float32, device=DEVICE)
+                logits = policy(a_t, rel_pos, time_frac, abs_elev_norm)
                 action, _, _ = policy.get_action(logits, deterministic=True)
             else:
                 action = policy.get_action(B, DEVICE)
@@ -436,8 +438,8 @@ def run_eval_transfer_bg(data_dir: str):
     _eval_progress["msg"] = "Loading datasets..."
 
     try:
-        tr_ds = SUN360Dataset(data_dir, split="train")
-        va_ds = SUN360Dataset(data_dir, split="val")
+        tr_ds = SUN360Dataset(data_dir, split="train", mean_subtract=True)
+        va_ds = SUN360Dataset(data_dir, split="val", mean_subtract=True)
         _cfg  = Config()
         _cfg.data_dir = data_dir
         _cfg.n_elev   = tr_ds.n_elev
