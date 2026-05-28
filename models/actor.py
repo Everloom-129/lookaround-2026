@@ -23,12 +23,15 @@ class Actor(nn.Module):
     def __init__(self, d_hidden: int = 256, n_actions: int = 14):
         super().__init__()
         d_in = d_hidden + 2 + 1 + 1  # hidden + rel_pos(2) + time_frac(1) + abs_elev(1)
+        # Matches origin SUN360ActiveMod.lua actor: 3 Linear + ReLU, no BatchNorm.
+        # The earlier port added BN1d(128) before the output head; that whitens pre-logits
+        # every batch and prevents action differentiation (logit_std stays ~0.01
+        # throughout phase 2 — observed in 4 successive failed runs).
         self.net = nn.Sequential(
             nn.Linear(d_in, 128),
             nn.ReLU(inplace=True),
             nn.Linear(128, 128),
             nn.ReLU(inplace=True),
-            nn.BatchNorm1d(128),
             nn.Linear(128, n_actions),
         )
 

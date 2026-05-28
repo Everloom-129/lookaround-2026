@@ -310,11 +310,11 @@ def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
         learned_baseline.parameters(), lr=config.lr * 10
     )
 
-    # Entropy bonus α: paper has none, but flat-logit collapse (entropy = log(K)
-    # with argmax always picking the same action) was empirically observed.
-    # α=0.01 is small enough not to dominate the PG loss but large enough to keep
-    # logits from collapsing to zero variance.
-    entropy_coef = 0.01
+    # Entropy bonus disabled (α=0): paper has no entropy term, and a brief experiment
+    # with α=0.01 actively pulled logits toward the maxent uniform distribution
+    # (logit_std 0.11 → 0.01 within ~17 batches of phase 2, then stuck). The flat
+    # logits were the failure mode we were trying to fix, not exploration collapse.
+    entropy_coef = 0.0
 
     encoder.eval(); loc_sensor.eval(); combine.eval()
     completion.eval(); memory.train(); actor.train()
