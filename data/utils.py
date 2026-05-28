@@ -80,3 +80,81 @@ def step_position(elev: int, azim: int,
     new_elev = max(0, min(n_elev - 1, elev + d_elev))
     new_azim = (azim + d_azim) % n_azim
     return new_elev, new_azim
+
+
+# ---------------------------------------------------------------------------
+# Vectorized (per-sample) variants — needed for per-sample REINFORCE trajectories.
+# The scalar versions above were used with a shared trajectory across the batch,
+# which gave 31/32 of the batch noise gradient (log_prob[i] uncorrelated with
+# reward[i] for i>0). The batched variants below let every sample have its own
+# trajectory so REINFORCE gets full B× signal.
+# ---------------------------------------------------------------------------
+
+def get_view_batched(viewgrid: Tensor, elev_idx: Tensor, azim_idx: Tensor,
+                     n_azim: int = 8) -> Tensor:
+    """
+    Per-sample view extraction.
+
+    Args:
+        viewgrid: (B, N_views, C, H, W)
+        elev_idx: (B,) long
+        azim_idx: (B,) long  (will be wrapped mod n_azim)
+    Returns:
+        (B, C, H, W)
+    """
+    B = viewgrid.shape[0]
+    flat = elev_idx * n_azim + (azim_idx % n_azim)            # (B,)
+    return viewgrid[torch.arange(B, device=viewgrid.device), flat]
+
+
+def circ_shift_viewgrid_batched(recon: Tensor, delta_0: Tensor,
+                                n_elev: int = 5, n_azim: int = 8) -> Tensor:
+    """
+    Per-sample azimuth-axis circular shift.
+
+    Args:
+        recon:   (B, N_views, C, H, W)
+        delta_0: (B,) long — per-sample azimuth shift
+    Returns:
+        (B, N_views, C, H, W) shifted
+    """
+    B, N, C, H, W = recon.shape
+    recon5d = recon.view(B, n_elev, n_azim, C, H, W)
+    # For each b, output[..., a, ...] = input[..., (a - delta_0[b]) mod n_azim, ...]
+    base = torch.arange(n_azim, device=recon.device).view(1, n_azim).expand(B, n_azim)
+    shifted = (base - delta_0.view(B, 1)) % n_azim                # (B, n_azim)
+    gather_idx = shifted.view(B, 1, n_azim, 1, 1, 1).expand(B, n_elev, n_azim, C, H, W)
+    out5d = recon5d.gather(dim=2, index=gather_idx)
+    return out5d.view(B, N, C, H, W)
+
+
+def paste_observed_batched(recon: Tensor, observed_mask: Tensor,
+                           target: Tensor) -> Tensor:
+    """
+    Per-sample paste: wherever observed_mask[b, j] is True, overwrite recon[b, j]
+    with target[b, j] (the actually-seen view). Used after circ_shift to get
+    absolute-azimuth aligned recon and target.
+
+    Args:
+        recon:         (B, N_views, C, H, W)
+        observed_mask: (B, N_views) bool — True at absolute (elev*n_azim+azim)
+                       positions the agent has visited
+        target:        (B, N_views, C, H, W) — ground truth viewgrid (mean-subtracted)
+    Returns:
+        (B, N_views, C, H, W)
+    """
+    mask = observed_mask.view(*observed_mask.shape, 1, 1, 1)
+    return torch.where(mask, target, recon)
+
+
+def step_position_batched(elev: Tensor, azim: Tensor,
+                          d_elev: Tensor, d_azim: Tensor,
+                          n_elev: int = 5, n_azim: int = 8) -> Tuple[Tensor, Tensor]:
+    """
+    Per-sample step. All inputs (B,) long tensors.
+
+    Elevation clamps at boundaries; azimuth wraps.
+    """
+    new_elev = (elev + d_elev).clamp(0, n_elev - 1)
+    new_azim = (azim + d_azim) % n_azim
+    return new_elev, new_azim

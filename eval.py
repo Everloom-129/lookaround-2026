@@ -27,7 +27,11 @@ from torch.utils.data import DataLoader
 
 from config import Config
 from data.sun360 import SUN360Dataset
-from data.utils import circ_shift_viewgrid, get_view, paste_observed, step_position
+from data.utils import (
+    circ_shift_viewgrid, get_view, paste_observed, step_position,
+    circ_shift_viewgrid_batched, get_view_batched, paste_observed_batched,
+    step_position_batched,
+)
 from models.actor import Actor
 from models.baselines import LargeActionPolicy, RandomPolicy
 from models.combine import CombineModule
@@ -71,26 +75,25 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
 
             elev_cur = torch.randint(0, n_elev, (B,), generator=rng).to(device)
             azim_cur = torch.randint(0, n_azim, (B,), generator=rng).to(device)
-            delta_0 = azim_cur[0].item()
+            delta_0 = azim_cur.clone()                          # (B,) per-sample
 
             h, c = memory.init_hidden(B, device)
-            shared_observed = {}
-            d_elev_prev = torch.zeros(B, device=device)
-            d_azim_prev = torch.zeros(B, device=device)
+            observed_mask = torch.zeros(B, n_elev * n_azim, dtype=torch.bool, device=device)
             rel_elev = torch.zeros(B, device=device)
             rel_azim = torch.zeros(B, device=device)
+            action_deltas_t = torch.tensor(config.action_deltas, dtype=torch.long, device=device)
 
             for t in range(T):
-                e, a = int(elev_cur[0].item()), int(azim_cur[0].item())
-                x_t = get_view(batch, e, a, n_azim=n_azim).to(device)
-                shared_observed[(e, a)] = x_t
+                x_t = get_view_batched(batch, elev_cur, azim_cur, n_azim=n_azim)
+                flat_idx = elev_cur * n_azim + (azim_cur % n_azim)
+                observed_mask[torch.arange(B, device=device), flat_idx] = True
 
                 p_t = torch.stack([
                     rel_elev.float() / max(n_elev - 1, 1),
                     rel_azim.float() / n_azim,
                     torch.full((B,), t / T, dtype=torch.float32, device=device),
                     elev_cur.float() / max(n_elev - 1, 1),
-                ], dim=1).to(device)
+                ], dim=1)
 
                 patch_feat = encoder(x_t)
                 loc_feat   = loc_sensor(p_t)
@@ -98,8 +101,8 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
                 a_t, (h, c) = memory(f_t, (h, c))
 
                 recon_t = completion(a_t)
-                recon_t = circ_shift_viewgrid(recon_t, int(delta_0), n_elev, n_azim)
-                recon_t = paste_observed(recon_t, shared_observed, n_azim)
+                recon_t = circ_shift_viewgrid_batched(recon_t, delta_0, n_elev, n_azim)
+                recon_t = paste_observed_batched(recon_t, observed_mask, batch)
 
                 mse_t = F.mse_loss(recon_t, batch).item() * 1000
                 cumulative_mse[t] += mse_t
@@ -109,24 +112,24 @@ def eval_policy(loader, encoder, loc_sensor, combine, memory, completion,
                         rel_pos = torch.stack([
                             rel_elev.float() / max(n_elev - 1, 1),
                             rel_azim.float() / n_azim,
-                        ], dim=1).to(device)
+                        ], dim=1)
                         time_frac = torch.full((B, 1), t / T,
                                                dtype=torch.float32, device=device)
-                        abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1).to(device)
+                        abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1)
                         logits = policy(a_t, rel_pos, time_frac, abs_elev_norm)
                         action, _, _ = policy.get_action(logits, deterministic=True)
                     else:
                         action = policy.get_action(B, device)
+                        if action.dim() == 0:
+                            action = action.expand(B)
 
-                    act_idx = action[0].item()
-                    de, da = config.action_deltas[act_idx]
-                    new_e, new_a = step_position(e, a, de, da, n_elev, n_azim)
-                    d_elev_prev = torch.full((B,), float(de), device=device)
-                    d_azim_prev = torch.full((B,), float(da), device=device)
-                    rel_elev = rel_elev + float(de)
-                    rel_azim = rel_azim + float(da)
-                    elev_cur = torch.full((B,), new_e, dtype=torch.long, device=device)
-                    azim_cur = torch.full((B,), new_a, dtype=torch.long, device=device)
+                    deltas = action_deltas_t[action]            # (B, 2)
+                    de = deltas[:, 0]; da = deltas[:, 1]
+                    elev_cur, azim_cur = step_position_batched(
+                        elev_cur, azim_cur, de, da, n_elev, n_azim
+                    )
+                    rel_elev = rel_elev + de.float()
+                    rel_azim = rel_azim + da.float()
 
             n_batches += 1
 

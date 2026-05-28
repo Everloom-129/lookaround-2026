@@ -18,7 +18,7 @@ N_ELEV=5
 # ---------------------------------------------------------------------------
 # Auto-construct wandb run name from hparams
 # ---------------------------------------------------------------------------
-RUN_NAME="sun360_indoor360_5elev_persp_entbonus_ep${EPOCHS}_bs${BATCH_SIZE}_lr${LR}_wd${WEIGHT_DECAY}_T${T}_lp${LAMBDA_POLICY}"
+RUN_NAME="persp_persample_ep${EPOCHS}_bs${BATCH_SIZE}_lr${LR}_wd${WEIGHT_DECAY}_T${T}_lp${LAMBDA_POLICY}"
 
 echo "========================================="
 echo "  Run name : ${RUN_NAME}"

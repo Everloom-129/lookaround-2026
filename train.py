@@ -23,7 +23,11 @@ from torch.utils.data import DataLoader, random_split
 from config import Config
 from data.combined import make_combined_loaders
 from data.sun360 import SUN360Dataset
-from data.utils import circ_shift_viewgrid, get_view, paste_observed, step_position
+from data.utils import (
+    circ_shift_viewgrid, get_view, paste_observed, step_position,
+    circ_shift_viewgrid_batched, get_view_batched, paste_observed_batched,
+    step_position_batched,
+)
 from models.actor import Actor
 from models.combine import CombineModule
 from models.completion import CompletionHead
@@ -63,104 +67,76 @@ def run_episode(
     B = batch.shape[0]
     n_elev, n_azim = config.n_elev, config.n_azim
 
-    # Random starting position per batch element
-    elev_0 = torch.randint(0, n_elev, (B,), device=device)
-    azim_0 = torch.randint(0, n_azim, (B,), device=device)
-    delta_0 = azim_0.clone()  # azimuth offset for rotation compensation
+    # Per-sample random starting position (each batch element has its OWN trajectory
+    # so REINFORCE log_prob[i] is causally tied to reward[i]; sharing a trajectory
+    # collapses SNR to 1:31 and was the cause of 4 successive flat-logit failures).
+    elev_cur = torch.randint(0, n_elev, (B,), device=device, dtype=torch.long)
+    azim_cur = torch.randint(0, n_azim, (B,), device=device, dtype=torch.long)
+    delta_0 = azim_cur.clone()                          # (B,) per-sample azim offset
 
-    # Current position
-    elev_cur = elev_0.clone()
-    azim_cur = azim_0.clone()
-
-    # Initialize LSTM state
     h, c = memory.init_hidden(B, device)
 
-    # Tracking
-    observed: List[dict] = [{}] * B  # per-element observed views (elev, azim) → view
-    # For simplicity use a shared dict indexed by (elev, azim) → (B, C, H, W)
-    # (all batch elements take the same position at each step)
-    # For truly independent trajectories we'd need per-element — but the original
-    # paper also batches with the same position sequence per batch. We keep it simple.
-    shared_observed = {}
+    # Per-sample observed-views mask. After we circ_shift to absolute frame the
+    # observed views at (elev, azim) live at flat_idx = elev*n_azim+azim of `batch`.
+    observed_mask = torch.zeros(B, n_elev * n_azim, dtype=torch.bool, device=device)
 
     recon_list = []
     log_probs = []
-    entropies = []      # per-step policy entropy (B,) — for entropy bonus + diagnostics
-    logits_list = []    # per-step logits (B, K) — for diagnostics (logit std)
+    entropies = []
+    logits_list = []
 
-    # Relative position tracking (from start)
+    # Relative position tracking (B,) — cumulative since start
     rel_elev = torch.zeros(B, device=device)
     rel_azim = torch.zeros(B, device=device)
-    d_elev_prev = torch.zeros(B, device=device)
-    d_azim_prev = torch.zeros(B, device=device)
+
+    # Precomputed action deltas on device for vectorized step
+    action_deltas_t = torch.tensor(config.action_deltas, dtype=torch.long, device=device)  # (K, 2)
 
     for t in range(T):
-        # --- Sense ---
-        # Gather the view for each batch element at its current position
-        # Since all elements move in sync we use the first element's position
-        e = elev_cur[0].item()
-        a = azim_cur[0].item()
-        x_t = get_view(batch, int(e), int(a), n_azim=n_azim).to(device)  # (B, C, H, W)
-        shared_observed[(e, a)] = x_t.detach()
+        # --- Sense (per-sample view at each element's own position) ---
+        x_t = get_view_batched(batch, elev_cur, azim_cur, n_azim=n_azim)   # (B, C, H, W)
+        flat_idx = elev_cur * n_azim + (azim_cur % n_azim)                  # (B,)
+        observed_mask[torch.arange(B, device=device), flat_idx] = True
 
-        # Proprioceptive metadata: [rel_elev_norm, rel_azim_norm, t/T, abs_elev_norm]
-        # Matches original location_ipsz = 2+1+1 (rel_pos + time + knownElev)
+        # Proprioceptive: [rel_elev_norm, rel_azim_norm, t/T, abs_elev_norm]
         p_t = torch.stack([
-            rel_elev.float() / max(n_elev - 1, 1),   # cumulative rel elev from start
-            rel_azim.float() / n_azim,                # cumulative rel azim from start
-            torch.full((B,), t / T, dtype=torch.float32, device=device),  # t/T
-            elev_cur.float() / max(n_elev - 1, 1),   # absolute elevation norm
-        ], dim=1).to(device)  # (B, 4)
+            rel_elev.float() / max(n_elev - 1, 1),
+            rel_azim.float() / n_azim,
+            torch.full((B,), t / T, dtype=torch.float32, device=device),
+            elev_cur.float() / max(n_elev - 1, 1),
+        ], dim=1)                                                            # (B, 4)
 
-        # --- Encode + Combine ---
-        patch_feat = encoder(x_t)              # (B, 256)
-        loc_feat   = loc_sensor(p_t)           # (B, 16)
-        f_t        = combine(patch_feat, loc_feat)  # (B, 256)
+        patch_feat = encoder(x_t)
+        loc_feat   = loc_sensor(p_t)
+        f_t        = combine(patch_feat, loc_feat)
+        a_t, (h, c) = memory(f_t, (h, c))
 
-        # --- Aggregate ---
-        a_t, (h, c) = memory(f_t, (h, c))     # a_t: (B, 256)
-
-        # --- Decode ---
-        recon_t = completion(a_t)              # (B, 40, 3, 32, 32)
-        # Rotation compensation — use first element's delta_0 (shared trajectory)
-        d0 = delta_0[0].item()
-        recon_t_shifted = circ_shift_viewgrid(recon_t, int(d0), n_elev, n_azim)
-        recon_t_shifted = paste_observed(recon_t_shifted, shared_observed, n_azim)
+        recon_t = completion(a_t)                                            # (B, N, C, H, W)
+        recon_t_shifted = circ_shift_viewgrid_batched(recon_t, delta_0, n_elev, n_azim)
+        recon_t_shifted = paste_observed_batched(recon_t_shifted, observed_mask, batch)
         recon_list.append(recon_t_shifted)
 
-        # --- Act (skip on last step) ---
         if t < T - 1:
             rel_pos = torch.stack([
                 rel_elev.float() / max(n_elev - 1, 1),
                 rel_azim.float() / n_azim,
-            ], dim=1).to(device)  # (B, 2)
-            time_frac = torch.full((B, 1), t / T,
-                                   dtype=torch.float32, device=device)
-            abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1).to(device)  # (B, 1)
-            logits = actor(a_t, rel_pos, time_frac, abs_elev_norm)  # (B, 14)
-            action, log_prob, dist = actor.get_action(
-                logits, deterministic=deterministic
-            )
+            ], dim=1)
+            time_frac     = torch.full((B, 1), t / T, dtype=torch.float32, device=device)
+            abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1)
+            logits = actor(a_t, rel_pos, time_frac, abs_elev_norm)          # (B, K)
+            action, log_prob, dist = actor.get_action(logits, deterministic=deterministic)
             log_probs.append(log_prob)
-            entropies.append(dist.entropy())     # (B,)
-            logits_list.append(logits.detach())  # (B, K)
+            entropies.append(dist.entropy())
+            logits_list.append(logits.detach())
 
-            # Step position (using first element's action — shared trajectory)
-            act_idx = action[0].item()
-            de, da = config.action_deltas[act_idx]
-            new_e, new_a = step_position(
-                int(elev_cur[0].item()), int(azim_cur[0].item()),
-                de, da, n_elev, n_azim
+            # Per-sample step
+            deltas = action_deltas_t[action]                                # (B, 2)
+            de = deltas[:, 0]; da = deltas[:, 1]
+            elev_cur, azim_cur = step_position_batched(
+                elev_cur, azim_cur, de, da, n_elev, n_azim
             )
-
-            # Update relative position
-            d_elev_prev = torch.full((B,), float(de), device=device)
-            d_azim_prev = torch.full((B,), float(da), device=device)
-            rel_elev = rel_elev + float(de)
-            rel_azim = rel_azim + float(da)
-
-            elev_cur = torch.full((B,), new_e, dtype=torch.long, device=device)
-            azim_cur = torch.full((B,), new_a, dtype=torch.long, device=device)
+            rel_elev = rel_elev + de.float()
+            rel_azim = rel_azim + da.float()
 
     return recon_list, log_probs, delta_0, entropies, logits_list
 
