@@ -113,7 +113,11 @@ def run_episode(
 
         recon_t = completion(a_t)                                            # (B, N, C, H, W)
         recon_t_shifted = circ_shift_viewgrid_batched(recon_t, delta_0, n_elev, n_azim)
-        recon_t_shifted = paste_observed_batched(recon_t_shifted, observed_mask, batch)
+        # Snapshot mask: paste_observed_batched uses torch.where which saves the
+        # condition tensor for backward. observed_mask gets mutated at the next
+        # timestep (inplace True at new position) — without the clone autograd sees
+        # the modified mask and errors with "variable modified by an inplace op".
+        recon_t_shifted = paste_observed_batched(recon_t_shifted, observed_mask.clone(), batch)
         recon_list.append(recon_t_shifted)
 
         if t < T - 1:
