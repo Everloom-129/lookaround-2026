@@ -38,7 +38,15 @@ The paper proposes a reinforcement learning agent that learns to **actively comp
 
 ## Reproduction Results
 
-The following plots are generated from this reimplementation and summarize reproducible evaluation outcomes across reconstruction quality and policy transfer settings.
+> **Status (branch `paper-align/5elev-perspective-entbonus`, 2026-05-28): 🔴 Active
+> observation completion did NOT reproduce paper's core claim.** Six iterations
+> achieved full paper alignment (per-sample trajectories, unfrozen LSTM, 45° FOV
+> perspective views, etc.) but the actor's REINFORCE policy gradient is too noisy
+> at our data scale (1673 train panos vs paper's ~7186) to escape the near-uniform
+> initial policy. Final ours/random improvement ratio: **1.30×** (paper: **2.16×**).
+> Full diagnostic + 6-iteration table in [`results/reproduction_status.md`](results/reproduction_status.md).
+> The earlier plots below were from earlier-iteration runs; the final eval
+> (epoch 200 of the per-sample run) is in `results/eval_metrics.json`.
 
 ![Eval MSE Curve](asset/eval_mse_curve.png)
 *Reproduction eval (indoor360): per-timestep MSE curve comparing ours vs. random and large-action baselines.*

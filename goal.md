@@ -1,12 +1,6 @@
-# Reproduction Goal — Handoff Prompt
+# Reproduction Goal 
 
-Paste the block below into a new Claude session to resume this reproduction.
-It defines what "done" means quantitatively, what to check, and what to do
-based on the outcome.
 
----
-
-```
 你好。继续 paper-align/5elev-perspective-entbonus 分支上的 SUN360 active observation
 completion 复现工作。请先 git log + checkpoints/ 看现状,再按照下面的 success criteria
 工作,不要重新设计训练流程。
@@ -73,11 +67,10 @@ domain 也是 SUN360+indoor360 混合) — 目标是 **匹配论文的核心 cla
 - 增加 phase 1 epoch 数,让 encoder/decoder 学得更好
 
 切记: 用 advisor() 在做实质决策前征询一次。诚实报告失败,不要掩饰指标。
-```
 
 ---
 
-## 设计依据 (给人看的)
+## 设计依据 
 
 1. **绝对 MSE 不可比** (数据规模差 4.3×,domain 混合) → 用 "ours vs random improvement
    比值" 作为主指标,这正是 paper Sec 4.2 的核心 claim
@@ -110,9 +103,31 @@ domain 也是 SUN360+indoor360 混合) — 目标是 **匹配论文的核心 cla
 ## 历史 checkpoints (供回归对比)
 
 ```
-checkpoints/4elev_backup/                 — 4×8 grid, frozen memory, sun360-only (~518 panos)
-checkpoints/5elev_sun360only_backup/      — 5×8, frozen memory, sun360-only
-checkpoints/5elev_combined_frozen_backup/ — 5×8, frozen memory, combined 2293 panos (epoch ~1130, 提前中止)
-checkpoints/5elev_memunfrozen_tile_backup/— 5×8, memory unfrozen, tile-resize views, combined (ep2000)
-checkpoints/ckpt_epoch*.pt                — 本次 persp+entbonus 训练产出 (训练中或已完成)
+checkpoints/4elev_backup/                       — 4×8 grid, frozen mem, sun360-only (~518 panos)
+checkpoints/5elev_sun360only_backup/            — 5×8, frozen mem, sun360-only
+checkpoints/5elev_combined_frozen_backup/       — 5×8, frozen mem, combined 2293 (ep ~1130, 提前中止)
+checkpoints/5elev_memunfrozen_tile_backup/      — 5×8, unfrozen mem, tile views (ep2000)
+checkpoints/5elev_persp_entbonus_killed_backup/ — 5×8, unfrozen mem, persp, entbonus α=0.01 (ep300, killed)
+checkpoints/5elev_persp_nobn_noent_killed_backup/—5×8, unfrozen mem, persp, no BN, no entbonus (ep200, killed)
+checkpoints/ckpt_epoch*.pt                      — per-sample trajectory (ep200, killed; final state)
 ```
+
+---
+
+## STATUS (2026-05-28): 🔴 Failure — see `results/reproduction_status.md`
+
+6 iterations attempted, full paper alignment achieved (per-sample trajectories,
+unfrozen memory, real perspective projection, no BN, no entropy bonus, baseline
+lr ×10). Final eval: ours=41.95, random=43.50 (1.30× improvement ratio vs paper's
+2.16×). Gate per goal.md: 🔴 (actor/logit_std=0.022 < 0.05 threshold; gap 3.56% <
+10% threshold).
+
+**Root cause**: even with all paper-aligned fixes, the actor's REINFORCE PG gradient
+is too noisy to overcome the small per-action reward variance from a near-uniform
+initial policy. Logit_std grows from 0.011 → 0.022 over 100 phase-2 epochs — too
+slow to clear the 0.3 threshold by 2000 epochs.
+
+**Next iteration options** documented in `results/reproduction_status.md` §"What
+was NOT tried". Decision deferred to user — these involve choosing between paper
+deviations (advantage normalization, weight-decay-off-on-actor, larger lr) and
+project-scope changes (more data, multi-trajectory sampling, PPO).
