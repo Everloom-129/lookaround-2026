@@ -9,6 +9,7 @@ dependencies = [
     "h5py>=3.16.0",
     "matplotlib>=3.10.8",
     "numpy>=2.4.3",
+    "py360convert>=1.0.4",
     "pyrender>=0.1.45",
     "torch==2.3.1",
     "torchvision==0.18.1",

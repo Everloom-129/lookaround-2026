@@ -85,6 +85,8 @@ def run_episode(
 
     recon_list = []
     log_probs = []
+    entropies = []      # per-step policy entropy (B,) — for entropy bonus + diagnostics
+    logits_list = []    # per-step logits (B, K) — for diagnostics (logit std)
 
     # Relative position tracking (from start)
     rel_elev = torch.zeros(B, device=device)
@@ -136,10 +138,12 @@ def run_episode(
                                    dtype=torch.float32, device=device)
             abs_elev_norm = (elev_cur.float() / max(n_elev - 1, 1)).unsqueeze(1).to(device)  # (B, 1)
             logits = actor(a_t, rel_pos, time_frac, abs_elev_norm)  # (B, 14)
-            action, log_prob, _ = actor.get_action(
+            action, log_prob, dist = actor.get_action(
                 logits, deterministic=deterministic
             )
             log_probs.append(log_prob)
+            entropies.append(dist.entropy())     # (B,)
+            logits_list.append(logits.detach())  # (B, K)
 
             # Step position (using first element's action — shared trajectory)
             act_idx = action[0].item()
@@ -158,35 +162,38 @@ def run_episode(
             elev_cur = torch.full((B,), new_e, dtype=torch.long, device=device)
             azim_cur = torch.full((B,), new_a, dtype=torch.long, device=device)
 
-    return recon_list, log_probs, delta_0
+    return recon_list, log_probs, delta_0, entropies, logits_list
 
 
 # ---------------------------------------------------------------------------
 # Loss computation
 # ---------------------------------------------------------------------------
 
-def compute_losses(recon_list, target, log_probs, baseline_value):
+def compute_losses(recon_list, target, log_probs, baseline_value,
+                   entropies=None, entropy_coef: float = 0.0):
     """
     recon_list:     list of T tensors (B, N_views, C, H, W) — already shifted + pasted
     target:         (B, N_views, C, H, W)  — mean-subtracted
     log_probs:      list of T-1 (B,) tensors
     baseline_value: scalar tensor from LearnedBaseline() (for advantage computation)
+    entropies:      optional list of T-1 (B,) tensors; needed for entropy bonus
+    entropy_coef:   α multiplier for -α·mean(H) added to policy_loss
 
     Returns:
         recon_loss:  scalar tensor — sum of MSE over all T steps (for monitoring)
-        policy_loss: scalar tensor — REINFORCE loss (for actor optimizer)
+        policy_loss: scalar tensor — REINFORCE loss (+ optional entropy bonus)
         reward:      (B,) tensor  — per-sample -MSE at final step (for baseline training)
     """
-    # Reconstruction loss: sum over all timesteps (scalar, for monitoring only in phase 2)
     recon_losses = [F.mse_loss(r, target) for r in recon_list]
     recon_loss = sum(recon_losses)
 
-    # Per-sample reward: -(mean pixel MSE at final step) — shape (B,)
     final_diff = (recon_list[-1].detach() - target.detach())
     reward = -final_diff.pow(2).mean(dim=[1, 2, 3, 4])  # (B,)
 
-    policy_loss = compute_reinforce_loss(log_probs, reward, baseline_value)
-
+    policy_loss = compute_reinforce_loss(
+        log_probs, reward, baseline_value,
+        entropies=entropies, entropy_coef=entropy_coef,
+    )
     return recon_loss, policy_loss, reward
 
 
@@ -208,7 +215,7 @@ def validate(val_loader, encoder, loc_sensor, combine, memory, completion,
     with torch.no_grad():
         for batch in val_loader:
             batch = batch.to(device)
-            recon_list, _, _ = run_episode(
+            recon_list, _, _, _, _ = run_episode(
                 batch, encoder, loc_sensor, combine, memory, completion,
                 actor=actor, config=config, device=device, T=config.T,
                 deterministic=True,
@@ -237,7 +244,7 @@ def pretrain(loader, encoder, loc_sensor, combine, memory, completion,
         total_loss = 0.0
         for batch in loader:
             batch = batch.to(device)  # (B, 40, 3, 32, 32)
-            recon_list, _, _ = run_episode(
+            recon_list, _, _, _, _ = run_episode(
                 batch, encoder, loc_sensor, combine, memory, completion,
                 actor=None,  # not used when T=1
                 config=config, device=device, T=1,
@@ -270,28 +277,47 @@ def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
     Matches original: finetune_lrMult=0 freezes pretrained modules; only Actor
     and the learned baseline scalar are updated. Baseline trained at 150× actor lr.
     """
-    # Freeze all pretrained modules — only actor (and baseline) update in phase 2
-    for module in [encoder, loc_sensor, combine, memory, completion]:
+    # Phase 2 freezing — matches paper §3.3 ("train aggregate and act ... while other
+    # modules are frozen") and origin example.sh job 2 (finetune_lrMult=0,
+    # finetuneDecoderFlag=1 → decoder_lr_mult=0; finetuneRNNFlag/ActorFlag default
+    # false → rnn_lr_mult=action_lr_mult=1). So: freeze the sensing apparatus
+    # (encoder/location/combine) AND the decoder (completion); the aggregator (memory
+    # LSTM) and the actor both TRAIN.
+    for module in [encoder, loc_sensor, combine, completion]:
         for p in module.parameters():
             p.requires_grad = False
+    for p in memory.parameters():
+        p.requires_grad = True
 
-    # Actor-only optimizer with weight decay (matching original weightDecay=0.005)
+    # Optimizer over aggregator (memory) + actor, both at base lr (weight_decay=0.005).
+    # memory receives BOTH reconstruction-loss grads (through the frozen decoder) and
+    # REINFORCE grads (through h_t → action log-probs); actor receives REINFORCE grads.
     actor_optimizer = torch.optim.Adam(
-        actor.parameters(), lr=config.lr, weight_decay=0.005
+        list(actor.parameters()) + list(memory.parameters()),
+        lr=config.lr, weight_decay=0.005,
     )
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(
         actor_optimizer, mode="min", factor=0.5,
         patience=200, threshold=0.0002, min_lr=1e-6,
     )
 
-    # Learned scalar baseline (matches original nn.Add(1), trained at 150× actor lr)
+    # Learned scalar baseline. Original Lua used 150× actor lr, but with the tiny
+    # advantage signal in this task (advantage ≈ 1e-3) that lr collapses the baseline
+    # onto the reward EMA within a handful of steps → advantage ≈ 0 → no learning.
+    # Drop to 10× so baseline tracks more slowly and leaves a usable advantage.
     learned_baseline = LearnedBaseline().to(device)
     baseline_optimizer = torch.optim.Adam(
-        learned_baseline.parameters(), lr=config.lr * 150
+        learned_baseline.parameters(), lr=config.lr * 10
     )
 
+    # Entropy bonus α: paper has none, but flat-logit collapse (entropy = log(K)
+    # with argmax always picking the same action) was empirically observed.
+    # α=0.01 is small enough not to dominate the PG loss but large enough to keep
+    # logits from collapsing to zero variance.
+    entropy_coef = 0.01
+
     encoder.eval(); loc_sensor.eval(); combine.eval()
-    memory.eval(); completion.eval(); actor.train()
+    completion.eval(); memory.train(); actor.train()
 
     # Cache one fixed val sample for visualization (grabbed once, reused every epoch)
     _vis_batch = None
@@ -309,13 +335,14 @@ def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
             batch = batch.to(device)
             B = batch.shape[0]
 
-            recon_list, log_probs, _ = run_episode(
+            recon_list, log_probs, _, entropies, logits_list = run_episode(
                 batch, encoder, loc_sensor, combine, memory, completion,
                 actor=actor, config=config, device=device, T=config.T,
             )
 
             recon_loss, policy_loss, reward = compute_losses(
-                recon_list, batch, log_probs, learned_baseline()
+                recon_list, batch, log_probs, learned_baseline(),
+                entropies=entropies, entropy_coef=entropy_coef,
             )
 
             # Update baseline (MSE against per-sample reward)
@@ -326,10 +353,20 @@ def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
             baseline_loss.backward()
             baseline_optimizer.step()
 
-            # Update actor (REINFORCE)
+            # Update aggregator (memory) + actor.
+            # recon_loss (Eq 2, summed over all T steps) backprops through the frozen
+            # decoder into the RNN — teaching it to accumulate views into a better
+            # internal model. policy_loss (REINFORCE) trains the actor and also nudges
+            # the RNN via the action log-probs. Both terms hit the same optimizer.
             actor_optimizer.zero_grad()
-            policy_loss.backward()
-            nn.utils.clip_grad_norm_(actor.parameters(), config.max_grad_norm)
+            total_loss = recon_loss + config.lambda_policy * policy_loss
+            total_loss.backward()
+            # clip_grad_norm_ returns the total (pre-clip) grad norm — log it to check
+            # whether max_grad_norm is biting the (larger) recon gradient into memory.
+            grad_norm = nn.utils.clip_grad_norm_(
+                list(actor.parameters()) + list(memory.parameters()),
+                config.max_grad_norm,
+            )
             actor_optimizer.step()
 
             epoch_policy += policy_loss.item()
@@ -339,11 +376,18 @@ def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
             global_step += 1
 
             if global_step % config.log_every == 0:
+                with torch.no_grad():
+                    mean_entropy = torch.stack(entropies).mean().item() if entropies else 0.0
+                    logits_stack = torch.stack(logits_list, dim=0)  # (T-1, B, K)
+                    logit_std = logits_stack.std(dim=-1).mean().item()
                 log_metrics({
                     "train/policy_loss": policy_loss.item(),
                     "train/reward":      reward.mean().item(),
                     "train/recon_loss":  recon_loss.item(),
                     "train/baseline":    learned_baseline.value.item(),
+                    "train/grad_norm":   float(grad_norm),
+                    "actor/entropy":     mean_entropy,
+                    "actor/logit_std":   logit_std,
                 }, step=global_step, run=run)
 
         # Epoch summary + val
@@ -359,9 +403,10 @@ def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
                     val_loader, encoder, loc_sensor, combine, memory,
                     completion, actor, config, device,
                 )
-                # validate() restores .train() on all modules; re-freeze frozen ones
+                # validate() restores .train() on all modules; re-set phase-2 modes
+                # (memory stays trainable; sensing apparatus + decoder stay frozen)
                 encoder.eval(); loc_sensor.eval(); combine.eval()
-                memory.eval(); completion.eval()
+                completion.eval(); memory.train()
                 metrics["val/recon_loss"] = val_recon
                 metrics["val/reward"]     = val_reward
                 scheduler.step(val_recon)
@@ -370,7 +415,7 @@ def train_full(loader, encoder, loc_sensor, combine, memory, completion, actor,
                 if _vis_batch is not None:
                     actor.eval()
                     with torch.no_grad():
-                        vis_recon, _, _ = run_episode(
+                        vis_recon, _, _, _, _ = run_episode(
                             _vis_batch, encoder, loc_sensor, combine, memory,
                             completion, actor=actor, config=config, device=device,
                             T=config.T, deterministic=True,

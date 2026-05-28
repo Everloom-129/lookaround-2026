@@ -4,7 +4,7 @@ set -euo pipefail
 # ---------------------------------------------------------------------------
 # Hyperparameters — edit here
 # ---------------------------------------------------------------------------
-DATA_DIR="data/sun360_torchfeed"
+DATA_DIR="data/sun360_indoor360_5elev"
 DEVICE="cuda:2"
 EPOCHS=2000
 PRETRAIN_EPOCHS=50      # fixed in config, shown here for reference
@@ -13,11 +13,12 @@ LR="1e-3"
 WEIGHT_DECAY="5e-3"
 LAMBDA_POLICY="1.0"
 T=6
+N_ELEV=5
 
 # ---------------------------------------------------------------------------
 # Auto-construct wandb run name from hparams
 # ---------------------------------------------------------------------------
-RUN_NAME="sun360only_ep${EPOCHS}_bs${BATCH_SIZE}_lr${LR}_wd${WEIGHT_DECAY}_T${T}_lp${LAMBDA_POLICY}"
+RUN_NAME="sun360_indoor360_5elev_persp_entbonus_ep${EPOCHS}_bs${BATCH_SIZE}_lr${LR}_wd${WEIGHT_DECAY}_T${T}_lp${LAMBDA_POLICY}"
 
 echo "========================================="
 echo "  Run name : ${RUN_NAME}"

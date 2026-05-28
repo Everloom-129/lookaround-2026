@@ -29,11 +29,11 @@ Split HDF5 files matching the torchfeed schema:
   pixels_trn_torchfeed.h5 / pixels_val_torchfeed.h5 / pixels_tst_torchfeed.h5
 
 Each file contains:
-  target_viewgrid        uint8  (N, 3, 256, 128)  — Torch7 (W before H) layout
-  gridshape              float64 [4, 8]
+  target_viewgrid        uint8  (N, 3, 256, 160)  — Torch7 (W before H) layout
+  gridshape              float64 [5, 8]
   view_snapshape         float64 [32, 32]
-  pano_dims              float64 [128, 256]
-  average_target_viewgrid uint8  (3, 256, 128)
+  pano_dims              float64 [160, 256]
+  average_target_viewgrid uint8  (3, 256, 160)
   labs                   float64 (N, 1)
   shuffle_ord            float64 (N_total,)
 
@@ -65,15 +65,24 @@ from typing import Dict, List, Optional, Tuple
 
 import h5py
 import numpy as np
+import py360convert
 from PIL import Image
 
 # Grid parameters matching the torchfeed format
-N_ELEV = 4
+N_ELEV = 5
 N_AZIM = 8
 VIEW_H = 32
 VIEW_W = 32
-PANO_H = N_ELEV * VIEW_H   # 128
+PANO_H = N_ELEV * VIEW_H   # 160 (5 elevations × 32 px) — aligned with paper Sec 4.1
 PANO_W = N_AZIM * VIEW_W   # 256
+
+# Paper Sec 4.1: 5 elevations evenly spaced over [-90°, +90°], 8 azimuths over [0°, 360°),
+# 45° horizontal/vertical FOV per perspective view.
+ELEV_DEGS = np.linspace(-90.0, 90.0, N_ELEV).tolist()     # [-90, -45, 0, 45, 90]
+AZIM_DEGS = (np.arange(N_AZIM) * (360.0 / N_AZIM)).tolist()  # [0, 45, 90, ..., 315]
+FOV_DEG = 45.0
+PANO_LOAD_H = 512           # equirect resolution to project from (Source: 1024×512 inputs)
+PANO_LOAD_W = 1024
 
 # Train/val/test split fractions
 SPLIT_FRAC = {"train": 0.73, "val": 0.13, "test": 0.14}
@@ -122,12 +131,13 @@ def find_panoramas(pano_dir: str) -> List[Tuple[str, int]]:
 
 def process_panorama(img_path: str) -> Optional[np.ndarray]:
     """
-    Load and resize a panorama to (PANO_H, PANO_W, 3).
-    Returns uint8 array or None on error.
+    Load equirectangular panorama at PANO_LOAD_H×PANO_LOAD_W.
+    Returns uint8 array (H, W, 3) ready for perspective projection, or None on error.
     """
     try:
         img = Image.open(img_path).convert("RGB")
-        img = img.resize((PANO_W, PANO_H), Image.LANCZOS)
+        if img.size != (PANO_LOAD_W, PANO_LOAD_H):
+            img = img.resize((PANO_LOAD_W, PANO_LOAD_H), Image.LANCZOS)
         return np.array(img, dtype=np.uint8)
     except Exception as e:
         print(f"  Warning: skipping {img_path}: {e}")
@@ -136,13 +146,31 @@ def process_panorama(img_path: str) -> Optional[np.ndarray]:
 
 def pano_to_viewgrid_torch7(pano: np.ndarray) -> np.ndarray:
     """
-    Convert (PANO_H, PANO_W, 3) uint8 panorama to Torch7-style viewgrid.
-    Output: (3, PANO_W, PANO_H) uint8 — channels-first, W before H.
+    Extract N_ELEV × N_AZIM perspective views from an equirect panorama and tile
+    them into the Torch7 viewgrid layout (3, PANO_W, PANO_H).
+
+    Paper Sec 4.1: 45° FOV perspective views at evenly spaced elevations
+    (-90, -45, 0, +45, +90°) and azimuths (0, 45, …, 315°).
+
+    Tiling: view (elev_idx, azim_idx) goes to row [elev_idx*VIEW_H:(elev_idx+1)*VIEW_H],
+    col [azim_idx*VIEW_W:(azim_idx+1)*VIEW_W] of a (PANO_H, PANO_W, 3) image.
+    The dataset loader (data/sun360.py) inverts this tiling to recover individual views.
     """
-    # (H, W, C) → (C, H, W)
-    chw = pano.transpose(2, 0, 1)
-    # Torch7 stores (C, W, H) — swap last two dims
-    return chw.transpose(0, 2, 1)   # (C, W, H) = (3, 256, 128)
+    tiled = np.zeros((PANO_H, PANO_W, 3), dtype=np.uint8)
+    for ei, elev_deg in enumerate(ELEV_DEGS):
+        for ai, azim_deg in enumerate(AZIM_DEGS):
+            # py360convert: u=yaw (azim), v=pitch (elev), in_rot_deg=0
+            view = py360convert.e2p(
+                pano,
+                fov_deg=(FOV_DEG, FOV_DEG),
+                u_deg=float(azim_deg),
+                v_deg=float(elev_deg),
+                out_hw=(VIEW_H, VIEW_W),
+            )
+            tiled[ei*VIEW_H:(ei+1)*VIEW_H, ai*VIEW_W:(ai+1)*VIEW_W] = view
+    # (H, W, C) → (C, H, W) → Torch7 (C, W, H)
+    chw = tiled.transpose(2, 0, 1)
+    return chw.transpose(0, 2, 1)   # (C, W, H) = (3, PANO_W, PANO_H)
 
 
 def split_data(pairs: List[Tuple[str, int]],

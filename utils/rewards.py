@@ -9,7 +9,7 @@ The paper uses:
 
 Matches original VRRegressReward.lua + nn.Add(1) scalar baseline.
 """
-from typing import List
+from typing import List, Optional
 
 import torch
 import torch.nn as nn
@@ -34,33 +34,39 @@ class LearnedBaseline(nn.Module):
 
 def compute_reinforce_loss(log_probs: List[Tensor],
                            reward: Tensor,
-                           baseline: Tensor) -> Tensor:
+                           baseline: Tensor,
+                           entropies: Optional[List[Tensor]] = None,
+                           entropy_coef: float = 0.0) -> Tensor:
     """
-    Compute REINFORCE policy gradient loss.
+    Compute REINFORCE policy gradient loss with optional entropy regularization.
 
-    Uses per-sample reward and a learned scalar baseline for variance reduction.
-    Applies the same reward signal to all timesteps' log probs (non-myopic).
+    policy_loss = -E[sum_t log_pi_t · advantage] - entropy_coef · mean_t H(pi_t)
+
+    Entropy bonus prevents the actor logits from collapsing to a flat distribution
+    (which would still produce a deterministic argmax). When the reward signal
+    across actions is tiny (as it is for tile-resize viewgrids on small datasets),
+    the policy collapses without this regularization.
 
     Args:
-        log_probs: list of (B,) tensors, one per action timestep (T-1 entries)
-        reward:    (B,) per-sample reward R_i = -MSE_final_i  (higher = better)
-        baseline:  scalar tensor from LearnedBaseline() (already detached for advantage)
+        log_probs:    list of (B,) tensors, one per action timestep (T-1 entries)
+        reward:       (B,) per-sample reward R_i = -MSE_final_i  (higher = better)
+        baseline:     scalar tensor from LearnedBaseline() (detached for advantage)
+        entropies:    optional list of (B,) entropies, one per timestep. If provided
+                      and entropy_coef > 0, a -coef·mean(H) term is added.
+        entropy_coef: scalar α (paper uses no entropy bonus; we add it as a stabilizer)
 
     Returns:
-        policy_loss: scalar tensor (to be added to actor optimizer step)
+        policy_loss: scalar tensor
     """
     if not log_probs:
         return torch.tensor(0.0, requires_grad=False)
 
-    # Stack log probs: (T-1, B)
-    stacked = torch.stack(log_probs, dim=0)  # (T-1, B)
-
-    # Sum over timesteps for each batch element: (B,)
-    sum_log_probs = stacked.sum(dim=0)       # (B,)
-
-    # Advantage: detach baseline so no gradient flows into it here
+    stacked = torch.stack(log_probs, dim=0)              # (T-1, B)
+    sum_log_probs = stacked.sum(dim=0)                   # (B,)
     advantage = (reward - baseline.detach().squeeze()).detach()  # (B,)
+    pg_loss = -(sum_log_probs * advantage).mean()
 
-    # Policy gradient loss (negative because we maximize reward)
-    policy_loss = -(sum_log_probs * advantage).mean()
-    return policy_loss
+    if entropies and entropy_coef > 0.0:
+        ent = torch.stack(entropies, dim=0).mean()       # scalar mean over T·B
+        pg_loss = pg_loss - entropy_coef * ent
+    return pg_loss
